@@ -31,6 +31,7 @@ public class ProcessingSketch extends PApplet{
         scenes.add(new ScnMuchy(this));
         scenes.add(new ScnUrad(this));
         scenes.add(new ScnBoh(this));
+        scenes.add(new ScnSpalna(this));
     }
 
     public void draw (){

@@ -8,7 +8,7 @@ public class ProcessingSketch extends PApplet{
 
     private boolean record = false;
     private int[] bgColors = {0,32,64,128,192,255, color(222,177,143), color(209,175,140), color(199,172,143), color (195,171,147), color(186,171,150), color(181,172,155), color(175,173,160), color(173,176, 165), color(173,180,173), color(172,187,182), color(175,195, 193), color(175,203, 204), color(180,214, 215), color(186,226,226), color(195,237, 236)};
-    private int currentBgColor = 0;
+    private int currentBgColor = 1;
     private int cycleDir = 1;
     
     private ArrayList<Scene> scenes = new ArrayList<>();

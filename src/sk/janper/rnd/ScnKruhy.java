@@ -65,13 +65,14 @@ public class ScnKruhy implements Scene {
     @Override
     public void display() {
         if (moving){
-
+            //TODO: stop motion
         }
 
         mapCurrent();
         makeGears();
 
         if (photographic){
+            //TODO: strange behavior
             parent.image(field, 0, 0);
             displayCurrentSpirographAlpha(1500);
         } else {
@@ -141,6 +142,7 @@ public class ScnKruhy implements Scene {
     }
 
     private void mapCurrent(){
+        //TODO: independent counter
         int step = parent.frameCount%transitionSteps;
 
         currentRadii.clear();
@@ -219,6 +221,7 @@ public class ScnKruhy implements Scene {
         alphaLayer.background(0);
         alphaLayer.stroke(255);
         alphaLayer.noFill();
+        //TODO: no mouse mapping
         float weight = parent.map(parent.mouseX, 0, parent.width, 10f,200f);
         alphaLayer.strokeWeight(weight);
         float offset = 5f;
@@ -228,10 +231,7 @@ public class ScnKruhy implements Scene {
         points.forEach(p -> parent.point(p.x - offset, p.y - offset));
         parent.popStyle();
 
-
         points.forEach(p -> alphaLayer.point(p.x, p.y));
-
-
 
         circles.mask(alphaLayer.get());
         parent.image(circles, 0, 0);
@@ -241,7 +241,4 @@ public class ScnKruhy implements Scene {
         setOriginal();
         randomizeTarget();
     }
-
-
-
 }

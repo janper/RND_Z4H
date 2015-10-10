@@ -15,6 +15,8 @@ public class ScnPsycholog implements Scene {
     private String name = "Psychológ";
     private int bgColour;
 
+    private boolean moving = false;
+
     private static final int NUM_POINTS = 5;
     public static final int MIN_RADIUS = 200;
     public static final int MAX_RADIUS = 700;
@@ -30,28 +32,32 @@ public class ScnPsycholog implements Scene {
     PShader shader;
 
     public ScnPsycholog(PApplet parent) {
+        System.out.print("Constructing "+name);
         this.parent = parent;
         shader = parent.loadShader("metaBall.glsl");
 
         shader.set("minThreshold", MIN_META);
         shader.set("maxThreshold", MAX_META);
         reset();
+        System.out.println(" done!");
     }
 
     @Override
     public void start() {
-
+        moving = true;
     }
 
     @Override
     public void stop() {
-
+        moving = false;
     }
 
     @Override
     public void display() {
+        if  (moving){
+            movePoints();
+        }
         setPoints();
-        movePoints();
         parent.pushStyle();
         parent.noStroke();
         parent.beginShape();

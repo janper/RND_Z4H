@@ -19,8 +19,10 @@ public class ScnBoh implements Scene {
     private Vec3D bottom;
 
     public ScnBoh(PApplet parent) {
+        System.out.print("Constructing "+name);
         this.parent = parent;
         reset();
+        System.out.println(" done!");
     }
 
     @Override

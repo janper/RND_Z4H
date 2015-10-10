@@ -15,7 +15,7 @@ public class ProcessingSketch extends PApplet{
     private int whichScene = 0;
     private Scene scene;
 
-    private final int SCENES = 10;
+    private final int SCENES = 11;
     
     
     public void setup() {
@@ -111,11 +111,11 @@ public class ProcessingSketch extends PApplet{
                 scenes.add(new ScnPsycholog(this));
                 progressbar(10f / SCENES);
                 break;
-//
-//            case 12:
-//                scenes.add(new ScnPrechod1(this));
-//                progressbar(11f / SCENES);
-//                break;
+
+            case 12:
+                scenes.add(new ScnKruhy(this));
+                progressbar(11f / SCENES);
+                break;
 //
 //            case 13:
 //                scenes.add(new ScnPrechod1(this));

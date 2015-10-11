@@ -21,7 +21,7 @@ public class Pheromones {
 
     public Pheromones(PApplet parent) {
         this.parent = parent;
-        this.pheromones = new ArrayList<();
+        this.pheromones = new ArrayList<>();
     }
 
     public ArrayList<Pheromone> getPheromones() {

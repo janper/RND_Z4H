@@ -50,6 +50,7 @@ public class ScnPsycholog implements Scene {
     @Override
     public void stop() {
         moving = false;
+        parent.resetShader();
     }
 
     @Override

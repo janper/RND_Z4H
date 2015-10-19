@@ -20,6 +20,7 @@ public class ScnMravce implements Scene {
 
     private int defaultFoodAmount = 50;
     private int mode = 0;
+    private boolean moving;
 
     public ScnMravce(PApplet parent) {
         System.out.print("Constructing "+name);
@@ -30,19 +31,21 @@ public class ScnMravce implements Scene {
 
     @Override
     public void start() {
-
+        moving = true;
     }
 
     @Override
     public void stop() {
-
+        moving = false;
     }
 
     @Override
     public void display() {
         removeEmptyFoodSources();
-        pheromones.update();
-        updateAnts();
+        if (moving) {
+            pheromones.update();
+            updateAnts();
+        }
 
         if (mode > 0 && mode < 3) {
         displayNests();
@@ -84,6 +87,11 @@ public class ScnMravce implements Scene {
     @Override
     public void setBGColour(int colour){
         bgColour = colour;
+    }
+
+    @Override
+    public boolean isPlaying(){
+        return moving;
     }
 
     private void initEnvironment(int numberNests, int numberSources){

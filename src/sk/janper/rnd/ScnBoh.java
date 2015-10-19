@@ -18,6 +18,8 @@ public class ScnBoh implements Scene {
     private Vec3D tip;
     private Vec3D bottom;
 
+    boolean moving = false;
+
     public ScnBoh(PApplet parent) {
         System.out.print("Constructing "+name);
         this.parent = parent;
@@ -27,18 +29,22 @@ public class ScnBoh implements Scene {
 
     @Override
     public void start() {
-
+        moving = true;
     }
 
     @Override
     public void stop() {
-
+        moving = false;
     }
 
     @Override
     public void display() {
+        if (moving){
+            rays.forEach(r -> {
+                r.update();
+            });
+        }
         rays.forEach(r -> {
-            r.update();
             r.display();
         });
     }
@@ -88,6 +94,11 @@ public class ScnBoh implements Scene {
             tempRay.setStickDistance2(150);
             rays.add(tempRay);
         }
+    }
+
+    @Override
+    public boolean isPlaying(){
+        return moving;
     }
 
 }

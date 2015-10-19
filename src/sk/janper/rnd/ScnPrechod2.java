@@ -85,6 +85,11 @@ public class ScnPrechod2 implements Scene {
         });
     }
 
+    @Override
+    public boolean isPlaying(){
+        return moving;
+    }
+
     public void start(){
         moving = true;
     }

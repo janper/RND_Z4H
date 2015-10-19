@@ -57,6 +57,10 @@ public class ScnMuchy implements Scene {
     public void mode(int which){
     }
 
+    public boolean isPlaying(){
+        return move;
+    }
+
     public String getName(){
         return name;
     }

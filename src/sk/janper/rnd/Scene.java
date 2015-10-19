@@ -13,4 +13,5 @@ public interface Scene {
     void jitter();
     void mode(int which);
     void setBGColour(int colour);
+    boolean isPlaying();
 }

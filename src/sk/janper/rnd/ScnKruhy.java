@@ -121,6 +121,11 @@ public class ScnKruhy implements Scene {
         bgColour = colour;
     }
 
+    @Override
+    public boolean isPlaying(){
+        return moving;
+    }
+
 
     private void randomizeTarget(){
         float lastRadius = parent.height;

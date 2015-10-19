@@ -22,6 +22,8 @@ public class ScnUmyvarka implements Scene {
     private ArrayList<Tile> tiles;
     private boolean realistic = false;
 
+    private boolean moving;
+
     private String name = "Zachody";
     private int bgColour;
 
@@ -35,12 +37,14 @@ public class ScnUmyvarka implements Scene {
 
     public void start(){
         mirror.start();
+        moving = true;
     }
 
     public void stop(){
         if (mirror!=null){
             mirror.stop();
         }
+        moving = false;
     }
 
     public void reset() {
@@ -56,6 +60,11 @@ public class ScnUmyvarka implements Scene {
         }
 
         System.out.println("Realistic: " + realistic);
+    }
+
+    @Override
+    public boolean isPlaying(){
+        return moving;
     }
 
     public void jitter() {

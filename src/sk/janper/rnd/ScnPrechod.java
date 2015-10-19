@@ -53,6 +53,11 @@ public class ScnPrechod implements Scene {
 
     }
 
+    @Override
+    public boolean isPlaying(){
+        return moving;
+    }
+
     public void jitter(){
         float amount = 1;
         lights.forEach( l -> {

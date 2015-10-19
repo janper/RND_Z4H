@@ -83,6 +83,11 @@ public class ScnUrad implements Scene {
         bgColour = colour;
     }
 
+    @Override
+    public boolean isPlaying(){
+        return moving;
+    }
+
     public String loremIpsum(int length){
         String output = "";
         for (int i=0; i<length; i++){

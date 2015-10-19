@@ -92,7 +92,7 @@ public class ScnKlenotnictvo implements Scene {
     }
 
     private void displayBack() {
-        parent.background(back);
+        parent.background(back.get());
     }
 
     private void displayImage(PImage img) {
@@ -129,6 +129,11 @@ public class ScnKlenotnictvo implements Scene {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean isPlaying(){
+        return enablePhysics;
     }
 
     public void start(){

@@ -73,6 +73,11 @@ public class ScnSpalna implements Scene {
     }
 
     @Override
+    public boolean isPlaying(){
+        return moving;
+    }
+
+    @Override
     public void jitter() {
         fur.forEach(r -> r.shake(10f));
     }

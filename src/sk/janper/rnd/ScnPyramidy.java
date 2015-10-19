@@ -97,6 +97,11 @@ public class ScnPyramidy implements Scene {
 
     }
 
+    @Override
+    public boolean isPlaying(){
+        return moving;
+    }
+
 
     public void makePyramids(){
         ArrayList <Block> tempBlocks;

@@ -86,6 +86,8 @@ public class ScnKuchyna implements Scene {
         bgColour = colour;
     }
 
-
-
+    @Override
+    public boolean isPlaying(){
+        return moving;
+    }
 }

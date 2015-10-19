@@ -54,6 +54,11 @@ public class ScnPsycholog implements Scene {
     }
 
     @Override
+    public boolean isPlaying(){
+        return moving;
+    }
+
+    @Override
     public void display() {
         if  (moving){
             movePoints();

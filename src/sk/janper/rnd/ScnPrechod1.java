@@ -85,6 +85,11 @@ public class ScnPrechod1 implements Scene {
         int bgColour = colour;
     }
 
+    @Override
+    public boolean isPlaying(){
+        return moving;
+    }
+
     private void initLights(int number){
         lights = new ArrayList<Light>();
         float magnitude = limits.getExtent().magnitude()*2;

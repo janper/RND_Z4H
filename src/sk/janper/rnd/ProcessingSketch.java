@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.*;
+import processing.opengl.PShader;
 
 import java.util.ArrayList;
 
@@ -16,10 +17,13 @@ public class ProcessingSketch extends PApplet{
     private Scene scene;
 
     private final int SCENES = 13;
-    
-    
+    private PShader blurShader;
+    private boolean blur = false;
+
+
     public void setup() {
         size(1920, 1080, P3D);
+        blurShader = loadShader("blur.glsl");
         printInstructions();
     }
 
@@ -50,6 +54,10 @@ public class ProcessingSketch extends PApplet{
         if (frameCount>SCENES+1) {
             scene.setBGColour(bgColors[currentBgColor]);
             scene.display();
+
+            if (blur){
+                filter(blurShader);
+            }
 
             recordIfNeeded();
         }
@@ -158,14 +166,17 @@ public class ProcessingSketch extends PApplet{
 
 
     public void setScene (int which){
-
+        boolean playing = true;
         if (scene!=null){
+            playing = scene.isPlaying();
             scene.stop();
         }
         int index = Math.abs(which % scenes.size());
         scene = scenes.get(index);
         System.out.println("Setting scene " + index + ": "+scene.getName());
-//        scene.start();
+        if (playing) {
+            scene.start();
+        }
     }
 
 
@@ -187,6 +198,7 @@ public class ProcessingSketch extends PApplet{
         System.out.println("r : Reset");
         System.out.println("q : Shuffle");
         System.out.println("w : Jitter");
+        System.out.println("a : Blur");
         System.out.println("0-1 : Scene modes");
     }
 
@@ -258,6 +270,9 @@ public class ProcessingSketch extends PApplet{
             case 'p' : System.out.println("Next scene");
                 whichScene++;
                 setScene(whichScene);
+                break;
+            case 'a' : System.out.println("Toggle blur to "+!blur);
+                blur = !blur;
                 break;
         }
     }

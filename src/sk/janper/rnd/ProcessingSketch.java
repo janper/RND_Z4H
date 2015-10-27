@@ -19,7 +19,7 @@ public class ProcessingSketch extends PApplet{
     
     
     public void setup() {
-        size(1920, 1080, P3D);
+        size(800, 600, P3D);
         printInstructions();
     }
 

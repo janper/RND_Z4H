@@ -1,0 +1,21 @@
+<component name="libraryTable">
+  <library name="docs">
+    <CLASSES />
+    <JAVADOC>
+      <root url="file://$USER_HOME$/Documents/Processing/libraries/audioutils/docs" />
+      <root url="file://$USER_HOME$/Documents/Processing/libraries/colorutils/docs" />
+      <root url="file://$USER_HOME$/Documents/Processing/libraries/controlP5/reference" />
+      <root url="file://$USER_HOME$/Documents/Processing/libraries/datautils/docs" />
+      <root url="file://$USER_HOME$/Documents/Processing/libraries/peasycam/reference" />
+      <root url="file://$USER_HOME$/Documents/Processing/libraries/simutils/docs" />
+      <root url="file://$USER_HOME$/Documents/Processing/libraries/toxiclibs_p5/docs" />
+      <root url="file://$USER_HOME$/Documents/Processing/libraries/toxiclibscore/docs" />
+      <root url="file://$USER_HOME$/Documents/Processing/libraries/verletphysics/docs" />
+      <root url="file://$USER_HOME$/Documents/Processing/libraries/volumeutils/docs" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="file://$USER_HOME$/Documents/Processing/libraries/controlP5/src" />
+      <root url="file://$USER_HOME$/Documents/Processing/libraries/peasycam/src" />
+    </SOURCES>
+  </library>
+</component>

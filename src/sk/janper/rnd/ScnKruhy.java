@@ -2,9 +2,7 @@ package sk.janper.rnd;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
-import processing.core.PImage;
 import toxi.geom.Vec2D;
-import toxi.geom.Vec3D;
 
 import java.util.ArrayList;
 
@@ -33,6 +31,8 @@ public class ScnKruhy implements Scene {
 
     private int transitionSteps = 4800;
 
+    private int counter;
+
 
     public ScnKruhy(PApplet parent) {
         System.out.print("Constructing "+name);
@@ -55,7 +55,7 @@ public class ScnKruhy implements Scene {
     @Override
     public void display(PGraphics buffer) {
         if (moving){
-            //TODO: stop motion
+            counter++;
         }
 
         mapCurrent();
@@ -73,6 +73,7 @@ public class ScnKruhy implements Scene {
     public void reset() {
         prepareGears();
         randomizeTarget();
+        counter = 0;
     }
 
     @Override
@@ -124,8 +125,7 @@ public class ScnKruhy implements Scene {
     }
 
     private void mapCurrent(){
-        //TODO: independent counter
-        int step = parent.frameCount%transitionSteps;
+        int step = counter%transitionSteps;
 
         currentRadii.clear();
         currentSpeed.clear();
@@ -194,5 +194,15 @@ public class ScnKruhy implements Scene {
     public void randomize() {
         setOriginal();
         randomizeTarget();
+    }
+
+    @Override
+    public PGraphics getBack(){
+        return null;
+    }
+
+    @Override
+    public PGraphics getFront(){
+        return null;
     }
 }

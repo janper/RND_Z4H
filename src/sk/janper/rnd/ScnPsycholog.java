@@ -191,5 +191,16 @@ public class ScnPsycholog implements Scene {
     }
 
 
+    @Override
+    public PGraphics getBack(){
+        return null;
+    }
+
+    @Override
+    public PGraphics getFront(){
+        return null;
+    }
+
+
 
 }

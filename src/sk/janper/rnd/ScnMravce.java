@@ -167,5 +167,15 @@ public class ScnMravce implements Scene {
         ants.forEach(a -> a.display(buffer));
     }
 
+    @Override
+    public PGraphics getBack(){
+        return null;
+    }
+
+    @Override
+    public PGraphics getFront(){
+        return null;
+    }
+
 
 }

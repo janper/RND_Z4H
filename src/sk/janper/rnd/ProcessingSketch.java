@@ -28,23 +28,31 @@ public class ProcessingSketch extends PApplet{
     int WIDTH, HEIGHT;
 
     public void init(){
-        if(frame!=null){
+        GraphicsDevice devices[] = getDevices();
+
+        if((frame!=null)&&(devices.length>1)){
             frame.removeNotify();//make the frame not displayable
             frame.setResizable(false);
             frame.setUndecorated(true);
-            println("frame is at "+frame.getLocation());
+            System.out.println("frame is at "+frame.getLocation());
             frame.addNotify();
         }
         super.init();
     }
 
-    public void setSize(){
+    private GraphicsDevice[] getDevices(){
+        GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        return environment.getScreenDevices();
+    }
+
+    public boolean setSize(){
+        boolean returnValue = false;
             //***** figure out the display environment ****/
-            GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            GraphicsDevice devices[] = environment.getScreenDevices();
+            GraphicsDevice devices[] = getDevices();
             //  System.out.println(Arrays.toString(devices));
 
             if(devices.length>1 ){ //we have a 2nd display/projector
+                returnValue = true;
                 //learn the true dimensions of the secondary display
                 WIDTH =devices[1].getDisplayMode().getWidth();
                 HEIGHT= devices[1].getDisplayMode().getHeight();
@@ -54,12 +62,16 @@ public class ProcessingSketch extends PApplet{
                 HEIGHT= devices[0].getDisplayMode().getHeight();
                 println("Adjusting animation size to "+WIDTH+"x"+HEIGHT+" to fit primary display");
             }
+        return returnValue;
     }
 
 
     public void setup() {
-        setSize();
-        size((int)(WIDTH*1.75),(int)(HEIGHT*1.75), P2D);
+        if (setSize()) {
+            size((int) (WIDTH * 1.75), (int) (HEIGHT * 1.75), P2D);
+        } else {
+            size(1920,1080, P2D);
+        }
         blurShader = loadShader("blur.glsl");
         initBuffers();
         printInstructions();
@@ -68,8 +80,8 @@ public class ProcessingSketch extends PApplet{
     private void initBuffers() {
         back = createGraphics(width, height, P2D);
         buffer = createGraphics(width, height, P3D);
-        //TODO: weird smooth
         buffer.smooth();
+        //TODO: weird smooth
         front = createGraphics(width, height, P2D);
     }
 

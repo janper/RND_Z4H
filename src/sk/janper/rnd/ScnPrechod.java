@@ -132,5 +132,15 @@ public class ScnPrechod implements Scene {
         lights = newLights;
     }
 
+    @Override
+    public PGraphics getBack(){
+        return null;
+    }
+
+    @Override
+    public PGraphics getFront(){
+        return null;
+    }
+
 
 }

@@ -2,9 +2,6 @@ package sk.janper.rnd;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
-import toxi.geom.Vec3D;
-
-import java.util.ArrayList;
 
 /**
  * Created by Jan on 08.10.2015.
@@ -20,9 +17,14 @@ public class ScnKuchyna implements Scene {
     private Tapeta tapeta;
     private boolean moving = false;
 
+    private int counter;
+
+    private Buffers buffers;
+
     public ScnKuchyna(PApplet parent) {
         System.out.print("Constructing "+name);
         this.parent = parent;
+        buffers = new BuffKuchyna(parent);
         reset();
         System.out.println(" done!");
     }
@@ -41,11 +43,15 @@ public class ScnKuchyna implements Scene {
     public void display(PGraphics buffer) {
         if (moving) {
             tapeta.update();
+            counter++;
         }
-        buffer.beginDraw();
-        buffer.clear();
-        tapeta.drawWallpaperDirect(xCount, yCount, buffer);
-        buffer.endDraw();
+
+        if (buffers.isAnim(counter)) {
+            buffer.beginDraw();
+            buffer.clear();
+            tapeta.drawWallpaperDirect(xCount, yCount, buffer);
+            buffer.endDraw();
+        }
     }
 
     @Override
@@ -53,10 +59,12 @@ public class ScnKuchyna implements Scene {
         tapeta = new Tapeta(parent);
         tapeta.setLineColor(parent.color(255, 128));
         tapeta.setLinear(false);
-        tapeta.setLineWidth(2f);
+        tapeta.setLineWidth(4f);
         tapeta.setSegments(15);
         tapeta.setAxes(5);
         tapeta.setItemSize(150f);
+
+        counter=0;
     }
 
     @Override
@@ -93,5 +101,15 @@ public class ScnKuchyna implements Scene {
     @Override
     public boolean isPlaying(){
         return moving;
+    }
+
+    @Override
+    public PGraphics getBack(){
+        return buffers.getBack(counter);
+    }
+
+    @Override
+    public PGraphics getFront(){
+        return null;
     }
 }

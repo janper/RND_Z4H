@@ -80,5 +80,15 @@ public class ScnMuchy implements Scene {
         }
     }
 
+    @Override
+    public PGraphics getBack(){
+        return null;
+    }
+
+    @Override
+    public PGraphics getFront(){
+        return null;
+    }
+
 
 }

@@ -105,4 +105,14 @@ public class ScnBoh implements Scene {
         return moving;
     }
 
+    @Override
+    public PGraphics getBack(){
+        return null;
+    }
+
+    @Override
+    public PGraphics getFront(){
+        return null;
+    }
+
 }

@@ -178,4 +178,14 @@ public class ScnUrad implements Scene {
         return output;
     }
 
+    @Override
+    public PGraphics getBack(){
+        return null;
+    }
+
+    @Override
+    public PGraphics getFront(){
+        return null;
+    }
+
 }

@@ -232,4 +232,14 @@ public class ScnPyramidy implements Scene {
         return completeShape;
     }
 
+    @Override
+    public PGraphics getBack(){
+        return null;
+    }
+
+    @Override
+    public PGraphics getFront(){
+        return null;
+    }
+
 }

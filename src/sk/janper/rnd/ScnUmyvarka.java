@@ -174,4 +174,14 @@ public class ScnUmyvarka implements Scene {
         realistic = !realistic;
         System.out.println("Realistic: " + realistic);
     }
+
+    @Override
+    public PGraphics getBack(){
+        return null;
+    }
+
+    @Override
+    public PGraphics getFront(){
+        return null;
+    }
 }

@@ -16,4 +16,6 @@ public interface Scene {
     void mode(int which);
     void setBGColour(int colour);
     boolean isPlaying();
+    PGraphics getBack();
+    PGraphics getFront();
 }

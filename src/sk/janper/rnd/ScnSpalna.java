@@ -137,4 +137,14 @@ public class ScnSpalna implements Scene {
             r.getSprings().forEach(s -> physics.addSpring(s));
         });
     }
+
+    @Override
+    public PGraphics getBack(){
+        return null;
+    }
+
+    @Override
+    public PGraphics getFront(){
+        return null;
+    }
 }

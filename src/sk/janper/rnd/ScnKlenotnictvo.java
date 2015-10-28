@@ -49,6 +49,7 @@ public class ScnKlenotnictvo implements Scene {
 
         buffer.beginDraw();
         buffer.clear();
+        buffer.smooth();
         physics.particles.forEach(particle ->{
             Diamond d = (Diamond) particle;
             Vec3D direction = diamondDirection(d);
@@ -157,6 +158,16 @@ public class ScnKlenotnictvo implements Scene {
             }
         }
         return output;
+    }
+
+    @Override
+    public PGraphics getBack(){
+        return null;
+    }
+
+    @Override
+    public PGraphics getFront(){
+        return null;
     }
 
 

@@ -121,9 +121,10 @@ public class Diamond extends VerletParticle {
     }
 
 
-    public void display(Vec3D normal){
-        parent.pushStyle();
-        parent.pushMatrix();
+    public void display(Vec3D normal, PGraphics buffer){
+
+        buffer.pushStyle();
+        buffer.pushMatrix();
 
 
         float zRotation = Vec3D.Y_AXIS.angleBetween(new Vec3D(normal.x,normal.y, 0));
@@ -152,11 +153,11 @@ public class Diamond extends VerletParticle {
 //        parent.noFill();
 
 //        parent.shape(this.s, diamondWidth/(-2),diamondHeight/(-2),diamondWidth, diamondHeight);
-        parent.shape(this.s, 0, 0,diamondWidth, diamondHeight);
+        buffer.shape(this.s, 0, 0,diamondWidth, diamondHeight);
 //        parent.image(this.i, 0, 0, diamondWidth, diamondHeight);
 
-        parent.popMatrix();
-        parent.popStyle();
+        buffer.popMatrix();
+        buffer.popStyle();
 
     }
 }

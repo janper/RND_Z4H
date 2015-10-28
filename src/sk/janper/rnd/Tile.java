@@ -97,8 +97,8 @@ public class Tile extends Vec2D {
         this.interpolateToSelf(target,0.1f);
     }
 
-    public void display(){
-        parent.image(graphics, x, y);
+    public void display(PGraphics buffer){
+        buffer.image(graphics, x, y);
 //        parent.shape(shape,x,y);
     }
 

@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import processing.core.PShape;
 import toxi.geom.Vec3D;
 import toxi.physics.VerletPhysics;
@@ -54,7 +55,7 @@ public class ScnPyramidy implements Scene {
     }
 
     @Override
-    public void display() {
+    public void display(PGraphics buffer) {
         if (moving) {
             blocks.forEach(b -> b.adjust(0.1f));
             if (parent.frameCount%speed==1){
@@ -68,7 +69,10 @@ public class ScnPyramidy implements Scene {
 //            highlight(which);
 //        }
 
-        blocks.forEach(Block::display);
+        buffer.beginDraw();
+        buffer.clear();
+        blocks.forEach(b -> b.display(buffer));
+        buffer.endDraw();
     }
 
     @Override

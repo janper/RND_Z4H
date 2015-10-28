@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import toxi.geom.ReadonlyVec3D;
 import toxi.geom.Vec3D;
 import toxi.physics.VerletParticle;
@@ -97,22 +98,22 @@ public class Rod extends Vec3D {
     }
 
 
-    public void display(){
-        parent.pushStyle();
-        parent.noFill();
-        parent.stroke(this.colour);
-        parent.strokeWeight(this.weight);
-        parent.beginShape();
-        parent.curveVertex(this.particles.get(0).x, this.particles.get(0).y, this.particles.get(0).z); // the first control point
-        this.particles.forEach(p -> parent.curveVertex(p.x, p.y, p.z));
+    public void display(PGraphics buffer){
+        buffer.pushStyle();
+        buffer.noFill();
+        buffer.stroke(this.colour);
+        buffer.strokeWeight(this.weight);
+        buffer.beginShape();
+        buffer.curveVertex(this.particles.get(0).x, this.particles.get(0).y, this.particles.get(0).z); // the first control point
+        this.particles.forEach(p -> buffer.curveVertex(p.x, p.y, p.z));
 //        for (int i=0; i<this.particles.size(); i++){
 //            parent.curveVertex(this.particles.get(i).x, this.particles.get(i).y, this.particles.get(i).z);
 //        }
         int last = this.particles.size()-1;
 //        parent.curveVertex(this.particles.get(last).x, this.particles.get(last).y, this.particles.get(last).z);
-        parent.vertex(this.particles.get(last).x, this.particles.get(last).y, this.particles.get(last).z);
-        parent.endShape();
-        parent.popStyle();
+        buffer.vertex(this.particles.get(last).x, this.particles.get(last).y, this.particles.get(last).z);
+        buffer.endShape();
+        buffer.popStyle();
 
 //        parent.pushStyle();
 //        parent.noFill();

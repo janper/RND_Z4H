@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import processing.core.PShape;
 import toxi.geom.ReadonlyVec3D;
 import toxi.geom.Vec3D;import java.lang.Exception;import java.lang.Math;import java.lang.System;
@@ -139,27 +140,22 @@ public class Fly extends Vec3D {
         return (float)(Math.atan2(v1.y(), v1.x()) - Math.atan2(v2.y(), v2.x()));
     }
 
-    public void display(){
-        parent.pushStyle();
-//        parent.stroke(this.color);
-//        parent.strokeWeight(5f);
-//        parent.point(this.x, this.y);
+    public void display(PGraphics buffer){
+        buffer.pushStyle();
 
-        parent.pushMatrix();
+        buffer.pushMatrix();
 
         float rotationAngle = angleBetweenVectors(new Vec3D(this.compoundVector.x, this.compoundVector.y, 0),Vec3D.Y_AXIS);
 
-        parent.translate(this.x, this.y, this.z);
-        parent.rotate(rotationAngle+(float)Math.PI);
+        buffer.translate(this.x, this.y, this.z);
+        buffer.rotate(rotationAngle+(float)Math.PI);
 
         float flyWidth = 40f;
         float flyHeight = 40f;
-        parent.shape(this.flyShape, -0.5f * flyWidth, -0.5f * flyHeight, flyWidth, flyHeight);
+        buffer.shape(this.flyShape, -0.5f * flyWidth, -0.5f * flyHeight, flyWidth, flyHeight);
 
-        parent.popMatrix();
-
-
-        parent.popStyle();
+        buffer.popMatrix();
+        buffer.popStyle();
     }
     
     //getters and setters

@@ -81,14 +81,14 @@ public class Light extends Vec3D {
         return full;
     }
 
-    public void display(){
-        parent.pushMatrix();
-        parent.translate(x+offset.x, y+offset.y, z+offset.z);
-        parent.rotateY(rotationAngle);
+    public void display(PGraphics buffer){
+        buffer.pushMatrix();
+        buffer.translate(x+offset.x, y+offset.y, z+offset.z);
+        buffer.rotateY(rotationAngle);
 
-        parent.shape(shape, -span / 2, 0, shape.width, shape.height);
-        parent.shape(shape, span / 2, 0, shape.width, shape.height);
-        parent.popMatrix();
+        buffer.shape(shape, -span / 2, 0, shape.width, shape.height);
+        buffer.shape(shape, span / 2, 0, shape.width, shape.height);
+        buffer.popMatrix();
     }
 
     public PGraphics draw() {

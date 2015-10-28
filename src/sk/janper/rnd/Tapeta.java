@@ -173,7 +173,7 @@ public class Tapeta extends PolyCurve {
         return outImg;
     }
 
-    public void drawWallpaperDirect (int xCount, int yCount){
+    public void drawWallpaperDirect (int xCount, int yCount, PGraphics buffer){
         pattern = parent.createGraphics((int)itemSize, (int)itemSize);
         pattern.smooth();
 
@@ -198,7 +198,7 @@ public class Tapeta extends PolyCurve {
             for (int x=0; x<xCount+y%2; x++){
                 float currentX = x*xStep-y%2*xStep/2;
                 float currentY = y*yStep;
-                parent.image(pattern, currentX, currentY);
+                buffer.image(pattern, currentX, currentY);
             }
         }
     }

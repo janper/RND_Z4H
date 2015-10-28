@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import toxi.geom.AABB;
 import toxi.geom.Vec3D;
 
@@ -34,16 +35,19 @@ public class ScnPrechod1 implements Scene {
         initLights(30);
     }
 
-    public void display(){
+    public void display(PGraphics buffer){
         if (moving) {
             check();
             lights.forEach(l -> {
                 l.update();
             });
         }
+        buffer.beginDraw();
+        buffer.clear();
         lights.forEach(l -> {
-            l.display();
+            l.display(buffer);
         });
+        buffer.endDraw();
     }
 
     public void start(){

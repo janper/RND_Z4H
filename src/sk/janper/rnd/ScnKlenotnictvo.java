@@ -25,31 +25,14 @@ public class ScnKlenotnictvo implements Scene {
 
     private int mode = 0;
 
-    private PImage imageFull;
-    private PImage image1;
-    private PImage image2;
-    private PImage image3;
-    private PGraphics back;
-
     public ScnKlenotnictvo(PApplet parent) {
         System.out.print("Constructing "+name);
         this.parent = parent;
         reset();
-        makeImages();
         System.out.println(" done!");
     }
 
-    private void makeImages() {
-        imageFull = parent.loadImage("klenotnictvo00.jpg");
-        image1 = parent.loadImage("klenotnictvo00.jpg");
-        image2 = parent.loadImage("klenotnictvo00.jpg");
-        image3 = parent.loadImage("klenotnictvo00.jpg");
 
-        image1.mask(parent.loadImage("klenotnictvom1.jpg"));
-        image2.mask(parent.loadImage("klenotnictvom2.jpg"));
-        image3.mask(parent.loadImage("klenotnictvom3.jpg"));
-        back = parent.createGraphics(parent.width, parent.height);
-    }
 
     public void reset(){
         initPhysics();
@@ -57,56 +40,21 @@ public class ScnKlenotnictvo implements Scene {
     }
 
 
-    public void display (){
+    public void display (PGraphics buffer){
         if (enablePhysics) {
             adjustLocked(0.1f);
 //            shakeLocked(0.05f);
             physics.update();
         }
 
-        if (mode!=0){
-            makeBack();
+        buffer.beginDraw();
+        buffer.clear();
+        for (VerletParticle particle : physics.particles){
+            Diamond d = (Diamond) particle;
+            Vec3D direction = diamondDirection(d);
+            d.display(direction, buffer);
         }
-
-        if  (mode==1){
-            displayImage(image1);
-        }
-        if (mode == 2){
-            displayImage(image1);
-            displayImage(image2);
-        }
-        if (mode == 3) {
-            displayImage(image1);
-            displayImage(image2);
-            displayImage(image3);
-        }
-        if (mode!=0 && mode !=4){
-            displayBack();
-        }
-
-        if (mode == 4){
-            display4();
-        }
-
-        displayDiamonds();
-    }
-
-    private void displayBack() {
-        parent.background(back.get());
-    }
-
-    private void displayImage(PImage img) {
-        back.image(img, 0,0);
-    }
-
-    private void makeBack() {
-        back.fill(bgColour);
-        back.noStroke();
-        back.rect(0,0,back.width, back.height);
-    }
-
-    private void display4() {
-        parent.background(imageFull);
+        buffer.endDraw();
     }
 
     public void shuffle(){
@@ -189,16 +137,6 @@ public class ScnKlenotnictvo implements Scene {
             tempParticle=nextParticle;
         }
 //        System.out.println("String added");
-    }
-
-
-    private void displayDiamonds() {
-        for (VerletParticle particle : physics.particles){
-            Diamond d = (Diamond) particle;
-            Vec3D direction = diamondDirection(d);
-            d.display(direction);
-        }
-
     }
 
     private void adjustLocked(float ratio){

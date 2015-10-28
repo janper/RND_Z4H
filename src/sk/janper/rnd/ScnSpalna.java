@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import toxi.geom.Vec3D;
 import toxi.physics.VerletPhysics;
 import toxi.physics.behaviors.GravityBehavior;
@@ -46,12 +47,12 @@ public class ScnSpalna implements Scene {
     }
 
     @Override
-    public void display() {
+    public void display(PGraphics buffer) {
         if (moving) {
             physics.update();
             fur.forEach(r -> r.stabilize(0.1f));
         }
-        fur.forEach(Rod::display);
+        fur.forEach(r -> r.display(buffer));
     }
 
     @Override

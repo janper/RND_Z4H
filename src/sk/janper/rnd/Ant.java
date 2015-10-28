@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import processing.core.PShape;
 import toxi.geom.ReadonlyVec3D;
 import toxi.geom.Vec3D;
@@ -229,20 +230,20 @@ public class Ant extends Vec3D{
         return (float)(Math.atan2(v1.y(), v1.x()) - Math.atan2(v2.y(), v2.x()));
     }
 
-    public void display(){
-        parent.pushStyle();
-        parent.pushMatrix();
+    public void display(PGraphics buffer){
+        buffer.pushStyle();
+        buffer.pushMatrix();
 
         float rotationAngle = angleBetweenVectors(this.calculateAverageVector(),Vec3D.Y_AXIS);
 
-        parent.translate(this.x, this.y);
-        parent.rotate(rotationAngle+(float)Math.PI);
+        buffer.translate(this.x, this.y);
+        buffer.rotate(rotationAngle+(float)Math.PI);
 
         float antWidth = 30f;
         float antHeight = 30f;
-        parent.shape(this.antShape, -0.5f * antWidth, -0.5f * antHeight, antWidth, antHeight);
+        buffer.shape(this.antShape, -0.5f * antWidth, -0.5f * antHeight, antWidth, antHeight);
 
-        parent.popMatrix();
-        parent.popStyle();
+        buffer.popMatrix();
+        buffer.popStyle();
     }
 }

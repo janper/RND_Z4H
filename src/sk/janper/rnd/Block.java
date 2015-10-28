@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import processing.core.PShape;
 import toxi.geom.ReadonlyVec3D;
 import toxi.geom.Vec3D;
@@ -86,30 +87,30 @@ public class Block extends Vec3D {
         this.interpolateToSelf(this.originalPosition,factor);
     }
 
-    public void display(){
+    public void display(PGraphics buffer){
         if (this.shape ==null) {
-            displayDots();
+            displayDots(buffer);
         } else {
-            displayShapes();
+            displayShapes(buffer);
         }
     }
 
-    public void displayShapes() {
+    public void displayShapes(PGraphics buffer) {
         if (this.used) {
-            parent.pushMatrix();
-            parent.translate(this.x, this.y, this.z);
-            parent.shape(this.shape);
-            parent.popMatrix();
+            buffer.pushMatrix();
+            buffer.translate(this.x, this.y, this.z);
+            buffer.shape(this.shape);
+            buffer.popMatrix();
         }
     }
 
-    public void displayDots() {
+    public void displayDots(PGraphics buffer) {
         if (this.used) {
-            parent.pushStyle();
-            parent.stroke(255);
-            parent.strokeWeight(5f);
-            parent.point(this.x, this.y, this.z);
-            parent.popStyle();
+            buffer.pushStyle();
+            buffer.stroke(255);
+            buffer.strokeWeight(5f);
+            buffer.point(this.x, this.y, this.z);
+            buffer.popStyle();
         }
     }
 

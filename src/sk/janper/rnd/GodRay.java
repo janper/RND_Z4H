@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import toxi.geom.ReadonlyVec3D;
 import toxi.geom.Vec3D;
 
@@ -156,15 +157,15 @@ public class GodRay extends Vec3D {
     }
 
 
-    public void display(){
-        parent.pushMatrix();
-        parent.pushStyle();
+    public void display(PGraphics buffer){
+        buffer.pushMatrix();
+        buffer.pushStyle();
         for (int i=0; i<currentPoints.size()-1; i++){
-            parent.strokeWeight(parent.map(i, 0, currentPoints.size()-1, weight1, weight2));
-            parent.stroke (parent.lerpColor(color1, color2, (i/currentPoints.size()-1)));
-            parent.line (currentPoints.get(i).x, currentPoints.get(i).y, currentPoints.get(i).z,currentPoints.get(i+1).x, currentPoints.get(i+1).y, currentPoints.get(i+1).z);
+            buffer.strokeWeight(parent.map(i, 0, currentPoints.size()-1, weight1, weight2));
+            buffer.stroke (parent.lerpColor(color1, color2, (i/currentPoints.size()-1)));
+            buffer.line (currentPoints.get(i).x, currentPoints.get(i).y, currentPoints.get(i).z,currentPoints.get(i+1).x, currentPoints.get(i+1).y, currentPoints.get(i+1).z);
         }
-        parent.popStyle();
-        parent.popMatrix();
+        buffer.popStyle();
+        buffer.popMatrix();
     }
 }

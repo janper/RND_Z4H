@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import toxi.geom.ReadonlyVec3D;
 import toxi.geom.Vec3D;
 
@@ -113,15 +114,15 @@ public class Pheromones {
         }
     }
 
-    public void display2(){
+    public void display2(PGraphics buffer){
         try {
             pheromones.forEach(p -> {
                 int alpha = Math.round(PApplet.map(p.getAge(), 0, this.getMaxAge(), 255, 0));
-                parent.pushStyle();
-                parent.stroke(this.getColor(),alpha);
-                parent.strokeWeight(this.getWeight());
-                parent.point(p.x,p.y,p.z);
-                parent.popStyle();
+                buffer.pushStyle();
+                buffer.stroke(this.getColor(),alpha);
+                buffer.strokeWeight(this.getWeight());
+                buffer.point(p.x,p.y,p.z);
+                buffer.popStyle();
             });
         } catch (NullPointerException e)
         {

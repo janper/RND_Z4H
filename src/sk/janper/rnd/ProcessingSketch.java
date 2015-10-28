@@ -20,11 +20,22 @@ public class ProcessingSketch extends PApplet{
     private PShader blurShader;
     private boolean blur = false;
 
+    private PGraphics back;
+    private PGraphics front;
+    private PGraphics buffer;
+
 
     public void setup() {
         size(1920, 1080, P3D);
         blurShader = loadShader("blur.glsl");
+        initBuffers();
         printInstructions();
+    }
+
+    private void initBuffers() {
+        back = createGraphics(width, height, P2D);
+        buffer = createGraphics(width, height, P3D);
+        front = createGraphics(width, height, P2D);
     }
 
     private void addScenes() {
@@ -53,11 +64,18 @@ public class ProcessingSketch extends PApplet{
 
         if (frameCount>SCENES+1) {
             scene.setBGColour(bgColors[currentBgColor]);
-            scene.display();
+            scene.display(buffer);
+
+            image (back, 0,0,width, height);
+            image (buffer, 0,0,width, height);
+            image (front, 0,0,width, height);
+
 
             if (blur){
                 filter(blurShader);
             }
+
+
 
             recordIfNeeded();
         }

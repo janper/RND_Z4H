@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import toxi.geom.Vec3D;
 
 import java.util.ArrayList;
@@ -38,15 +39,18 @@ public class ScnBoh implements Scene {
     }
 
     @Override
-    public void display() {
+    public void display(PGraphics buffer) {
+        buffer.beginDraw();
+        buffer.clear();
         if (moving){
             rays.forEach(r -> {
                 r.update();
             });
         }
         rays.forEach(r -> {
-            r.display();
+            r.display(buffer);
         });
+        buffer.endDraw();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import processing.core.PVector;
 import processing.opengl.PShader;
 import toxi.geom.Vec3D;
@@ -59,35 +60,40 @@ public class ScnPsycholog implements Scene {
     }
 
     @Override
-    public void display() {
+    public void display(PGraphics buffer) {
         if  (moving){
             movePoints();
         }
         setPoints();
-        parent.pushStyle();
-        parent.noStroke();
-        parent.beginShape();
+
+        buffer.beginDraw();
+        buffer.clear();
+        buffer.shader(shader);
+        buffer.pushStyle();
+        buffer.noStroke();
+        buffer.beginShape();
         if (mode == 0) {
-            parent.fill(255);
+            buffer.fill(255);
         } else {
-            parent.fill(255, 0, 0);
+            buffer.fill(255, 0, 0);
         }
-        parent.vertex(0, 0);
+        buffer.vertex(0, 0);
         if (mode != 0) {
-            parent.fill(0, 255, 0);
+            buffer.fill(0, 255, 0);
         }
-        parent.vertex(0, parent.height);
+        buffer.vertex(0, parent.height);
         if (mode != 0) {
-            parent.fill(0, 0, 255);
+            buffer.fill(0, 0, 255);
         }
-        parent.vertex(parent.width, parent.height);
+        buffer.vertex(parent.width, parent.height);
         if (mode != 0) {
-            parent.fill(255, 255, 255);
+            buffer.fill(255, 255, 255);
         }
-        parent.vertex(parent.width, 0);
-        parent.endShape(parent.CLOSE);
-        parent.popStyle();
-        parent.shader(shader);
+        buffer.vertex(parent.width, 0);
+        buffer.endShape(parent.CLOSE);
+        buffer.popStyle();
+        buffer.resetShader();
+        buffer.endDraw();
     }
 
     @Override
@@ -155,6 +161,9 @@ public class ScnPsycholog implements Scene {
     }
 
     public void movePoints(){
+
+        //TODO: weird motion
+
         for (int i=0; i<points.size(); i++) {
             points.get(i).add(new PVector(vectors.get(i).x, vectors.get(i).y, 0));
             if (points.get(i).x<0){

@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import toxi.geom.Vec3D;
 
 import java.util.ArrayList;
@@ -31,11 +32,11 @@ public class ScnMuchy implements Scene {
         initFlies();
     }
 
-    public void display (){
+    public void display (PGraphics buffer){
         if (move) {
             flies.forEach(f -> f.update());
         }
-        flies.forEach(f -> f.display());
+        flies.forEach(f -> f.display(buffer));
     }
 
     public void shuffle(){

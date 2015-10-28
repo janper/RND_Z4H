@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import toxi.geom.Vec2D;
 
 import java.util.ArrayList;
@@ -71,15 +72,20 @@ public class ScnUmyvarka implements Scene {
         tiles.forEach(t -> t.jitter(10));
     }
 
-    public void display() {
+    public void display(PGraphics buffer) {
+
+        buffer.beginDraw();
+        buffer.clear();
 
         if (realistic) {
-            mirror.displayReal();
+            mirror.displayReal(buffer);
         } else {
-            mirror.display();
+            mirror.display(buffer);
         }
 
-        drawTiles();
+        drawTiles(buffer);
+
+        buffer.endDraw();
     }
 
     public String getName(){
@@ -115,10 +121,10 @@ public class ScnUmyvarka implements Scene {
         }
     }
 
-    private void drawTiles(){
+    private void drawTiles(PGraphics buffer){
         tiles.forEach(t -> {
             t.update();
-            t.display();
+            t.display(buffer);
         });
     }
 

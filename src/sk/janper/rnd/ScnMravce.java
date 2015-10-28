@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import toxi.geom.Vec3D;
 
 import java.util.ArrayList;
@@ -40,22 +41,25 @@ public class ScnMravce implements Scene {
     }
 
     @Override
-    public void display() {
+    public void display(PGraphics buffer) {
         removeEmptyFoodSources();
         if (moving) {
             pheromones.update();
             updateAnts();
         }
 
+        buffer.beginDraw();
+        buffer.clear();
+
         if (mode > 0 && mode < 3) {
-        displayNests();
+        displayNests(buffer);
         }
         if (mode >1 && mode < 4) {
-            displayFoodSources();
+            displayFoodSources(buffer);
         }
-        pheromones.display2();
+        pheromones.display2(buffer);
 
-        displayAnts();
+        displayAnts(buffer);
     }
 
     @Override
@@ -130,24 +134,24 @@ public class ScnMravce implements Scene {
         }
     }
 
-    private void displayNests(){
-        parent.pushStyle();
-        parent.ellipseMode(PApplet.CENTER);
-        parent.fill(128, 160, 200, 128);
-        parent.noStroke();
-        antNests.forEach(nest -> parent.ellipse(nest.x, nest.y, nest.getSize() * 2, nest.getSize() * 2));
-        parent.popStyle();
+    private void displayNests(PGraphics buffer){
+        buffer.pushStyle();
+        buffer.ellipseMode(PApplet.CENTER);
+        buffer.fill(128, 160, 200, 128);
+        buffer.noStroke();
+        antNests.forEach(nest -> buffer.ellipse(nest.x, nest.y, nest.getSize() * 2, nest.getSize() * 2));
+        buffer.popStyle();
     }
 
-    private void displayFoodSources(){
-        parent.pushStyle();
-        parent.ellipseMode(PApplet.CENTER);
-        parent.noStroke();
+    private void displayFoodSources(PGraphics buffer){
+        buffer.pushStyle();
+        buffer.ellipseMode(PApplet.CENTER);
+        buffer.noStroke();
         foodSources.forEach(food -> {
-            parent.fill(128, 200, 160, PApplet.map(food.getFoodAmount(), 0, this.defaultFoodAmount, 16, 255));
-            parent.ellipse(food.x, food.y, food.getSize() * 2, food.getSize() * 2);
+            buffer.fill(128, 200, 160, PApplet.map(food.getFoodAmount(), 0, this.defaultFoodAmount, 16, 255));
+            buffer.ellipse(food.x, food.y, food.getSize() * 2, food.getSize() * 2);
         });
-        parent.popStyle();
+        buffer.popStyle();
     }
 
     private void removeEmptyFoodSources(){
@@ -158,8 +162,8 @@ public class ScnMravce implements Scene {
         ants.forEach(Ant::update);
     }
 
-    private void displayAnts(){
-        ants.forEach(Ant::display);
+    private void displayAnts(PGraphics buffer){
+        ants.forEach(a -> a.display(buffer));
     }
 
 

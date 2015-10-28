@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import toxi.geom.Vec2D;
 
 import java.util.ArrayList;
@@ -40,11 +41,16 @@ public class ScnUrad implements Scene {
     }
 
     @Override
-    public void display() {
+    public void display(PGraphics buffer) {
+        buffer.beginDraw();
+        buffer.clear();
+
         if (moving) {
             textBoxes.forEach(tb -> tb.update());
         }
-        textBoxes.forEach(tb -> parent.image(tb.get(), tb.getPosition().x, tb.getPosition().y));
+        textBoxes.forEach(tb -> buffer.image(tb.get(), tb.getPosition().x, tb.getPosition().y));
+
+        buffer.endDraw();
 
     }
 

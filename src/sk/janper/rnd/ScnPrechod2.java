@@ -50,7 +50,7 @@ public class ScnPrechod2 implements Scene {
         initLights(30);
     }
 
-    public void display(){
+    public void display(PGraphics buffer){
         if (moving) {
             check();
             lights.forEach(l -> {
@@ -80,9 +80,12 @@ public class ScnPrechod2 implements Scene {
             parent.background(imgA);
         }
 
+        buffer.beginDraw();
+        buffer.clear();
         lights.forEach(l -> {
-            l.display();
+            l.display(buffer);
         });
+        buffer.endDraw();
     }
 
     @Override

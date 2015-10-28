@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import toxi.geom.Vec3D;
 
 import java.util.ArrayList;
@@ -37,11 +38,14 @@ public class ScnKuchyna implements Scene {
     }
 
     @Override
-    public void display() {
+    public void display(PGraphics buffer) {
         if (moving) {
             tapeta.update();
         }
-        tapeta.drawWallpaperDirect(xCount, yCount);
+        buffer.beginDraw();
+        buffer.clear();
+        tapeta.drawWallpaperDirect(xCount, yCount, buffer);
+        buffer.endDraw();
     }
 
     @Override

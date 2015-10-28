@@ -24,7 +24,7 @@ public class ScnMuchy implements Scene {
         System.out.print("Constructing "+name);
         this.parent = parent;
         reset();
-        System.out.println("done!");
+        System.out.println(" done!");
     }
 
     public void reset(){
@@ -33,10 +33,13 @@ public class ScnMuchy implements Scene {
     }
 
     public void display (PGraphics buffer){
+        buffer.beginDraw();
+        buffer.clear();
         if (move) {
             flies.forEach(f -> f.update());
         }
         flies.forEach(f -> f.display(buffer));
+        buffer.endDraw();
     }
 
     public void shuffle(){

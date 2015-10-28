@@ -3,6 +3,7 @@ package sk.janper.rnd;
 import processing.core.*;
 import processing.opengl.PShader;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class ProcessingSketch extends PApplet{
@@ -24,9 +25,41 @@ public class ProcessingSketch extends PApplet{
     private PGraphics front;
     private PGraphics buffer;
 
+    int WIDTH, HEIGHT;
+
+    public void init(){
+        if(frame!=null){
+            frame.removeNotify();//make the frame not displayable
+            frame.setResizable(false);
+            frame.setUndecorated(true);
+            println("frame is at "+frame.getLocation());
+            frame.addNotify();
+        }
+        super.init();
+    }
+
+    public void setSize(){
+            //***** figure out the display environment ****/
+            GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            GraphicsDevice devices[] = environment.getScreenDevices();
+            //  System.out.println(Arrays.toString(devices));
+
+            if(devices.length>1 ){ //we have a 2nd display/projector
+                //learn the true dimensions of the secondary display
+                WIDTH =devices[1].getDisplayMode().getWidth();
+                HEIGHT= devices[1].getDisplayMode().getHeight();
+                println("Adjusting animation size to "+WIDTH+"x"+HEIGHT+" b/c of 2ndary display");
+            }else{ //no 2nd screen but make it fullscreen anyway
+                WIDTH =devices[0].getDisplayMode().getWidth();
+                HEIGHT= devices[0].getDisplayMode().getHeight();
+                println("Adjusting animation size to "+WIDTH+"x"+HEIGHT+" to fit primary display");
+            }
+    }
+
 
     public void setup() {
-        size(1920, 1080, P3D);
+        setSize();
+        size((int)(WIDTH*1.75),(int)(HEIGHT*1.75), P2D);
         blurShader = loadShader("blur.glsl");
         initBuffers();
         printInstructions();
@@ -35,6 +68,8 @@ public class ProcessingSketch extends PApplet{
     private void initBuffers() {
         back = createGraphics(width, height, P2D);
         buffer = createGraphics(width, height, P3D);
+        //TODO: weird smooth
+        buffer.smooth();
         front = createGraphics(width, height, P2D);
     }
 
@@ -218,6 +253,7 @@ public class ProcessingSketch extends PApplet{
         System.out.println("w : Jitter");
         System.out.println("a : Blur");
         System.out.println("0-1 : Scene modes");
+        System.out.println("h : Halt");
     }
 
     public void keyPressed(){
@@ -292,6 +328,10 @@ public class ProcessingSketch extends PApplet{
             case 'a' : System.out.println("Toggle blur to "+!blur);
                 blur = !blur;
                 break;
+            case 'h' : System.out.println("Halt!");
+                exit();
+                break;
+
         }
     }
 

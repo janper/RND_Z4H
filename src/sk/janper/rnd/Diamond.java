@@ -143,7 +143,7 @@ public class Diamond extends VerletParticle {
 //        parent.strokeWeight(1f);
 //        parent.line (this.x, this.y, this.z, secondPoint.x, secondPoint.y, secondPoint.z);
 
-        parent.applyMatrix(transformationMatrix);
+        buffer.applyMatrix(transformationMatrix);
 
         float diamondWidth = 60f;
         float diamondHeight = 40f;

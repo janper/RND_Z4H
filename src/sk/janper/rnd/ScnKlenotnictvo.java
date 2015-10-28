@@ -18,7 +18,7 @@ public class ScnKlenotnictvo implements Scene {
     VerletPhysics physics;
     Vec3D gravityVector = new Vec3D(0f,5f,0f);
     private float bounceRatio=100f;
-    private boolean enablePhysics = false;
+    private boolean enablePhysics = true;
 
     private String name = "Klenotnictvo";
     private int bgColour;
@@ -49,11 +49,12 @@ public class ScnKlenotnictvo implements Scene {
 
         buffer.beginDraw();
         buffer.clear();
-        for (VerletParticle particle : physics.particles){
+        physics.particles.forEach(particle ->{
             Diamond d = (Diamond) particle;
             Vec3D direction = diamondDirection(d);
             d.display(direction, buffer);
-        }
+        });
+
         buffer.endDraw();
     }
 

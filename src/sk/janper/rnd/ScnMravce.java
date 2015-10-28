@@ -60,6 +60,7 @@ public class ScnMravce implements Scene {
         pheromones.display2(buffer);
 
         displayAnts(buffer);
+        buffer.endDraw();
     }
 
     @Override

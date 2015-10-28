@@ -48,11 +48,14 @@ public class ScnSpalna implements Scene {
 
     @Override
     public void display(PGraphics buffer) {
+        buffer.beginDraw();
+        buffer.clear();
         if (moving) {
             physics.update();
             fur.forEach(r -> r.stabilize(0.1f));
         }
         fur.forEach(r -> r.display(buffer));
+        buffer.endDraw();
     }
 
     @Override

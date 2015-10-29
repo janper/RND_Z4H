@@ -19,4 +19,5 @@ public interface Scene {
     PGraphics getBack();
     PGraphics getFront();
     int getCounter();
+    float getOpacity();
 }

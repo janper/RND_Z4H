@@ -192,4 +192,9 @@ public class ScnUrad implements Scene {
     public int getCounter() {
         return 0;
     }
+
+    @Override
+    public float getOpacity() {
+        return 1f;
+    }
 }

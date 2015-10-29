@@ -17,13 +17,18 @@ public class ProcessingSketch extends PApplet{
     private int whichScene = 0;
     private Scene scene;
 
-    private final int SCENES = 13;
+    private final int SCENES = 1;
     private PShader blurShader;
     private boolean blur = false;
 
     private PGraphics back;
     private PGraphics front;
     private PGraphics buffer;
+
+    private PGraphics blank;
+    private PGraphics white;
+
+    private PShader mixShader;
 
     int WIDTH, HEIGHT;
 
@@ -74,6 +79,13 @@ public class ProcessingSketch extends PApplet{
         }
         blurShader = loadShader("blur.glsl");
         initBuffers();
+        blank = createGraphics(width, height,P2D);
+        white = createGraphics(width, height,P2D);
+        white.beginDraw();
+        white.background(255);
+        white.endDraw();
+        mixShader = loadShader("mixShader.glsl");
+
         printInstructions();
     }
 
@@ -98,6 +110,11 @@ public class ProcessingSketch extends PApplet{
     }
 
     public void draw (){
+//        blank.beginDraw();
+//        blank.clear();
+//        blank.background(bgColors[currentBgColor]);
+//        blank.endDraw();
+
         background(bgColors[currentBgColor]);
 
         if (frameCount<SCENES+2) {
@@ -109,31 +126,63 @@ public class ProcessingSketch extends PApplet{
             setScene(whichScene);
         }
 
-        if (frameCount>SCENES+1) {
+        if (frameCount>SCENES+2) {
             scene.setBGColour(bgColors[currentBgColor]);
 
             back=scene.getBack();
             scene.display(buffer);
             front=scene.getFront();
 
-            if (back!=null){
-                image (back, 0,0,width, height);
-            }
-            image (buffer, 0,0,width, height);
-            if (front!=null) {
-                image(front, 0, 0, width, height);
-            }
+            PImage a = (back==null)?blank.get():back.get();
+            PImage b = (buffer==null)?blank.get():buffer.get();
+            PImage c = (front==null)?blank.get():front.get();
+
+            mixShader.set("b", b);
+            mixShader.set("c", c);
+
+            mixShader.set("bOpacity", scene.getOpacity());
+            shader(mixShader);
+
+            image (a, 0,0,width, height);
+//            image (b, 0,0,width, height);
+//            image (c, 0,0,width, height);
+
+            resetShader();
 
             if (blur){
                 filter(blurShader);
             }
 
-
-
             recordIfNeeded();
         }
 
     }
+
+
+//    public void draw (){
+//
+//        background(bgColors[currentBgColor]);
+//
+//        if (frameCount<SCENES+2) {
+//            loadScene();
+//        }
+//
+//        if (frameCount==SCENES+2){
+//            progressbar(1);
+//            setScene(whichScene);
+//        }
+//
+//        if (frameCount>SCENES+2) {
+//            scene.setBGColour(bgColors[currentBgColor]);
+//
+//            image (buffer, 0,0,width, height);
+//            if (blur){
+//                filter(blurShader);
+//            }
+//            recordIfNeeded();
+//        }
+//
+//    }
 
     private void loadScene() {
         switch(frameCount) {
@@ -142,8 +191,8 @@ public class ProcessingSketch extends PApplet{
                 break;
 
             case 2:
-                scenes.add(new ScnUmyvarka(this));
-                progressbar(1f / SCENES);
+                scenes.add(new ScnKuchyna(this));
+                progressbar(13f / SCENES);
                 break;
 
             case 3:
@@ -202,9 +251,10 @@ public class ProcessingSketch extends PApplet{
                 break;
 
             case 14:
-                scenes.add(new ScnKuchyna(this));
-                progressbar(13f / SCENES);
+                scenes.add(new ScnUmyvarka(this));
+                progressbar(1f / SCENES);
                 break;
+
 //
 //            case 15:
 //                scenes.add(new ScnPrechod1(this));

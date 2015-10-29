@@ -120,6 +120,12 @@ public class ScnKuchyna implements Scene {
     }
 
     @Override
+    public float getOpacity() {
+
+        return buffers.getAnimOpacity(counter);
+    }
+
+    @Override
     public int getCounter() {
         return counter;
     }

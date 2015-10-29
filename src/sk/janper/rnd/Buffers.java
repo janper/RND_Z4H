@@ -7,6 +7,7 @@ import processing.core.PGraphics;
  */
 public interface Buffers {
     boolean isAnim(int counter);
+    float getAnimOpacity(int counter);
     PGraphics getBack(int counter);
     PGraphics getFront(int counter);
     void reset();

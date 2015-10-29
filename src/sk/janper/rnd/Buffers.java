@@ -9,4 +9,5 @@ public interface Buffers {
     boolean isAnim(int counter);
     PGraphics getBack(int counter);
     PGraphics getFront(int counter);
+    void reset();
 }

@@ -147,5 +147,8 @@ public class ScnPrechod1 implements Scene {
         return null;
     }
 
-
+    @Override
+    public int getCounter() {
+        return 0;
+    }
 }

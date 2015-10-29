@@ -184,4 +184,9 @@ public class ScnUmyvarka implements Scene {
     public PGraphics getFront(){
         return null;
     }
+
+    @Override
+    public int getCounter() {
+        return 0;
+    }
 }

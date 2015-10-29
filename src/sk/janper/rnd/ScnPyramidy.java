@@ -242,4 +242,8 @@ public class ScnPyramidy implements Scene {
         return null;
     }
 
+    @Override
+    public int getCounter() {
+        return 0;
+    }
 }

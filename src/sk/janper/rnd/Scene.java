@@ -18,4 +18,5 @@ public interface Scene {
     boolean isPlaying();
     PGraphics getBack();
     PGraphics getFront();
+    int getCounter();
 }

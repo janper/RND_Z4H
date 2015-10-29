@@ -111,12 +111,18 @@ public class ProcessingSketch extends PApplet{
 
         if (frameCount>SCENES+1) {
             scene.setBGColour(bgColors[currentBgColor]);
+
+            back=scene.getBack();
             scene.display(buffer);
+            front=scene.getFront();
 
-            image (back, 0,0,width, height);
+            if (back!=null){
+                image (back, 0,0,width, height);
+            }
             image (buffer, 0,0,width, height);
-            image (front, 0,0,width, height);
-
+            if (front!=null) {
+                image(front, 0, 0, width, height);
+            }
 
             if (blur){
                 filter(blurShader);
@@ -295,7 +301,8 @@ public class ProcessingSketch extends PApplet{
             case 'x' : System.out.println("Start");
                 scene.start();
                 break;
-            case 'i' : System.out.println("Current frame rate: " + frameRate);
+            case 'i' :
+                printInfo();
                 break;
 
             case '0' : System.out.println("Scene mode 0");
@@ -345,6 +352,13 @@ public class ProcessingSketch extends PApplet{
                 break;
 
         }
+    }
+
+    private void printInfo() {
+        System.out.println("Current scene: " + scene.getName());
+//        System.out.println("Current mode: " + scene.getMode());
+        System.out.println("Current frame: " + scene.getCounter());
+        System.out.println("Current frame rate: " + frameRate);
     }
 
 }

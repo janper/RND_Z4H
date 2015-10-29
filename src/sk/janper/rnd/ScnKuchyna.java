@@ -42,16 +42,20 @@ public class ScnKuchyna implements Scene {
     @Override
     public void display(PGraphics buffer) {
         if (moving) {
-            tapeta.update();
             counter++;
         }
 
+        buffer.beginDraw();
+        buffer.clear();
+
         if (buffers.isAnim(counter)) {
-            buffer.beginDraw();
-            buffer.clear();
+            if (moving) {
+                tapeta.update();
+            }
             tapeta.drawWallpaperDirect(xCount, yCount, buffer);
-            buffer.endDraw();
         }
+
+        buffer.endDraw();
     }
 
     @Override
@@ -63,6 +67,8 @@ public class ScnKuchyna implements Scene {
         tapeta.setSegments(15);
         tapeta.setAxes(5);
         tapeta.setItemSize(150f);
+
+        buffers.reset();
 
         counter=0;
     }
@@ -110,6 +116,11 @@ public class ScnKuchyna implements Scene {
 
     @Override
     public PGraphics getFront(){
-        return null;
+        return buffers.getFront(counter);
+    }
+
+    @Override
+    public int getCounter() {
+        return counter;
     }
 }

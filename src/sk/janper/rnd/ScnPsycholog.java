@@ -1,10 +1,10 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PVector;
 import processing.opengl.PShader;
-import toxi.geom.Vec3D;
 
 import java.util.ArrayList;
 
@@ -12,25 +12,19 @@ import java.util.ArrayList;
  * Created by Jan on 08.10.2015.
  */
 public class ScnPsycholog implements Scene {
+    public static final int MIN_RADIUS = 200;
+    public static final int MAX_RADIUS = 700;
+    public static final float MIN_META = 0.05f;
+    public static final float MAX_META = 0.15f;
+    private static final int NUM_POINTS = 5;
+    PShader shader;
     private PApplet parent;
     private String name = "Psychológ";
     private int bgColour;
-
     private boolean moving = false;
-
-    private static final int NUM_POINTS = 5;
-    public static final int MIN_RADIUS = 200;
-    public static final int MAX_RADIUS = 700;
-
-    public static final float MIN_META = 0.05f;
-    public static final float MAX_META = 0.15f;
-
     private ArrayList<PVector> points;
     private ArrayList<PVector> vectors;
-
     private int mode = 0;
-
-    PShader shader;
 
     public ScnPsycholog(PApplet parent) {
         System.out.print("Constructing "+name);
@@ -90,7 +84,7 @@ public class ScnPsycholog implements Scene {
             buffer.fill(255, 255, 255);
         }
         buffer.vertex(parent.width, 0);
-        buffer.endShape(parent.CLOSE);
+        buffer.endShape(PConstants.CLOSE);
         buffer.popStyle();
         buffer.resetShader();
         buffer.endDraw();
@@ -190,24 +184,13 @@ public class ScnPsycholog implements Scene {
         }
     }
 
-
-    @Override
-    public PGraphics getBack(){
-        return null;
-    }
-
-    @Override
-    public PGraphics getFront(){
-        return null;
-    }
-
     @Override
     public int getCounter() {
         return 0;
     }
 
     @Override
-    public float getOpacity() {
-        return 1f;
+    public PShader getShader() {
+        return null;
     }
 }

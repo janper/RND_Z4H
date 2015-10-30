@@ -2,6 +2,7 @@ package sk.janper.rnd;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.opengl.PShader;
 import toxi.geom.Vec3D;
 
 import java.util.ArrayList;
@@ -10,16 +11,13 @@ import java.util.ArrayList;
  * Created by Jan on 08.10.2015.
  */
 public class ScnBoh implements Scene {
+    boolean moving = false;
     private PApplet parent;
     private String name = "Boh";
     private int bgColour;
-
     private ArrayList<GodRay> rays;
-
     private Vec3D tip;
     private Vec3D bottom;
-
-    boolean moving = false;
 
     public ScnBoh(PApplet parent) {
         System.out.print("Constructing "+name);
@@ -105,23 +103,15 @@ public class ScnBoh implements Scene {
         return moving;
     }
 
-    @Override
-    public PGraphics getBack(){
-        return null;
-    }
-
-    @Override
-    public PGraphics getFront(){
-        return null;
-    }
 
     @Override
     public int getCounter() {
         return 0;
     }
 
+
     @Override
-    public float getOpacity() {
-        return 1f;
+    public PShader getShader() {
+        return null;
     }
 }

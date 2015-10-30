@@ -2,6 +2,7 @@ package sk.janper.rnd;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.opengl.PShader;
 import toxi.geom.Vec2D;
 
 import java.util.ArrayList;
@@ -10,13 +11,10 @@ import java.util.ArrayList;
  * Created by Jan on 08.10.2015.
  */
 public class ScnUrad implements Scene {
-    private PApplet parent;
-
-
-    private ArrayList<TextBox> textBoxes;
     private static final int NUMBER = 20;
     private static final Vec2D GRID_STEP = new Vec2D(60,70);
-
+    private PApplet parent;
+    private ArrayList<TextBox> textBoxes;
     private boolean moving = false;
 
     private String name = "Urad";
@@ -179,22 +177,12 @@ public class ScnUrad implements Scene {
     }
 
     @Override
-    public PGraphics getBack(){
-        return null;
-    }
-
-    @Override
-    public PGraphics getFront(){
-        return null;
-    }
-
-    @Override
     public int getCounter() {
         return 0;
     }
 
     @Override
-    public float getOpacity() {
-        return 1f;
+    public PShader getShader() {
+        return null;
     }
 }

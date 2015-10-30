@@ -2,7 +2,7 @@ package sk.janper.rnd;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
-import processing.core.PImage;
+import processing.opengl.PShader;
 import toxi.geom.Vec3D;
 import toxi.physics.VerletParticle;
 import toxi.physics.VerletPhysics;
@@ -13,10 +13,9 @@ import toxi.physics.behaviors.GravityBehavior;
  * Created by Jan on 06.10.2015.
  */
 public class ScnKlenotnictvo implements Scene {
-    private PApplet parent;
-
     VerletPhysics physics;
     Vec3D gravityVector = new Vec3D(0f,5f,0f);
+    private PApplet parent;
     private float bounceRatio=100f;
     private boolean enablePhysics = true;
 
@@ -161,22 +160,12 @@ public class ScnKlenotnictvo implements Scene {
     }
 
     @Override
-    public PGraphics getBack(){
-        return null;
-    }
-
-    @Override
-    public PGraphics getFront(){
-        return null;
-    }
-
-    @Override
     public int getCounter() {
         return 0;
     }
 
     @Override
-    public float getOpacity() {
-        return 1f;
+    public PShader getShader() {
+        return null;
     }
 }

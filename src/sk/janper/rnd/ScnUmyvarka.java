@@ -2,6 +2,7 @@ package sk.janper.rnd;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.opengl.PShader;
 import toxi.geom.Vec2D;
 
 import java.util.ArrayList;
@@ -10,11 +11,10 @@ import java.util.ArrayList;
  * Created by Jan on 06.10.2015.
  */
 public class ScnUmyvarka implements Scene {
-    private PApplet parent;
-
     private final int tileSize = 60;
     private final int videoWidth = 640;
     private final int videoHeight = 480;
+    private PApplet parent;
     private int thresholdMin = 130;
     private int thresholdMax = 140;
 
@@ -54,11 +54,7 @@ public class ScnUmyvarka implements Scene {
     }
 
     public void mode (int which){
-        if (which == 0){
-            realistic = false;
-        } else {
-            realistic = true;
-        }
+        realistic = which != 0;
 
         System.out.println("Realistic: " + realistic);
     }
@@ -101,7 +97,7 @@ public class ScnUmyvarka implements Scene {
             mirror.stop();
         }
 
-        mirror = new Mirror(new Vec2D((int)parent.random((int) ((parent.width / tileSize) - (w / tileSize)))* tileSize, (int)parent.random((int) ((parent.height / tileSize) - (h / tileSize)))* tileSize), parent, w, h);
+        mirror = new Mirror(new Vec2D((int) parent.random((parent.width / tileSize) - (w / tileSize)) * tileSize, (int) parent.random((parent.height / tileSize) - (h / tileSize)) * tileSize), parent, w, h);
 
         mirror.start();
         mirror.setThresholdMin(thresholdMin);
@@ -176,22 +172,12 @@ public class ScnUmyvarka implements Scene {
     }
 
     @Override
-    public PGraphics getBack(){
-        return null;
-    }
-
-    @Override
-    public PGraphics getFront(){
-        return null;
-    }
-
-    @Override
     public int getCounter() {
         return 0;
     }
 
     @Override
-    public float getOpacity() {
-        return 1f;
+    public PShader getShader() {
+        return null;
     }
 }

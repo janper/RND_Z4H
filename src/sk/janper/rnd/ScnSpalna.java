@@ -2,6 +2,7 @@ package sk.janper.rnd;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.opengl.PShader;
 import toxi.geom.Vec3D;
 import toxi.physics.VerletPhysics;
 import toxi.physics.behaviors.GravityBehavior;
@@ -121,9 +122,9 @@ public class ScnSpalna implements Scene {
                 Vec3D direction = new Vec3D(0, 0, 100);
                 GravityBehavior gravity = new GravityBehavior(gravityVector);
                 Rod rod = new Rod(parent, position, direction, gravity);
-                int topColour = parent.lerpColor(parent.color(8, 204, 135), parent.color(125, 90, 7), parent.map(x, 0, xSteps - 1, 0, 1));
-                int bottomColour = parent.lerpColor(parent.color(0, 255, 255), parent.color(255, 0, 255), parent.map(x, 0, xSteps - 1, 0, 1));
-                int colour = parent.lerpColor(topColour, bottomColour, parent.map(y, 0, ySteps - 1, 0, 1));
+                int topColour = parent.lerpColor(parent.color(8, 204, 135), parent.color(125, 90, 7), PApplet.map(x, 0, xSteps - 1, 0, 1));
+                int bottomColour = parent.lerpColor(parent.color(0, 255, 255), parent.color(255, 0, 255), PApplet.map(x, 0, xSteps - 1, 0, 1));
+                int colour = parent.lerpColor(topColour, bottomColour, PApplet.map(y, 0, ySteps - 1, 0, 1));
                 rod.setColour(colour);
                 rod.calculate();
                 fur.add(rod);
@@ -139,22 +140,12 @@ public class ScnSpalna implements Scene {
     }
 
     @Override
-    public PGraphics getBack(){
-        return null;
-    }
-
-    @Override
-    public PGraphics getFront(){
-        return null;
-    }
-
-    @Override
     public int getCounter() {
         return 0;
     }
 
     @Override
-    public float getOpacity() {
-        return 1f;
+    public PShader getShader() {
+        return null;
     }
 }

@@ -1,6 +1,7 @@
 package sk.janper.rnd;
 
 import processing.core.PGraphics;
+import processing.opengl.PShader;
 
 /**
  * Created by Jan on 06.10.2015.
@@ -15,9 +16,10 @@ public interface Scene {
     void jitter();
     void mode(int which);
     void setBGColour(int colour);
-    boolean isPlaying();
-    PGraphics getBack();
-    PGraphics getFront();
     int getCounter();
-    float getOpacity();
+
+    boolean isPlaying();
+
+    PShader getShader();
+
 }

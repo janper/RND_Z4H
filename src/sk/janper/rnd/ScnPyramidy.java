@@ -1,11 +1,11 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PShape;
+import processing.opengl.PShader;
 import toxi.geom.Vec3D;
-import toxi.physics.VerletPhysics;
-import toxi.physics.behaviors.GravityBehavior;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,12 +16,10 @@ import java.util.stream.Collectors;
  * Created by Jan on 10.10.2015.
  */
 public class ScnPyramidy implements Scene {
-    private final String name = "Pyramídy";
-    private PApplet parent;
-
     public static final Vec3D SIZE = new Vec3D(100f, 50f, 100f);
+    private final String name = "Pyramídy";
     public ArrayList <Block> blocks = new ArrayList<Block>();
-
+    private PApplet parent;
     private int which = 0;
     private boolean showUnder = false;
 
@@ -154,7 +152,7 @@ public class ScnPyramidy implements Scene {
     }
 
     private PShape makeShape(Vec3D size, int strokeColour, int fillColour, float strokeWeight){
-        PShape completeShape = parent.createShape(parent.GROUP);
+        PShape completeShape = parent.createShape(PConstants.GROUP);
         PShape a;
 
         a = parent.createShape();
@@ -166,7 +164,7 @@ public class ScnPyramidy implements Scene {
         a.vertex(0 - size.x / 2, 0 + size.y / 2, 0 - size.z / 2);
         a.vertex(0 + size.x / 2, 0 + size.y / 2, 0 - size.z / 2);
         a.vertex(0 + size.x / 2, 0 - size.y / 2, 0 - size.z / 2);
-        a.endShape(parent.CLOSE);
+        a.endShape(PConstants.CLOSE);
         completeShape.addChild(a);
 
         a = parent.createShape();
@@ -178,7 +176,7 @@ public class ScnPyramidy implements Scene {
         a.vertex(0 - size.x / 2, 0 + size.y / 2, 0 + size.z / 2);
         a.vertex(0 + size.x / 2, 0 + size.y / 2, 0 + size.z / 2);
         a.vertex(0 + size.x / 2, 0 - size.y / 2, 0 + size.z / 2);
-        a.endShape(parent.CLOSE);
+        a.endShape(PConstants.CLOSE);
         completeShape.addChild(a);
 
         a = parent.createShape();
@@ -190,7 +188,7 @@ public class ScnPyramidy implements Scene {
         a.vertex(0 - size.x / 2, 0 + size.y / 2, 0 - size.z / 2);
         a.vertex(0 - size.x / 2, 0 + size.y / 2, 0 + size.z / 2);
         a.vertex(0 - size.x / 2, 0 - size.y / 2, 0 + size.z / 2);
-        a.endShape(parent.CLOSE);
+        a.endShape(PConstants.CLOSE);
         completeShape.addChild(a);
 
         a = parent.createShape();
@@ -202,7 +200,7 @@ public class ScnPyramidy implements Scene {
         a.vertex(0 + size.x / 2, 0 - size.y / 2, 0 - size.z / 2);
         a.vertex(0 + size.x / 2, 0 - size.y / 2, 0 + size.z / 2);
         a.vertex(0 + size.x / 2, 0 + size.y / 2, 0 + size.z / 2);
-        a.endShape(parent.CLOSE);
+        a.endShape(PConstants.CLOSE);
         completeShape.addChild(a);
 
         a = parent.createShape();
@@ -214,7 +212,7 @@ public class ScnPyramidy implements Scene {
         a.vertex(0 + size.x / 2, 0 + size.y / 2, 0 - size.z / 2);
         a.vertex(0 + size.x / 2, 0 + size.y / 2, 0 + size.z / 2);
         a.vertex(0 - size.x / 2, 0 + size.y / 2, 0 + size.z / 2);
-        a.endShape(parent.CLOSE);
+        a.endShape(PConstants.CLOSE);
         completeShape.addChild(a);
 
         a = parent.createShape();
@@ -226,20 +224,10 @@ public class ScnPyramidy implements Scene {
         a.vertex(0 + size.x / 2, 0 - size.y / 2, 0 - size.z / 2);
         a.vertex(0 + size.x / 2, 0 - size.y / 2, 0 + size.z / 2);
         a.vertex(0 - size.x / 2, 0 - size.y / 2, 0 + size.z / 2);
-        a.endShape(parent.CLOSE);
+        a.endShape(PConstants.CLOSE);
         completeShape.addChild(a);
 
         return completeShape;
-    }
-
-    @Override
-    public PGraphics getBack(){
-        return null;
-    }
-
-    @Override
-    public PGraphics getFront(){
-        return null;
     }
 
     @Override
@@ -248,7 +236,7 @@ public class ScnPyramidy implements Scene {
     }
 
     @Override
-    public float getOpacity() {
-        return 1f;
+    public PShader getShader() {
+        return null;
     }
 }

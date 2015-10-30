@@ -1,7 +1,9 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PGraphics;
+import processing.opengl.PShader;
 import toxi.geom.Vec2D;
 
 import java.util.ArrayList;
@@ -113,7 +115,7 @@ public class ScnKruhy implements Scene {
             float randomRadius = parent.random(lastRadius / 4, lastRadius / 2);
             targetRadii.add(randomRadius);
             lastRadius = randomRadius;
-            targetSpeed.add(parent.random(-parent.PI / ((this.depth - i) * 10), parent.PI / ((this.depth - i) * 10)));
+            targetSpeed.add(parent.random(-PConstants.PI / ((this.depth - i) * 10), PConstants.PI / ((this.depth - i) * 10)));
         }
     }
 
@@ -131,8 +133,8 @@ public class ScnKruhy implements Scene {
         currentSpeed.clear();
 
         for (int i=0 ; i<this.depth; i++){
-            currentRadii.add(parent.map(step, 0, transitionSteps, originalRadii.get(i), targetRadii.get(i)));
-            currentSpeed.add(parent.map(step, 0, transitionSteps, originalSpeed.get(i), targetSpeed.get(i)));
+            currentRadii.add(PApplet.map(step, 0, transitionSteps, originalRadii.get(i), targetRadii.get(i)));
+            currentSpeed.add(PApplet.map(step, 0, transitionSteps, originalSpeed.get(i), targetSpeed.get(i)));
         }
     }
 
@@ -171,16 +173,16 @@ public class ScnKruhy implements Scene {
         ArrayList<Vec2D> points = getPoints(count);
         buffer.pushStyle();
         buffer.strokeWeight(4f);
-        buffer.beginShape(parent.POINTS);
+        buffer.beginShape(PConstants.POINTS);
         buffer.noFill();
 
         int fade = 100;
         for (int i=0; i<points.size();i++){
             if (i>=0 && i<=fade){
-                buffer.stroke(parent.lerpColor(parent.color(255, 0), parent.color(255, 255), parent.map(i, 0, fade, 0, 1)));
+                buffer.stroke(parent.lerpColor(parent.color(255, 0), parent.color(255, 255), PApplet.map(i, 0, fade, 0, 1)));
             } else{
                 if (i>=points.size()-fade && i<=points.size()){
-                    buffer.stroke (parent.lerpColor(parent.color(255, 0), parent.color(255, 255), parent.map(i, points.size() - fade, points.size(), 1, 0)));
+                    buffer.stroke(parent.lerpColor(parent.color(255, 0), parent.color(255, 255), PApplet.map(i, points.size() - fade, points.size(), 1, 0)));
                 }else{
                     buffer.stroke(255);
                 }
@@ -197,22 +199,12 @@ public class ScnKruhy implements Scene {
     }
 
     @Override
-    public PGraphics getBack(){
-        return null;
-    }
-
-    @Override
-    public PGraphics getFront(){
-        return null;
-    }
-
-    @Override
     public int getCounter() {
         return 0;
     }
 
     @Override
-    public float getOpacity() {
-        return 1f;
+    public PShader getShader() {
+        return null;
     }
 }

@@ -1,6 +1,8 @@
 package sk.janper.rnd;
 
-import processing.core.*;
+import processing.core.PApplet;
+import processing.core.PGraphics;
+import processing.core.PImage;
 import processing.opengl.PShader;
 
 import java.awt.*;
@@ -8,29 +10,23 @@ import java.util.ArrayList;
 
 public class ProcessingSketch extends PApplet{
 
+    private final int SCENES = 1;
+    int WIDTH, HEIGHT;
     private boolean record = false;
     private int[] bgColors = {color(0),color(32), color(64), color(128), color(192), color(255), color(222,177,143), color(209,175,140), color(199,172,143), color (195,171,147), color(186,171,150), color(181,172,155), color(175,173,160), color(173,176, 165), color(173,180,173), color(172,187,182), color(175,195, 193), color(175,203, 204), color(180,214, 215), color(186,226,226), color(195,237, 236)};
     private int currentBgColor = 0;
     private int cycleDir = 1;
-    
     private ArrayList<Scene> scenes = new ArrayList<>();
     private int whichScene = 0;
     private Scene scene;
-
-    private final int SCENES = 1;
     private PShader blurShader;
     private boolean blur = false;
-
     private PGraphics back;
     private PGraphics front;
     private PGraphics buffer;
-
     private PGraphics blank;
     private PGraphics white;
-
     private PShader mixShader;
-
-    int WIDTH, HEIGHT;
 
     public void init(){
         GraphicsDevice devices[] = getDevices();
@@ -129,23 +125,17 @@ public class ProcessingSketch extends PApplet{
         if (frameCount>SCENES+2) {
             scene.setBGColour(bgColors[currentBgColor]);
 
-            back=scene.getBack();
             scene.display(buffer);
-            front=scene.getFront();
 
-            PImage a = (back==null)?blank.get():back.get();
             PImage b = (buffer==null)?blank.get():buffer.get();
-            PImage c = (front==null)?blank.get():front.get();
 
-            mixShader.set("b", b);
-            mixShader.set("c", c);
+            PShader shader = scene.getShader();
 
-            mixShader.set("bOpacity", scene.getOpacity());
-            shader(mixShader);
+            if (shader != null) {
+                shader(shader);
+            }
 
-            image (a, 0,0,width, height);
-//            image (b, 0,0,width, height);
-//            image (c, 0,0,width, height);
+            image(b, 0, 0, width, height);
 
             resetShader();
 

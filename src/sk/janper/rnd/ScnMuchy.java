@@ -2,6 +2,7 @@ package sk.janper.rnd;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.opengl.PShader;
 import toxi.geom.Vec3D;
 
 import java.util.ArrayList;
@@ -10,13 +11,10 @@ import java.util.ArrayList;
  * Created by Jan on 06.10.2015.
  */
 public class ScnMuchy implements Scene {
-    private PApplet parent;
-
     public ArrayList<Fly> flies;
     public int numFlies = 100;
-
     public String name = "Muchy";
-
+    private PApplet parent;
     private boolean move = false;
     private int bgColour;
 
@@ -81,22 +79,12 @@ public class ScnMuchy implements Scene {
     }
 
     @Override
-    public PGraphics getBack(){
-        return null;
-    }
-
-    @Override
-    public PGraphics getFront(){
-        return null;
-    }
-
-    @Override
     public int getCounter() {
         return 0;
     }
 
     @Override
-    public float getOpacity() {
-        return 1f;
+    public PShader getShader() {
+        return null;
     }
 }

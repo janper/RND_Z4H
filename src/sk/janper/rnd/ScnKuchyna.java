@@ -2,6 +2,7 @@ package sk.janper.rnd;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.opengl.PShader;
 
 /**
  * Created by Jan on 08.10.2015.
@@ -19,12 +20,12 @@ public class ScnKuchyna implements Scene {
 
     private int counter;
 
-    private Buffers buffers;
+    private BufferShader bufferShader;
 
     public ScnKuchyna(PApplet parent) {
         System.out.print("Constructing "+name);
         this.parent = parent;
-        buffers = new BuffKuchyna(parent);
+        bufferShader = new BuffKuchyna(parent);
         reset();
         System.out.println(" done!");
     }
@@ -48,12 +49,10 @@ public class ScnKuchyna implements Scene {
         buffer.beginDraw();
         buffer.clear();
 
-        if (buffers.isAnim(counter)) {
-            if (moving) {
-                tapeta.update();
-            }
-            tapeta.drawWallpaperDirect(xCount, yCount, buffer);
+        if (moving) {
+            tapeta.update();
         }
+        tapeta.drawWallpaperDirect(xCount, yCount, buffer);
 
         buffer.endDraw();
     }
@@ -67,8 +66,6 @@ public class ScnKuchyna implements Scene {
         tapeta.setSegments(15);
         tapeta.setAxes(5);
         tapeta.setItemSize(150f);
-
-        buffers.reset();
 
         counter=0;
     }
@@ -96,7 +93,6 @@ public class ScnKuchyna implements Scene {
     @Override
     public String getName() {
         return name;
-
     }
 
     @Override
@@ -110,23 +106,13 @@ public class ScnKuchyna implements Scene {
     }
 
     @Override
-    public PGraphics getBack(){
-        return buffers.getBack(counter);
-    }
-
-    @Override
-    public PGraphics getFront(){
-        return buffers.getFront(counter);
-    }
-
-    @Override
-    public float getOpacity() {
-
-        return buffers.getAnimOpacity(counter);
-    }
-
-    @Override
     public int getCounter() {
         return counter;
     }
+
+    @Override
+    public PShader getShader() {
+        return bufferShader.getShader(counter);
+    }
+
 }

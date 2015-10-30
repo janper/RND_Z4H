@@ -3,6 +3,7 @@ package sk.janper.rnd;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
+import processing.opengl.PShader;
 import toxi.geom.AABB;
 import toxi.geom.Vec3D;
 
@@ -177,22 +178,12 @@ public class ScnPrechod2 implements Scene {
     }
 
     @Override
-    public PGraphics getBack(){
-        return null;
-    }
-
-    @Override
-    public PGraphics getFront(){
-        return null;
-    }
-
-    @Override
     public int getCounter() {
         return 0;
     }
 
     @Override
-    public float getOpacity() {
-        return 1f;
+    public PShader getShader() {
+        return null;
     }
 }

@@ -24,7 +24,7 @@ public class Tapeta extends PolyCurve {
 
     private float itemSize = 50f;
 
-    private PGraphics pg;
+//    private PGraphics pg;
     private PImage outImg;
     private PGraphics pattern;
     private boolean smooth = true;
@@ -34,10 +34,10 @@ public class Tapeta extends PolyCurve {
         this.parent = parent;
         this.randomizeAngles();
         setItemSize(itemSize);
-        pg = parent.createGraphics(parent.width, parent.height);
-        pg.smooth();
+//        pg = parent.createGraphics(parent.width, parent.height);
+//        pg.smooth();
 //        outImg = parent.createImage((int)parent.width, (int)parent.height);
-        outImg = pg.get();
+//        outImg = pg.get();
     }
 
     public int getAxes() {
@@ -129,52 +129,53 @@ public class Tapeta extends PolyCurve {
         tempPG.endShape();
     }
 
-    public PImage drawWallpaper (int xCount, int yCount){
-//        pg = parent.createGraphics(parent.width, parent.height);
-//        pg.smooth();
-//        pg.clear();
-//        pg.background(32);
-
-        for (int y = 0; y<outImg.height; y++){
-            for (int x = 0; x<outImg.width; x++){
-                outImg.set(x, y, parent.color(0f,0f,0f,0f));
-            }
-        }
-
-        pattern = parent.createGraphics((int)itemSize, (int)itemSize);
-        pattern.smooth();
-
-        pattern.stroke(lineColor);
-        pattern.strokeWeight(lineWidth);
-        pattern.noFill();
-        pattern.translate(itemSize / 2, itemSize / 2);
-
-        for (int step = 0; step < axes; step++) {
-            float angle = (float) Math.PI * 2 / axes * step;
-            this.setRotation(angle);
-            this.setReflect(false);
-            drawPolyLine(pattern, this.getCurrentPointPositions());
-            this.setReflect(true);
-            drawPolyLine(pattern, this.getCurrentPointPositions());
-        }
-
-        PImage img = pattern.get();
-
-        float xStep = (pg.width-itemSize)/(xCount-1);
-        float yStep = (pg.height-itemSize)/(yCount-1);
-
-        for (int y=0; y<yCount; y++){
-            for (int x=0; x<xCount+y%2; x++){
-                float currentX = x*xStep-y%2*xStep/2;
-                float currentY = y*yStep;
-                outImg.copy(img, 0,0,(int)img.width, (int)img.height,(int)currentX, (int)currentY, (int)img.width, (int)img.height);
-            }
-        }
-        return outImg;
-    }
+//    public PImage drawWallpaper (int xCount, int yCount){
+////        pg = parent.createGraphics(parent.width, parent.height);
+////        pg.smooth();
+////        pg.clear();
+////        pg.background(32);
+//
+//        for (int y = 0; y<outImg.height; y++){
+//            for (int x = 0; x<outImg.width; x++){
+//                outImg.set(x, y, parent.color(0f,0f,0f,0f));
+//            }
+//        }
+//
+//        pattern = parent.createGraphics((int)itemSize, (int)itemSize);
+//        pattern.smooth();
+//
+//        pattern.stroke(lineColor);
+//        pattern.strokeWeight(lineWidth);
+//        pattern.noFill();
+//        pattern.translate(itemSize / 2, itemSize / 2);
+//
+//        for (int step = 0; step < axes; step++) {
+//            float angle = (float) Math.PI * 2 / axes * step;
+//            this.setRotation(angle);
+//            this.setReflect(false);
+//            drawPolyLine(pattern, this.getCurrentPointPositions());
+//            this.setReflect(true);
+//            drawPolyLine(pattern, this.getCurrentPointPositions());
+//        }
+//
+//        PImage img = pattern.get();
+//
+//        float xStep = (pg.width-itemSize)/(xCount-1);
+//        float yStep = (pg.height-itemSize)/(yCount-1);
+//
+//        for (int y=0; y<yCount; y++){
+//            for (int x=0; x<xCount+y%2; x++){
+//                float currentX = x*xStep-y%2*xStep/2;
+//                float currentY = y*yStep;
+//                outImg.copy(img, 0,0,(int)img.width, (int)img.height,(int)currentX, (int)currentY, (int)img.width, (int)img.height);
+//            }
+//        }
+//        return outImg;
+//    }
 
     public void drawWallpaperDirect (int xCount, int yCount, PGraphics buffer){
         pattern = parent.createGraphics((int)itemSize, (int)itemSize);
+        pattern.beginDraw();
         pattern.smooth();
 
         pattern.stroke(lineColor);
@@ -190,6 +191,7 @@ public class Tapeta extends PolyCurve {
             this.setReflect(true);
             drawPolyLine(pattern, this.getCurrentPointPositions());
         }
+        pattern.endDraw();
 
         float xStep = (parent.width-itemSize)/(xCount-1);
         float yStep = (parent.height-itemSize)/(yCount-1);

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="ant-launcher">
+    <CLASSES>
+      <root url="jar:///Applications/Processing.app/Contents/Java/ant-launcher.jar!/" />
+      <root url="jar:///Applications/Processing.app/Contents/Java/ant.jar!/" />
+      <root url="jar:///Applications/Processing.app/Contents/Java/core.jar!/" />
+      <root url="jar:///Applications/Processing.app/Contents/Java/jna.jar!/" />
+      <root url="jar:///Applications/Processing.app/Contents/Java/pde.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

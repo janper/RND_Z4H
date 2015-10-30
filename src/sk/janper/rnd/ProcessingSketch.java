@@ -11,7 +11,8 @@ import java.util.ArrayList;
 public class ProcessingSketch extends PApplet{
 
     private final int SCENES = 14;
-    int WIDTH, HEIGHT;
+    int WIDTH = 1920;
+    int HEIGHT = 1080;
     private boolean record = false;
     private int[] bgColors = {color(0),color(32), color(64), color(128), color(192), color(255), color(222,177,143), color(209,175,140), color(199,172,143), color (195,171,147), color(186,171,150), color(181,172,155), color(175,173,160), color(173,176, 165), color(173,180,173), color(172,187,182), color(175,195, 193), color(175,203, 204), color(180,214, 215), color(186,226,226), color(195,237, 236)};
     private int currentBgColor = 0;
@@ -28,7 +29,7 @@ public class ProcessingSketch extends PApplet{
     private PGraphics white;
     private PShader mixShader;
 
-    public void init(){
+    public void settings(){
         GraphicsDevice devices[] = getDevices();
 
         if((frame!=null)&&(devices.length>1)){
@@ -38,7 +39,14 @@ public class ProcessingSketch extends PApplet{
             System.out.println("frame is at "+frame.getLocation());
             frame.addNotify();
         }
-        super.init();
+
+//        setSize();
+
+        int density = displayDensity();
+
+        size(WIDTH/density, HEIGHT/density, "processing.opengl.PGraphics2D");
+        pixelDensity(density);
+        super.settings();
     }
 
     private GraphicsDevice[] getDevices(){
@@ -68,29 +76,17 @@ public class ProcessingSketch extends PApplet{
 
 
     public void setup() {
-        if (setSize()) {
-            size((int) (WIDTH * 1.75), (int) (HEIGHT * 1.75), P2D);
-        } else {
-            size(1920,1080, P2D);
-        }
+//        if (setSize()) {
+//            size((int) (WIDTH * 1.75), (int) (HEIGHT * 1.75), P2D);
+//        } else {
+//            size(1920,1080, P2D);
+//        }
+
+        buffer = createGraphics(width, height, P2D);
+
         blurShader = loadShader("blur.glsl");
-        initBuffers();
-        blank = createGraphics(width, height,P2D);
-        white = createGraphics(width, height,P2D);
-        white.beginDraw();
-        white.background(255);
-        white.endDraw();
-        mixShader = loadShader("mixShader.glsl");
 
         printInstructions();
-    }
-
-    private void initBuffers() {
-        back = createGraphics(width, height, P2D);
-        buffer = createGraphics(width, height, P3D);
-        buffer.smooth();
-        //TODO: weird smooth
-        front = createGraphics(width, height, P2D);
     }
 
     private void addScenes() {
@@ -224,7 +220,7 @@ public class ProcessingSketch extends PApplet{
                 progressbar(8f / SCENES);
                 break;
 
-            case 10:
+            case 13:
                 scenes.add(new ScnPyramidy(this));
                 progressbar(9f / SCENES);
                 break;
@@ -239,7 +235,7 @@ public class ProcessingSketch extends PApplet{
                 progressbar(11f / SCENES);
                 break;
 
-            case 13:
+            case 10:
                 scenes.add(new ScnMravce(this));
                 progressbar(12f / SCENES);
                 break;

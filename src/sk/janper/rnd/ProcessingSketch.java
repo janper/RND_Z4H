@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class ProcessingSketch extends PApplet{
 
-    private final int SCENES = 1;
+    private final int SCENES = 14;
     int WIDTH, HEIGHT;
     private boolean record = false;
     private int[] bgColors = {color(0),color(32), color(64), color(128), color(192), color(255), color(222,177,143), color(209,175,140), color(199,172,143), color (195,171,147), color(186,171,150), color(181,172,155), color(175,173,160), color(173,176, 165), color(173,180,173), color(172,187,182), color(175,195, 193), color(175,203, 204), color(180,214, 215), color(186,226,226), color(195,237, 236)};
@@ -119,6 +119,10 @@ public class ProcessingSketch extends PApplet{
 
         if (frameCount==SCENES+2){
             progressbar(1);
+            for (int i = 0; i < SCENES; i++) {
+                setScene(i);
+                scene.display(buffer);
+            }
             setScene(whichScene);
         }
 

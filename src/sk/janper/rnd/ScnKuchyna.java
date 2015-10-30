@@ -61,8 +61,8 @@ public class ScnKuchyna implements Scene {
     public void reset() {
         tapeta = new Tapeta(parent);
         tapeta.setLineColor(parent.color(255, 128));
-        tapeta.setLinear(false);
-        tapeta.setLineWidth(4f);
+        tapeta.setLinear(true);
+        tapeta.setLineWidth(2f);
         tapeta.setSegments(15);
         tapeta.setAxes(5);
         tapeta.setItemSize(150f);

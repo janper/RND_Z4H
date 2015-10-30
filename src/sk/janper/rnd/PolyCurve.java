@@ -18,7 +18,7 @@ public class PolyCurve extends Vec2D {
 
     private int segments = 10;
     private float updateFactor = 0.01f;
-    private float targetTreshold = 0.01f;
+    private float targetTreshold = 0.1f;
     private float scale = 5f;
     private float changeFrequency = 0.5f;
     private float angleSpread = (float)Math.PI/8;
@@ -102,8 +102,22 @@ public class PolyCurve extends Vec2D {
         return rotation;
     }
 
+    public void setRotation(float rotation) {
+        this.rotation = rotation;
+    }
+
     public boolean isReflect() {
         return reflect;
+    }
+
+    public void setReflect(boolean reflect) {
+        this.reflect = reflect;
+        if (this.reflect && this.reflectionPoint == null) {
+            setReflectionPoint(this);
+        }
+        if (this.reflect && this.reflectionDirection == null) {
+            setReflectionDirection(this.firstVector);
+        }
     }
 
     public int getUpdateSteps() {
@@ -113,18 +127,8 @@ public class PolyCurve extends Vec2D {
     public void setUpdateSteps(int updateSteps) {
         this.updateSteps = updateSteps;
         differenceAngles.clear();
-        for (int i=0; i<this.segments;i++){
-            this.differenceAngles.add(this.targetAngles.get(i)-this.currentAngles.get(i));
-        }
-    }
-
-    public void setReflect(boolean reflect) {
-        this.reflect = reflect;
-        if (this.reflect && this.reflectionPoint==null){
-            setReflectionPoint(this);
-        }
-        if (this.reflect && this.reflectionDirection==null){
-            setReflectionDirection(this.firstVector);
+        for (int i = 0; i < this.segments; i++) {
+            this.differenceAngles.add(this.targetAngles.get(i) - this.currentAngles.get(i));
         }
     }
 
@@ -142,10 +146,6 @@ public class PolyCurve extends Vec2D {
 
     public void setReflectionDirection(Vec2D reflectionDirection) {
         this.reflectionDirection = reflectionDirection;
-    }
-
-    public void setRotation(float rotation) {
-        this.rotation = rotation;
     }
 
     public void setAllVectors (){

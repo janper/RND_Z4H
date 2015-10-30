@@ -20,9 +20,9 @@ public class Tapeta extends PolyCurve {
 
     private PApplet parent;
     private int lineColor = 255;
-    private float lineWidth = 3f;
+    private float lineWidth = 1f;
 
-    private float itemSize = 50f;
+    private float itemSize = 25f;
 
 //    private PGraphics pg;
     private PImage outImg;
@@ -173,9 +173,10 @@ public class Tapeta extends PolyCurve {
 //        return outImg;
 //    }
 
-    public void drawWallpaperDirect (int xCount, int yCount, PGraphics buffer){
+    public void drawWallpaper (int xCount, int yCount, PGraphics buffer){
         pattern = parent.createGraphics((int)itemSize, (int)itemSize);
         pattern.beginDraw();
+
         pattern.smooth();
 
         pattern.stroke(lineColor);
@@ -191,18 +192,54 @@ public class Tapeta extends PolyCurve {
             this.setReflect(true);
             drawPolyLine(pattern, this.getCurrentPointPositions());
         }
+
         pattern.endDraw();
 
-        float xStep = (parent.width-itemSize)/(xCount-1);
-        float yStep = (parent.height-itemSize)/(yCount-1);
+        float xStep = (buffer.width-itemSize)/(xCount-1);
+        float yStep = (buffer.height-itemSize)/(yCount-1);
 
         for (int y=0; y<yCount; y++){
             for (int x=0; x<xCount+y%2; x++){
                 float currentX = x*xStep-y%2*xStep/2;
                 float currentY = y*yStep;
-                buffer.image(pattern, currentX, currentY);
+                buffer.image(pattern.get(), currentX, currentY);
             }
         }
+    }
+
+
+    public void drawWallpaperDirect (int xCount, int yCount, PGraphics buffer){
+
+        buffer.pushStyle();
+
+        buffer.stroke(lineColor);
+        buffer.strokeWeight(lineWidth);
+        buffer.noFill();
+
+        float xStep = (buffer.width-itemSize)/(xCount-1);
+        float yStep = (buffer.height-itemSize)/(yCount-1);
+
+        for (int y=0; y<yCount; y++){
+            for (int x=0; x<xCount+y%2; x++){
+                buffer.pushMatrix();
+                float currentX = x*xStep-y%2*xStep/2;
+                float currentY = y*yStep;
+
+                buffer.translate(currentX+itemSize/2, currentY+itemSize/2);
+
+                for (int step = 0; step < axes; step++) {
+                    float angle = (float) Math.PI * 2 / axes * step;
+                    this.setRotation(angle);
+                    this.setReflect(false);
+                    drawPolyLine(buffer, this.getCurrentPointPositions());
+                    this.setReflect(true);
+                    drawPolyLine(buffer, this.getCurrentPointPositions());
+                }
+                buffer.popMatrix();
+            }
+        }
+        buffer.popStyle();
+        buffer.endDraw();
     }
 
 }

@@ -55,7 +55,7 @@ public class ScnPrechod2 implements Scene {
         if (moving) {
             check();
             lights.forEach(l -> {
-                l.update();
+                l.update(1f);
             });
         }
 

@@ -19,9 +19,19 @@ public class ScnPrechod1 implements Scene {
 
     private Vec3D direction = new Vec3D( 0, 0, (float)Math.random()*5f+5f);
 
+    private float speed = 1f;
+
     private AABB limits = new AABB();
 
     private String name = "Prechod 1";
+    private int mode = 0;
+
+    private Vec3D currentEye;
+    private Vec3D targetEye;
+
+    private Vec3D FRONTAL;
+    private Vec3D SIDEWAYS;
+    private final float TRANSTITION_SPEED = 0.1f;
 
     public ScnPrechod1(PApplet parent) {
         System.out.print("Constructing "+name);
@@ -29,6 +39,12 @@ public class ScnPrechod1 implements Scene {
         limits.set(new Vec3D(parent.width / 2, parent.height / 2, 0));
         limits.setExtent(new Vec3D (3500,1000,4000));
         reset();
+        FRONTAL = new Vec3D(parent.width / 2f, 2f*parent.height / 3f, limits.z+limits.getExtent().z/4f);
+        SIDEWAYS = new Vec3D (-parent.width , 2f*parent.height / 3f, limits.z);
+
+        currentEye = FRONTAL.copy();
+        targetEye = FRONTAL.copy();
+
         System.out.println(" done!");
     }
 
@@ -39,12 +55,14 @@ public class ScnPrechod1 implements Scene {
     public void display(PGraphics buffer){
         if (moving) {
             check();
-            lights.forEach(l -> {
-                l.update();
-            });
+            lights.forEach(l -> l.update(speed));
+            currentEye.interpolateToSelf(targetEye, TRANSTITION_SPEED);
         }
         buffer.beginDraw();
         buffer.clear();
+
+        buffer.camera(currentEye.x, currentEye.y, currentEye.z, limits.x, limits.y+parent.height/4f, limits.z, 0f, 1f, 0f);
+
         lights.forEach(l -> {
             l.display(buffer);
         });
@@ -60,7 +78,16 @@ public class ScnPrechod1 implements Scene {
     }
 
     public void mode(int which){
-
+        System.out.println("Mode: "+which);
+        mode = which;
+        if (mode==0){
+            targetEye = FRONTAL;
+            speed=1f;
+        }
+        if (mode==1){
+            targetEye = SIDEWAYS;
+            speed=0.1f;
+        }
     }
 
     public void jitter(){

@@ -34,7 +34,7 @@ public class ScnPrechod implements Scene {
         if (moving) {
             check(-9000, 560);
             lights.forEach(l -> {
-                l.update();
+                l.update(1f);
             });
         }
         buffer.beginDraw();

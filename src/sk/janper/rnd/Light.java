@@ -105,8 +105,8 @@ public class Light extends Vec3D {
 
 
 
-    public void update(){
-        this.addSelf(motionVector);
+    public void update(float speed){
+        this.addSelf(motionVector.scale(speed));
         motionVector.interpolateToSelf(ideal, 0.1f);
 //        System.out.print("Motion: " + motionVector.toString());
 //        System.out.println(" Ideal: " + ideal.toString());

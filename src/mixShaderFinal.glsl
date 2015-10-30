@@ -43,7 +43,7 @@ varying vec4 vertColor;
 varying vec4 vertTexCoord;
 
 vec4 bendCurrent (vec4 c, sampler2D s, float o){
-    vec4 a = texture2D(s, vertTexCoord.st);
+    vec4 a = texture2D(s, vec2(vertTexCoord.s, 1.0-vertTexCoord.t) );
     return mix (c, vec4(a.rgb,1.0), a.a*o);
 }
 

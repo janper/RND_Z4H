@@ -2,7 +2,6 @@ package sk.janper.rnd;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
-import processing.core.PImage;
 import processing.opengl.PShader;
 
 import java.awt.*;
@@ -10,7 +9,7 @@ import java.util.ArrayList;
 
 public class ProcessingSketch extends PApplet{
 
-    private final int SCENES = 14;
+    private final int SCENES = 11;
     int WIDTH = 1920;
     int HEIGHT = 1080;
     private boolean record = false;
@@ -22,12 +21,7 @@ public class ProcessingSketch extends PApplet{
     private Scene scene;
     private PShader blurShader;
     private boolean blur = false;
-    private PGraphics back;
-    private PGraphics front;
     private PGraphics buffer;
-    private PGraphics blank;
-    private PGraphics white;
-    private PShader mixShader;
 
     public void settings(){
         GraphicsDevice devices[] = getDevices();
@@ -44,8 +38,11 @@ public class ProcessingSketch extends PApplet{
 
         int density = displayDensity();
 
-        size(WIDTH/density, HEIGHT/density, "processing.opengl.PGraphics2D");
+        System.out.println("Density: "+density);
+
+        size(WIDTH, HEIGHT, "processing.opengl.PGraphics2D");
         pixelDensity(density);
+
         super.settings();
     }
 
@@ -76,37 +73,12 @@ public class ProcessingSketch extends PApplet{
 
 
     public void setup() {
-//        if (setSize()) {
-//            size((int) (WIDTH * 1.75), (int) (HEIGHT * 1.75), P2D);
-//        } else {
-//            size(1920,1080, P2D);
-//        }
-
-        buffer = createGraphics(width, height, P2D);
-
+        buffer = createGraphics(width, height, P3D);
         blurShader = loadShader("blur.glsl");
-
         printInstructions();
     }
 
-    private void addScenes() {
-        scenes.add(new ScnUmyvarka(this));
-        scenes.add(new ScnPrechod1(this));
-        scenes.add(new ScnPrechod2(this));
-        scenes.add(new ScnKlenotnictvo(this));
-        scenes.add(new ScnMuchy(this));
-        scenes.add(new ScnUrad(this));
-        scenes.add(new ScnBoh(this));
-        scenes.add(new ScnSpalna(this));
-        scenes.add(new ScnPyramidy(this));
-    }
-
     public void draw (){
-//        blank.beginDraw();
-//        blank.clear();
-//        blank.background(bgColors[currentBgColor]);
-//        blank.endDraw();
-
         background(bgColors[currentBgColor]);
 
         if (frameCount<SCENES+2) {
@@ -124,10 +96,7 @@ public class ProcessingSketch extends PApplet{
 
         if (frameCount>SCENES+2) {
             scene.setBGColour(bgColors[currentBgColor]);
-
             scene.display(buffer);
-
-            PImage b = (buffer==null)?blank.get():buffer.get();
 
             PShader shader = scene.getShader();
 
@@ -135,44 +104,16 @@ public class ProcessingSketch extends PApplet{
                 shader(shader);
             }
 
-            image(b, 0, 0, width, height);
-
+            image(buffer, 0, 0, width, height);
             resetShader();
 
             if (blur){
                 filter(blurShader);
             }
-
             recordIfNeeded();
         }
 
     }
-
-
-//    public void draw (){
-//
-//        background(bgColors[currentBgColor]);
-//
-//        if (frameCount<SCENES+2) {
-//            loadScene();
-//        }
-//
-//        if (frameCount==SCENES+2){
-//            progressbar(1);
-//            setScene(whichScene);
-//        }
-//
-//        if (frameCount>SCENES+2) {
-//            scene.setBGColour(bgColors[currentBgColor]);
-//
-//            image (buffer, 0,0,width, height);
-//            if (blur){
-//                filter(blurShader);
-//            }
-//            recordIfNeeded();
-//        }
-//
-//    }
 
     private void loadScene() {
         switch(frameCount) {
@@ -190,10 +131,10 @@ public class ProcessingSketch extends PApplet{
                 progressbar(2f / SCENES);
                 break;
 
-            case 4:
-                scenes.add(new ScnPrechod2(this));
-                progressbar(3f / SCENES);
-                break;
+//            case 4:
+//                scenes.add(new ScnPrechod2(this));
+//                progressbar(3f / SCENES);
+//                break;
 
             case 5:
                 scenes.add(new ScnKlenotnictvo(this));
@@ -220,7 +161,7 @@ public class ProcessingSketch extends PApplet{
                 progressbar(8f / SCENES);
                 break;
 
-            case 13:
+            case 10:
                 scenes.add(new ScnPyramidy(this));
                 progressbar(9f / SCENES);
                 break;
@@ -235,31 +176,15 @@ public class ProcessingSketch extends PApplet{
                 progressbar(11f / SCENES);
                 break;
 
-            case 10:
+            case 13:
                 scenes.add(new ScnMravce(this));
                 progressbar(12f / SCENES);
                 break;
 
-            case 14:
+            case 4:
                 scenes.add(new ScnUmyvarka(this));
                 progressbar(1f / SCENES);
                 break;
-
-//
-//            case 15:
-//                scenes.add(new ScnPrechod1(this));
-//                progressbar(14f / SCENES);
-//                break;
-//
-//            case 16:
-//                scenes.add(new ScnPrechod1(this));
-//                progressbar(15f / SCENES);
-//                break;
-//
-//            case 17:
-//                scenes.add(new ScnPrechod1(this));
-//                progressbar(16f / SCENES);
-//                break;
         }
     }
 
@@ -281,6 +206,7 @@ public class ProcessingSketch extends PApplet{
         if (scene!=null){
             playing = scene.isPlaying();
             scene.stop();
+            buffer.camera(width / 2f, height / 2f, (height / 2f) / tan(PI * 30f / 180f), width / 2f, height / 2f, 0, 0, 1, 0);
         }
         int index = Math.abs(which % scenes.size());
         scene = scenes.get(index);

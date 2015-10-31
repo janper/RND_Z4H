@@ -23,24 +23,44 @@ public class Block extends Vec3D {
     private ArrayList<Block> everything;
     private int layer;
     private PApplet parent;
+    private int strokeColour;
+    private int bgColour;
+    private float strokeWeight;
 //    private int fillColour = 32;
 //    private float strokeWeight  = 5f;
 //    private int strokeColour = 255;
 
-    public Block(PApplet parent, ReadonlyVec3D readonlyVec3D, int layer, Vec3D size, ArrayList<Block> everything) {
+    public Block(PApplet parent, ReadonlyVec3D readonlyVec3D, int layer, Vec3D size, ArrayList<Block> everything, int colour, float weight, int bgColour) {
         super(readonlyVec3D);
         this.layer = layer;
         this.parent = parent;
         this.everything = everything;
         this.size = size;
         this.originalPosition = this.copy();
+        this.strokeColour = colour;
+        this.strokeWeight=weight;
+        this.bgColour = bgColour;
 
         if (this.layer>0) {
             addBelow();
         }
     }
 
+    public int getStrokeColour() {
+        return strokeColour;
+    }
 
+    public void setStrokeColour(int strokeColour) {
+        this.strokeColour = strokeColour;
+    }
+
+    public float getStrokeWeight() {
+        return strokeWeight;
+    }
+
+    public void setStrokeWeight(float strokeWeight) {
+        this.strokeWeight = strokeWeight;
+    }
 
     private void addBelow() {
         float nextX = this.size.x / 2;
@@ -48,10 +68,10 @@ public class Block extends Vec3D {
         float nextZ = this.size.z / 2;
 
         ArrayList<Block> children = new ArrayList<Block>();
-        children.add(new Block(this.parent, new Vec3D(this.x + nextX, this.y + nextY, this.z + nextZ), this.layer-1, this.size, this.everything));
-        children.add(new Block(this.parent, new Vec3D(this.x - nextX, this.y + nextY, this.z + nextZ), this.layer - 1, this.size, this.everything));
-        children.add(new Block(this.parent, new Vec3D(this.x + nextX, this.y + nextY, this.z - nextZ), this.layer - 1, this.size, this.everything));
-        children.add(new Block(this.parent, new Vec3D(this.x - nextX, this.y + nextY, this.z - nextZ), this.layer - 1, this.size, this.everything));
+        children.add(new Block(this.parent, new Vec3D(this.x + nextX, this.y + nextY, this.z + nextZ), this.layer-1, this.size, this.everything, strokeColour, strokeWeight, bgColour));
+        children.add(new Block(this.parent, new Vec3D(this.x - nextX, this.y + nextY, this.z + nextZ), this.layer - 1, this.size, this.everything, strokeColour, strokeWeight, bgColour));
+        children.add(new Block(this.parent, new Vec3D(this.x + nextX, this.y + nextY, this.z - nextZ), this.layer - 1, this.size, this.everything, strokeColour, strokeWeight, bgColour));
+        children.add(new Block(this.parent, new Vec3D(this.x - nextX, this.y + nextY, this.z - nextZ), this.layer - 1, this.size, this.everything, strokeColour, strokeWeight, bgColour));
 
 //        long startTime = System.currentTimeMillis();
 //        int unique = 0;
@@ -88,18 +108,29 @@ public class Block extends Vec3D {
     }
 
     public void display(PGraphics buffer){
-        if (this.shape ==null) {
-            displayDots(buffer);
-        } else {
+//        if (this.shape ==null) {
+//            displayDots(buffer);
+//        } else {
             displayShapes(buffer);
-        }
+//        }
     }
 
     public void displayShapes(PGraphics buffer) {
         if (this.used) {
+//            System.out.print(".");
             buffer.pushMatrix();
+            buffer.pushStyle();
             buffer.translate(this.x, this.y, this.z);
-            buffer.shape(this.shape);
+//            buffer.shape(this.shape);
+
+            buffer.noFill();
+            buffer.stroke(strokeColour);
+            buffer.strokeWeight(strokeWeight);
+            buffer.fill(bgColour);
+            buffer.box(size.x, size.y, size.x);
+//            System.out.println("Weight: "+strokeWeight+" Colour: "+strokeColour+" Position: "+this.toString()+" Size: "+size.toString());
+
+            buffer.popStyle();
             buffer.popMatrix();
         }
     }

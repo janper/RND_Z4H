@@ -81,6 +81,8 @@ public class ProcessingSketch extends PApplet{
     public void draw (){
         background(bgColors[currentBgColor]);
 
+
+
         if (frameCount<SCENES+2) {
             loadScene();
         }
@@ -146,10 +148,10 @@ public class ProcessingSketch extends PApplet{
                 progressbar(5f / SCENES);
                 break;
 
-            case 7:
-                scenes.add(new ScnUrad(this));
-                progressbar(6f / SCENES);
-                break;
+//            case 7:
+//                scenes.add(new ScnUrad(this));
+//                progressbar(6f / SCENES);
+//                break;
 
             case 8:
                 scenes.add(new ScnBoh(this));

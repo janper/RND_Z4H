@@ -11,9 +11,10 @@ import java.util.ArrayList;
 /**
  * Created by Jan on 08.10.2015.
  */
+
 public class ScnKruhy implements Scene {
     private PApplet parent;
-    private String name = "Kruhy v obilí";
+    private String name = "Kruhy v obilï¿½";
     private int bgColour;
 
     private boolean moving = false;
@@ -194,6 +195,7 @@ public class ScnKruhy implements Scene {
     }
 
     public void randomize() {
+        //TODO: strange behavior
         setOriginal();
         randomizeTarget();
     }

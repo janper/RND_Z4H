@@ -7,44 +7,34 @@ import processing.opengl.PShader;
 import java.util.ArrayList;
 
 /**
- * Created by Jan on 28.10.2015.
+ * Created by rndzvuk on 31.10.15.
  */
-public class BuffKuchyna implements BufferShader {
+public class BufferPrechod1 implements BufferShader{
+
     private final float BACK_START = 0f;
     private final float PHASE_0 = 1f;  //initial fade-in
-    private final float PHASE_1 = 1f;  //shelf fade-in
-    private final float PHASE_2 = 1f;  //microwave fade-in
-    private final float PHASE_3 = 1f;  //stuff fade-in
-    private final float PHASE_4 = 1f;  //cloth fade-in
-    private final float PHASE_5 = 4f;  //just wait
-    private final float FRONT_START = BACK_START + PHASE_0 + PHASE_1 + PHASE_2 + PHASE_3 + PHASE_4 + PHASE_5;
-    private final float PHASE_6 = 1f;  //front fade-in
-    private final float BUFFER_START = FRONT_START + PHASE_6;
+    private final float PHASE_1 = 1f;  //cars fade-in
+    private final float PHASE_2 = 1f;  //zebra fade-in
+    private final float PHASE_3 = 2f;  //just wait
+    private final float PHASE_4 = 1f;  //remove cars
+    private final float BUFFER_START = BACK_START + PHASE_0+ PHASE_1+ PHASE_2+ PHASE_3+ PHASE_4;
     private final float BUFFER_FADE_IN = 1f;    //photo blending
-    private final float PHASE_7 = 10f; //just wait
-    private final float PHASE_8 = 4f;  //back fade-out
-    private final float BACK_END = BUFFER_START + PHASE_7 + PHASE_8;
-    private final float PHASE_9 = 10f; //just wait
-    private final float PHASE_10 = 4f; //front fade-out
-    private final float FRONT_END = BACK_END + PHASE_9 + PHASE_10;
+    private final float PHASE_5 = 10f; //just wait
+    private final float PHASE_6 = 1f;  //back fade-out
+    private final float BACK_END = BUFFER_START + PHASE_5 + PHASE_6;
     private PApplet parent;
     private int counter = 0;
-    private String backImageNames[] = {"kuchyna_back_0.png", "kuchyna_back_1.png", "kuchyna_back_2.png", "kuchyna_back_3.png", "kuchyna_back_4.png"};
-    private String frontImageNames[] = {"kuchyna_front_0.png"};
+    private String backImageNames[] = {"prechod_back_0.png", "prechod_back_2.png", "prechod_back_1.png"};
     private ArrayList<PImage> backImages = new ArrayList<>();
     private ArrayList<Float> backOpacities = new ArrayList<>();
-    private ArrayList<PImage> frontImages = new ArrayList<>();
-    private ArrayList<Float> frontOpacities = new ArrayList<>();
     private float globalOpacity = 1f;
     private PShader shader;
     private int FPS = 60;
 
-
-    public BuffKuchyna(PApplet parent) {
+    public BufferPrechod1(PApplet parent) {
         this.parent = parent;
         make();
     }
-
     private void make() {
         //back
 
@@ -57,56 +47,33 @@ public class BuffKuchyna implements BufferShader {
             backOpacities.add(0f);
         }
 
-        int frontCount = (frontImageNames.length > 5) ? 5 : frontImageNames.length;
-        for (int i = 0; i < frontCount; i++) {
-            PImage tempImage = parent.loadImage(frontImageNames[i]);
-            frontImages.add(tempImage);
-            frontOpacities.add(0f);
-        }
-
         updateImages();
         updateOpacities();
 
     }
-
     private void updateOpacities() {
-//        System.out.println("b: "+backOpacities);
-//        System.out.println("f: "+frontOpacities);
 
         shader.set("bCount", backOpacities.size());
-        shader.set("fCount", frontOpacities.size());
 
         for (int i = 0; i < backOpacities.size(); i++) {
             shader.set("b" + i + "Opacity", backOpacities.get(i));
-        }
-
-        for (int i = 0; i < frontOpacities.size(); i++) {
-            shader.set("f" + i + "Opacity", frontOpacities.get(i));
         }
 
         shader.set("opacity", globalOpacity);
 
         shader.set("textureOpacity", getAnimOpacity());
     }
-
     private void updateImages() {
         shader.set("bCount", backImages.size());
-        shader.set("fCount", frontImages.size());
 
         for (int i = 0; i < backImages.size(); i++) {
             shader.set("b" + i, backImages.get(i));
         }
-
-        for (int i = 0; i < frontImages.size(); i++) {
-            shader.set("f" + i, frontImages.get(i));
-        }
     }
-
     @Override
     public boolean isAnim(int counter) {
         return counter >= BUFFER_START * FPS;
     }
-
     @Override
     public float getAnimOpacity() {
         if (isAnim(counter)) {
@@ -115,10 +82,8 @@ public class BuffKuchyna implements BufferShader {
             return 0f;
         }
     }
-
     @Override
     public void makeBack() {
-
         float top;
         float bottom;
 
@@ -130,9 +95,6 @@ public class BuffKuchyna implements BufferShader {
                 backOpacities.set(0, PApplet.map(counter, bottom, top, 0f, 1f));
                 backOpacities.set(1, 0f);
                 backOpacities.set(2, 0f);
-                backOpacities.set(3, 0f);
-                backOpacities.set(4, 0f);
-
             }
 
             bottom = (BACK_START + PHASE_0) * FPS;
@@ -141,8 +103,6 @@ public class BuffKuchyna implements BufferShader {
                 backOpacities.set(0, 1f);
                 backOpacities.set(1, PApplet.map(counter, bottom, top, 0f, 1f));
                 backOpacities.set(2, 0f);
-                backOpacities.set(3, 0f);
-                backOpacities.set(4, 0f);
             }
 
             bottom = (BACK_START + PHASE_0 + PHASE_1) * FPS;
@@ -151,8 +111,6 @@ public class BuffKuchyna implements BufferShader {
                 backOpacities.set(0, 1f);
                 backOpacities.set(1, 1f);
                 backOpacities.set(2, PApplet.map(counter, bottom, top, 0f, 1f));
-                backOpacities.set(3, 0f);
-                backOpacities.set(4, 0f);
             }
 
             bottom = (BACK_START + PHASE_0 + PHASE_1 + PHASE_2) * FPS;
@@ -161,83 +119,49 @@ public class BuffKuchyna implements BufferShader {
                 backOpacities.set(0, 1f);
                 backOpacities.set(1, 1f);
                 backOpacities.set(2, 1f);
-                backOpacities.set(3, PApplet.map(counter, bottom, top, 0f, 1f));
-                backOpacities.set(4, 0f);
             }
 
             bottom = (BACK_START + PHASE_0 + PHASE_1 + PHASE_2 + PHASE_3) * FPS;
             top = (BACK_START + PHASE_0 + PHASE_1 + PHASE_2 + PHASE_3 + PHASE_4) * FPS;
             if ((counter >= bottom) && (counter <= top)) {
                 backOpacities.set(0, 1f);
-                backOpacities.set(1, 1f);
+                backOpacities.set(1, PApplet.map(counter, bottom, top, 1f, 0f));
                 backOpacities.set(2, 1f);
-                backOpacities.set(3, 1f);
-                backOpacities.set(4, PApplet.map(counter, bottom, top, 0f, 1f));
             }
 
-            bottom = (BACK_START + PHASE_0 + PHASE_1 + PHASE_2 + PHASE_3 + PHASE_4) * FPS;
-            top = (BACK_START + PHASE_0 + PHASE_1 + PHASE_2 + PHASE_3 + PHASE_4 + PHASE_5 + PHASE_6 + PHASE_7) * FPS;
+            bottom = (BACK_START + PHASE_0 + PHASE_1 + PHASE_2+ PHASE_3 + PHASE_4) * FPS;
+            top = (BACK_START + PHASE_0 + PHASE_1 + PHASE_2 + PHASE_3+ PHASE_4+ PHASE_5) * FPS;
             if ((counter >= bottom) && (counter <= top)) {
                 backOpacities.set(0, 1f);
-                backOpacities.set(1, 1f);
+                backOpacities.set(1, 0f);
                 backOpacities.set(2, 1f);
-                backOpacities.set(3, 1f);
-                backOpacities.set(4, 1f);
             }
 
-            bottom = (BACK_START + PHASE_0 + PHASE_1 + PHASE_2 + PHASE_3 + PHASE_4 + PHASE_5 + PHASE_6 + PHASE_7) * FPS;
+            bottom = (BACK_END- PHASE_6 ) * FPS;
             top = BACK_END * FPS;
             if ((counter >= bottom) && (counter <= top)) {
                 float opacity = PApplet.map(counter, bottom, top, 1f, 0f);
                 backOpacities.set(0, opacity);
-                backOpacities.set(1, opacity);
+                backOpacities.set(1, 0f);
                 backOpacities.set(2, opacity);
-                backOpacities.set(3, opacity);
-                backOpacities.set(4, opacity);
             }
         } else {
             backOpacities.set(0, 0f);
             backOpacities.set(1, 0f);
             backOpacities.set(2, 0f);
-            backOpacities.set(3, 0f);
-            backOpacities.set(4, 0f);
         }
-    }
 
+    }
 
     @Override
     public void makeFront() {
-        float top;
-        float bottom;
 
-        if ((counter >= FRONT_START * FPS) && (counter <= FRONT_END * FPS)) {
-            bottom = (FRONT_START) * FPS;
-            top = (FRONT_START + PHASE_6) * FPS;
-            if ((counter >= bottom) && (counter <= top)) {
-                frontOpacities.set(0, PApplet.map(counter, bottom, top, 0f, 1f));
-            }
-
-            bottom = (FRONT_START + PHASE_6) * FPS;
-            top = (FRONT_END - PHASE_10) * FPS;
-            if ((counter >= bottom) && (counter <= top)) {
-                frontOpacities.set(0, 1f);
-            }
-
-            bottom = (FRONT_END - PHASE_10) * FPS;
-            top = (FRONT_END) * FPS;
-            if ((counter >= bottom) && (counter <= top)) {
-                frontOpacities.set(0, PApplet.map(counter, bottom, top, 1f, 0f));
-            }
-        } else {
-            frontOpacities.set(0, 0f);
-        }
     }
-
     @Override
     public void setCounter(int counter) {
         this.counter = counter;
         makeBack();
-        makeFront();
+//        makeFront();
         updateOpacities();
     }
 
@@ -248,12 +172,12 @@ public class BuffKuchyna implements BufferShader {
 
     @Override
     public PShader getShader(int counter) {
-//        if ((counter>FRONT_END*FPS && counter>BACK_END*FPS)||(counter<BACK_START*FPS && counter<FRONT_START*FPS)){
-//            return null;
-//        } else {
-            setCounter(counter);
+        setCounter(counter);
+        if ((counter>BACK_END*FPS)||(counter<BACK_START *FPS)){
+            return null;
+        } else {
             return getShader();
-//        }
+        }
     }
 
     @Override

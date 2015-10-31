@@ -24,7 +24,6 @@ public class Tapeta extends PolyCurve {
 
     private float itemSize = 25f;
 
-//    private PGraphics pg;
     private PImage outImg;
     private PGraphics pattern;
     private boolean smooth = true;
@@ -34,10 +33,6 @@ public class Tapeta extends PolyCurve {
         this.parent = parent;
         this.randomizeAngles();
         setItemSize(itemSize);
-//        pg = parent.createGraphics(parent.width, parent.height);
-//        pg.smooth();
-//        outImg = parent.createImage((int)parent.width, (int)parent.height);
-//        outImg = pg.get();
     }
 
     public int getAxes() {

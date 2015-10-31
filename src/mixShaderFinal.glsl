@@ -42,9 +42,14 @@ uniform vec2 texOffset;
 varying vec4 vertColor;
 varying vec4 vertTexCoord;
 
-vec4 bendCurrent (vec4 c, sampler2D s, float o){
+vec4 blendCurrent (vec4 c, sampler2D s, float o){
     vec4 a = texture2D(s, vec2(vertTexCoord.s, 1.0-vertTexCoord.t) );
     return mix (c, vec4(a.rgb,1.0), a.a*o);
+}
+
+vec4 blendProcessing (vec4 c, sampler2D s, float o){
+    vec4 a = texture2D(s, vec2(vertTexCoord.s, vertTexCoord.t) );
+    return mix (c, a, a.a*o);
 }
 
 void main() {
@@ -52,47 +57,47 @@ void main() {
   vec4 c = vec4(0.0);
 
   if ((bCount>0)&&(b0Opacity!=0.0)){
-    c = bendCurrent (c, b0, b0Opacity);
+    c = blendCurrent (c, b0, b0Opacity);
   }
 
   if ((bCount>1)&&(b1Opacity!=0.0)){
-    c = bendCurrent (c, b1, b1Opacity);
+    c = blendCurrent (c, b1, b1Opacity);
   }
 
   if ((bCount>2)&&(b2Opacity!=0.0)){
-    c = bendCurrent (c, b2, b2Opacity);
+    c = blendCurrent (c, b2, b2Opacity);
   }
 
   if ((bCount>3)&&(b3Opacity!=0.0)){
-    c = bendCurrent (c, b3, b3Opacity);
+    c = blendCurrent (c, b3, b3Opacity);
   }
 
   if ((bCount>4)&&(b4Opacity!=0.0)){
-    c = bendCurrent (c, b4, b4Opacity);
+    c = blendCurrent (c, b4, b4Opacity);
   }
 
   if (textureOpacity!=0.0){
-    c = bendCurrent (c, texture, textureOpacity);
+    c = blendProcessing (c, texture, textureOpacity);
   }
 
    if ((fCount>0)&&(f0Opacity!=0.0)){
-      c = bendCurrent (c, f0, f0Opacity);
+      c = blendCurrent (c, f0, f0Opacity);
    }
 
    if ((fCount>1)&&(f1Opacity!=0.0)){
-     c = bendCurrent (c, f1, f1Opacity);
+     c = blendCurrent (c, f1, f1Opacity);
    }
 
    if ((fCount>2)&&(f2Opacity!=0.0)){
-     c = bendCurrent (c, f2, f2Opacity);
+     c = blendCurrent (c, f2, f2Opacity);
    }
 
    if ((fCount>3)&&(f3Opacity!=0.0)){
-     c = bendCurrent (c, f3, f3Opacity);
+     c = blendCurrent (c, f3, f3Opacity);
    }
 
    if ((fCount>4)&&(f4Opacity!=0.0)){
-    c = bendCurrent (c, f4, f4Opacity);
+    c = blendCurrent (c, f4, f4Opacity);
    }
 
   gl_FragColor = vec4(c.rgb, c.a*opacity);

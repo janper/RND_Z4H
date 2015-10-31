@@ -33,23 +33,30 @@ public class ScnPrechod1 implements Scene {
     private Vec3D SIDEWAYS;
     private final float TRANSTITION_SPEED = 0.1f;
 
+    private int counter = 0;
+
+    private BufferShader bufferShader;
+
     public ScnPrechod1(PApplet parent) {
         System.out.print("Constructing "+name);
         this.parent = parent;
         limits.set(new Vec3D(parent.width / 2, parent.height / 2, 0));
         limits.setExtent(new Vec3D (3500,1000,4000));
         reset();
-        FRONTAL = new Vec3D(parent.width / 2f, 2f*parent.height / 3f, limits.z+limits.getExtent().z/4f);
+        FRONTAL = new Vec3D(parent.width / 2f, 2f*parent.height / 3f, limits.z+limits.getExtent().z/1.5f);
         SIDEWAYS = new Vec3D (-parent.width , 2f*parent.height / 3f, limits.z);
 
         currentEye = FRONTAL.copy();
         targetEye = FRONTAL.copy();
+
+        bufferShader = new BufferPrechod1(parent);
 
         System.out.println(" done!");
     }
 
     public void reset(){
         initLights(30);
+        counter=0;
     }
 
     public void display(PGraphics buffer){
@@ -57,15 +64,14 @@ public class ScnPrechod1 implements Scene {
             check();
             lights.forEach(l -> l.update(speed));
             currentEye.interpolateToSelf(targetEye, TRANSTITION_SPEED);
+            counter++;
         }
         buffer.beginDraw();
         buffer.clear();
 
-        buffer.camera(currentEye.x, currentEye.y, currentEye.z, limits.x, limits.y+parent.height/4f, limits.z, 0f, 1f, 0f);
+        buffer.camera(currentEye.x, currentEye.y, currentEye.z, limits.x, limits.y+parent.height, limits.z-parent.height*0.5f, 0f, 1f, 0f);
 
-        lights.forEach(l -> {
-            l.display(buffer);
-        });
+        lights.forEach(l -> l.display(buffer));
         buffer.endDraw();
     }
 
@@ -123,7 +129,7 @@ public class ScnPrechod1 implements Scene {
     }
 
     private void initLights(int number){
-        lights = new ArrayList<Light>();
+        lights = new ArrayList<>();
         float magnitude = limits.getExtent().magnitude()*2;
         for (int i = 0; i<number; i++) {
             lights.add(getLight(false, magnitude));
@@ -141,7 +147,7 @@ public class ScnPrechod1 implements Scene {
             motion = direction;
             imageFile =  ("predne_kruhy.svg");
         }else {
-            location = new Vec3D(parent.width - 300, parent.height / 2 + 200, parent.random(limits.getMax().z-10-spread, limits.getMax().z-10));
+            location = new Vec3D(parent.width - 500, parent.height / 2 + 200, parent.random(limits.getMax().z-10-spread, limits.getMax().z-10));
             motion = direction.getInverted();
             imageFile =  ("zadne_kruhy.svg");
         }
@@ -154,12 +160,12 @@ public class ScnPrechod1 implements Scene {
     }
 
     public void check(){
-        ArrayList<Light> newLights = new ArrayList<Light>();
+        ArrayList<Light> newLights = new ArrayList<>();
         lights.forEach( l -> {
             if (l.isInAABB(limits)){
                 newLights.add(l);
             } else{
-                newLights.add(getLight(Math.random()<0.5d?false:true, 100f));
+                newLights.add(getLight(Math.random() >= 0.5d, 100f));
             }
         });
         lights = newLights;
@@ -172,6 +178,6 @@ public class ScnPrechod1 implements Scene {
 
     @Override
     public PShader getShader() {
-        return null;
+        return (mode==0)?bufferShader.getShader(counter):null;
     }
 }

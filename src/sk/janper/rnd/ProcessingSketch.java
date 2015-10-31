@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class ProcessingSketch extends PApplet{
 
-    private final int SCENES = 11;
+    private final int SCENES = 2;
     int WIDTH = 1920;
     int HEIGHT = 1080;
     private boolean record = false;
@@ -23,11 +23,13 @@ public class ProcessingSketch extends PApplet{
     private boolean blur = false;
     private PGraphics buffer;
 
+
+
     public void settings(){
         GraphicsDevice devices[] = getDevices();
 
         if((frame!=null)&&(devices.length>1)){
-            frame.removeNotify();//make the frame not displayable
+            frame.removeNotify(); //make the frame not displayable
             frame.setResizable(false);
             frame.setUndecorated(true);
             System.out.println("frame is at "+frame.getLocation());
@@ -202,7 +204,6 @@ public class ProcessingSketch extends PApplet{
         popStyle();
     }
 
-
     public void setScene (int which){
         boolean playing = true;
         if (scene!=null){
@@ -222,7 +223,7 @@ public class ProcessingSketch extends PApplet{
     private void recordIfNeeded() {
         if (record){
             int frame = frameCount+10000;
-            saveFrame("c:\\Users\\Jan\\OneDrive\\__dev\\processing_intellij\\libs\\Scenes\\frames\\"+scene.getName()+frame + ".png");
+            saveFrame("/Users/rndzvuk/Disk Google/screenshots/"+scene.getName()+frame + ".png");
         }
     }
 

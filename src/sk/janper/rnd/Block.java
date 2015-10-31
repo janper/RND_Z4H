@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
  */
 public class Block extends Vec3D {
     private Vec3D originalPosition;
+    private float leave = 0f;
     private boolean used = false;
     private Vec3D size = new Vec3D(100f,50f,100f);
     private PShape shape;
@@ -26,9 +27,7 @@ public class Block extends Vec3D {
     private int strokeColour;
     private int bgColour;
     private float strokeWeight;
-//    private int fillColour = 32;
-//    private float strokeWeight  = 5f;
-//    private int strokeColour = 255;
+
 
     public Block(PApplet parent, ReadonlyVec3D readonlyVec3D, int layer, Vec3D size, ArrayList<Block> everything, int colour, float weight, int bgColour) {
         super(readonlyVec3D);
@@ -73,8 +72,6 @@ public class Block extends Vec3D {
         children.add(new Block(this.parent, new Vec3D(this.x + nextX, this.y + nextY, this.z - nextZ), this.layer - 1, this.size, this.everything, strokeColour, strokeWeight, bgColour));
         children.add(new Block(this.parent, new Vec3D(this.x - nextX, this.y + nextY, this.z - nextZ), this.layer - 1, this.size, this.everything, strokeColour, strokeWeight, bgColour));
 
-//        long startTime = System.currentTimeMillis();
-//        int unique = 0;
 
         List<Block> filteredEverything = this.everything.parallelStream().filter(k -> (k.getLayer() < this.layer)).collect(Collectors.toList());
         children.forEach(b -> {
@@ -86,21 +83,18 @@ public class Block extends Vec3D {
                 this.underneath.add(similar);
             }
         });
-//        for (Block b: children){
-//            Block similar = b.findSimilar(filteredEverything);
-//            if (similar==null){
-//                this.everything.add(b);
-//                this.underneath.add(b);
-////                unique++;
-//            } else {
-//                this.underneath.add(similar);
-//            }
-//        }
-//        long stopTime = System.currentTimeMillis();
-//        long elapsedTime = stopTime - startTime;
-//        if (elapsedTime>0) {
-//            System.out.println(elapsedTime + "ms to add " + unique + " unique to " + this.everything.size() + " items");
-//        }
+
+    }
+
+    public void leave (float howMuch){
+        float currentLeave = parent.random(howMuch, howMuch*2f);
+        originalPosition.y-=currentLeave;
+        leave+=currentLeave;
+    }
+
+    public void comeBack (){
+        originalPosition.y+=leave;
+        leave=0;
     }
 
     public void adjust(float factor){
@@ -156,40 +150,8 @@ public class Block extends Vec3D {
             return null;
         }
 
-
-
-//        Block closest = null;
-//        for (Block b:list){
-//            if (b.distanceToSquared(this)==0){
-//                closest = b;
-//            }
-//        }
-//        return closest;
     }
 
-//    public int getFillColour() {
-//        return fillColour;
-//    }
-//
-//    public void setFillColour(int fillColour) {
-//        this.fillColour = fillColour;
-//    }
-//
-//    public float getStrokeWeight() {
-//        return strokeWeight;
-//    }
-//
-//    public void setStrokeWeight(float strokeWeight) {
-//        this.strokeWeight = strokeWeight;
-//    }
-//
-//    public int getStrokeColour() {
-//        return strokeColour;
-//    }
-//
-//    public void setStrokeColour(int strokeColour) {
-//        this.strokeColour = strokeColour;
-//    }
 
     public ArrayList<Block> getEverythinig() {
         return everything;

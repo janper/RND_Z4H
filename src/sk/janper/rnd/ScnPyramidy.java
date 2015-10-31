@@ -17,11 +17,9 @@ import java.util.stream.Collectors;
  */
 public class ScnPyramidy implements Scene {
     public static final Vec3D SIZE = new Vec3D(100f, 50f, 100f);
-    private final String name = "Pyram�dy";
+    private final String name = "Pyramidy";
     public ArrayList <Block> blocks = new ArrayList<Block>();
     private PApplet parent;
-    private int which = 0;
-    private boolean showUnder = false;
 
     private Vec3D randomPoint;
 
@@ -35,6 +33,7 @@ public class ScnPyramidy implements Scene {
     private AABB boundingBox = new AABB();
     private float rotationSpeed = 60*60;
     private float shift;
+    private int mode = 0;
 
     public ScnPyramidy(PApplet parent) {
         System.out.print("Constructing "+name);
@@ -64,7 +63,7 @@ public class ScnPyramidy implements Scene {
     @Override
     public void display(PGraphics buffer) {
         if (moving) {
-            blocks.forEach(b -> b.adjust(0.1f));
+            blocks.forEach(b -> b.adjust(0.025f));
             counter++;
             if (getCounter()%speed==1){
                 randomPoint = Vec3D.randomVector().normalizeTo(5000f);
@@ -100,7 +99,16 @@ public class ScnPyramidy implements Scene {
 
     @Override
     public void mode(int which) {
-
+        mode = which;
+        if (mode == 9){
+            blocks.forEach(b -> b.leave(3000f));
+        }
+        if (mode == 8){
+            blocks.forEach(b -> b.leave(500f));
+        }
+        if (mode != 9 && mode !=8){
+            blocks.forEach(b -> b.comeBack());
+        }
     }
 
     @Override

@@ -25,7 +25,7 @@ public class ScnUmyvarka implements Scene {
 
     private boolean moving;
 
-    private String name = "Zachody";
+    private String name = "Umyvarka";
     private int bgColour;
 
 
@@ -42,9 +42,9 @@ public class ScnUmyvarka implements Scene {
     }
 
     public void stop(){
-        if (mirror!=null){
-            mirror.stop();
-        }
+//        if (mirror!=null){
+//            mirror.stop();
+//        }
         moving = false;
     }
 
@@ -73,7 +73,7 @@ public class ScnUmyvarka implements Scene {
         buffer.beginDraw();
         buffer.clear();
 
-        if (realistic) {
+        if (realistic && moving) {
             mirror.displayReal(buffer);
         } else {
             mirror.display(buffer);

@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * Created by Jan on 10.10.2015.
  */
 public class ScnSpalna implements Scene {
-    private final String name = "Spál?a";
+    private final String name = "Spalna";
     private PApplet parent;
 
     private VerletPhysics physics;

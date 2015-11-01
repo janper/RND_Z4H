@@ -34,8 +34,10 @@ public class ScnKlenotnictvo implements Scene {
 
 
     public void reset(){
+        stop();
         initPhysics();
         addManyStrings(80f);
+        start();
     }
 
 

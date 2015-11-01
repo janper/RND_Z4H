@@ -1,5 +1,8 @@
 package sk.janper.rnd;
 
+import netP5.NetAddress;
+import oscP5.OscMessage;
+import oscP5.OscP5;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.opengl.PShader;
@@ -9,7 +12,7 @@ import java.util.ArrayList;
 
 public class ProcessingSketch extends PApplet{
 
-    private final int SCENES = 2;
+    private final int SCENES = 11;
     int WIDTH = 1920;
     int HEIGHT = 1080;
     private boolean record = false;
@@ -22,27 +25,29 @@ public class ProcessingSketch extends PApplet{
     private PShader blurShader;
     private boolean blur = false;
     private PGraphics buffer;
+    private int mode = 0;
 
+    private char actionChar;
+    private boolean action = false;
+
+    private OscP5 osc;
+    private NetAddress broadcastLocation;
+    private boolean reset  =false;
 
 
     public void settings(){
         GraphicsDevice devices[] = getDevices();
 
-        if((frame!=null)&&(devices.length>1)){
-            frame.removeNotify(); //make the frame not displayable
-            frame.setResizable(false);
-            frame.setUndecorated(true);
-            System.out.println("frame is at "+frame.getLocation());
-            frame.addNotify();
+        if(devices.length>1){
+            setSize();
+            fullScreen(2);
         }
 
-//        setSize();
+        size(WIDTH, HEIGHT, P2D);
+        smooth();
 
         int density = displayDensity();
-
         System.out.println("Density: "+density);
-
-        size(WIDTH, HEIGHT, "processing.opengl.PGraphics2D");
         pixelDensity(density);
 
         super.settings();
@@ -55,17 +60,14 @@ public class ProcessingSketch extends PApplet{
 
     public boolean setSize(){
         boolean returnValue = false;
-            //***** figure out the display environment ****/
             GraphicsDevice devices[] = getDevices();
-            //  System.out.println(Arrays.toString(devices));
 
-            if(devices.length>1 ){ //we have a 2nd display/projector
+            if(devices.length>1 ){
                 returnValue = true;
-                //learn the true dimensions of the secondary display
                 WIDTH =devices[1].getDisplayMode().getWidth();
                 HEIGHT= devices[1].getDisplayMode().getHeight();
                 println("Adjusting animation size to "+WIDTH+"x"+HEIGHT+" b/c of 2ndary display");
-            }else{ //no 2nd screen but make it fullscreen anyway
+            }else{
                 WIDTH =devices[0].getDisplayMode().getWidth();
                 HEIGHT= devices[0].getDisplayMode().getHeight();
                 println("Adjusting animation size to "+WIDTH+"x"+HEIGHT+" to fit primary display");
@@ -77,13 +79,17 @@ public class ProcessingSketch extends PApplet{
     public void setup() {
         buffer = createGraphics(width, height, P3D);
         blurShader = loadShader("blur.glsl");
+        connect();
         printInstructions();
+    }
+
+    private void connect() {
+        osc = new OscP5(this,8000);
+        broadcastLocation = new NetAddress("192.168.1.4", 8090);
     }
 
     public void draw (){
         background(bgColors[currentBgColor]);
-
-
 
         if (frameCount<SCENES+2) {
             loadScene();
@@ -99,15 +105,23 @@ public class ProcessingSketch extends PApplet{
         }
 
         if (frameCount>SCENES+2) {
+
+            if (reset){
+                scene.reset();
+                reset=false;
+            }
+
+            if (action){
+                action (actionChar);
+                action = false;
+            }
+
             scene.setBGColour(bgColors[currentBgColor]);
-            scene.display(buffer);
-
             PShader shader = scene.getShader();
-
             if (shader != null) {
                 shader(shader);
             }
-
+            scene.display(buffer);
             image(buffer, 0, 0, width, height);
             resetShader();
 
@@ -180,7 +194,7 @@ public class ProcessingSketch extends PApplet{
                 progressbar(11f / SCENES);
                 break;
 
-            case 13:
+            case 7:
                 scenes.add(new ScnMravce(this));
                 progressbar(12f / SCENES);
                 break;
@@ -244,6 +258,11 @@ public class ProcessingSketch extends PApplet{
     }
 
     public void keyPressed(){
+        actionChar = key;
+        action = true;
+    }
+
+    public void action(char key){
         switch (key){
             case 'q' : System.out.println("Shuffle");
                 scene.shuffle();
@@ -252,7 +271,7 @@ public class ProcessingSketch extends PApplet{
                 scene.jitter();
                 break;
             case 'r' : System.out.println("Reset");
-                scene.reset();
+                reset=true;
                 break;
             case 's' :
                 record = !record;
@@ -275,34 +294,49 @@ public class ProcessingSketch extends PApplet{
                 break;
 
             case '0' : System.out.println("Scene mode 0");
-                scene.mode(0);
+                mode = 0;
+                scene.mode(mode);
                 break;
             case '1' : System.out.println("Scene mode 1");
-                scene.mode(1);
+                mode = 0;
+                scene.mode(mode);
                 break;
             case '2' : System.out.println("Scene mode 2");
-                scene.mode(2);
+                mode = 2;
+                scene.mode(mode);
                 break;
             case '3' : System.out.println("Scene mode 3");
-                scene.mode(3);
+                mode = 3;
+                scene.mode(mode);
                 break;
             case '4' : System.out.println("Scene mode 4");
-                scene.mode(4);
+                mode = 4;
+                scene.mode(mode);
                 break;
             case '5' : System.out.println("Scene mode 5");
-                scene.mode(5);
+                mode = 5;
+                scene.mode(mode);
                 break;
             case '6' : System.out.println("Scene mode 6");
-                scene.mode(6);
+                mode = 6;
+                scene.mode(mode);
                 break;
             case '7' : System.out.println("Scene mode 7");
-                scene.mode(7);
+                mode = 7;
+                scene.mode(mode);
                 break;
             case '8' : System.out.println("Scene mode 8");
-                scene.mode(8);
+                mode = 8;
+                scene.mode(mode);
                 break;
             case '9' : System.out.println("Scene mode 9");
-                scene.mode(9);
+                mode = 9;
+                scene.mode(mode);
+                break;
+
+            case 'm':
+                System.out.println("Scene mode "+mode);
+                scene.mode(mode);
                 break;
 
             case 'o' : System.out.println("Previous scene");
@@ -317,6 +351,7 @@ public class ProcessingSketch extends PApplet{
                 blur = !blur;
                 break;
             case 'h' : System.out.println("Halt!");
+                osc.dispose();
                 exit();
                 break;
 
@@ -328,6 +363,46 @@ public class ProcessingSketch extends PApplet{
 //        System.out.println("Current mode: " + scene.getMode());
         System.out.println("Current frame: " + scene.getCounter());
         System.out.println("Current frame rate: " + frameRate);
+    }
+
+    void oscEvent(OscMessage theOscMessage) {
+        char k = theOscMessage.addrPattern().charAt(4);
+
+//        String[] splits = theOscMessage.addrPattern().split("/");
+//        float value = Float.valueOf(splits[splits.length-1]);
+//        println("Osc from: "+k);
+
+        switch (k){
+            case 'n':
+                mode--;
+                mode = (mode<0)?0:mode;
+                mode = (mode>9)?9:mode;
+                actionChar = 'm';
+                action=true;
+                break;
+            case 'm':
+                mode++;
+                mode = (mode<0)?0:mode;
+                mode = (mode>9)?9:mode;
+                actionChar = 'm';
+                action=true;
+                break;
+//            case 'c':
+//                whichScene = (int)value;
+//                System.out.println("Scene "+whichScene);
+//                setScene(whichScene);
+//                break;
+//            case 'd':
+//                mode = (int)value;
+//                scene.mode(mode);
+//                System.out.println("Scene mode "+mode);
+//                break;
+            default:
+                actionChar = k;
+                action=true;
+                break;
+        }
+
     }
 
 }

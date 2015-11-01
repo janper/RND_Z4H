@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Created by rndzvuk on 31.10.15.
  */
-public class BufferPrechod1 implements BufferShader{
+public class BuffPrechod1 implements BufferShader{
 
     private final float BACK_START = 0f;
     private final float PHASE_0 = 1f;  //initial fade-in
@@ -31,7 +31,7 @@ public class BufferPrechod1 implements BufferShader{
     private PShader shader;
     private int FPS = 60;
 
-    public BufferPrechod1(PApplet parent) {
+    public BuffPrechod1(PApplet parent) {
         this.parent = parent;
         make();
     }

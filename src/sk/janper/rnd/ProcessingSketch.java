@@ -298,7 +298,7 @@ public class ProcessingSketch extends PApplet{
                 scene.mode(mode);
                 break;
             case '1' : System.out.println("Scene mode 1");
-                mode = 0;
+                mode = 1;
                 scene.mode(mode);
                 break;
             case '2' : System.out.println("Scene mode 2");

@@ -49,7 +49,8 @@ vec4 blendCurrent (vec4 c, sampler2D s, float o){
 
 vec4 blendProcessing (vec4 c, sampler2D s, float o){
     vec4 a = texture2D(s, vec2(vertTexCoord.s, vertTexCoord.t) );
-    return mix (c, a, a.a*o);
+    float avg = (a.r+a.g+a.b)/3.0;
+    return mix (c, a, a.a*o*avg);
 }
 
 void main() {

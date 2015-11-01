@@ -49,7 +49,7 @@ public class ScnPrechod1 implements Scene {
         currentEye = FRONTAL.copy();
         targetEye = FRONTAL.copy();
 
-        bufferShader = new BufferPrechod1(parent);
+        bufferShader = new BuffPrechod1(parent);
 
         System.out.println(" done!");
     }

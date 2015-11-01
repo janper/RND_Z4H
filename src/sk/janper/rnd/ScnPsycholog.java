@@ -19,12 +19,15 @@ public class ScnPsycholog implements Scene {
     private static final int NUM_POINTS = 5;
     PShader shader;
     private PApplet parent;
-    private String name = "Psychológ";
+    private String name = "Psycholog";
     private int bgColour;
     private boolean moving = false;
     private ArrayList<PVector> points;
     private ArrayList<PVector> vectors;
     private int mode = 0;
+
+    private BufferShader bufferShader;
+    private int counter = 0;
 
     public ScnPsycholog(PApplet parent) {
         System.out.print("Constructing "+name);
@@ -33,6 +36,9 @@ public class ScnPsycholog implements Scene {
 
         shader.set("minThreshold", MIN_META);
         shader.set("maxThreshold", MAX_META);
+
+        bufferShader = new BuffPsycholog(parent);
+
         reset();
         System.out.println(" done!");
     }
@@ -57,6 +63,7 @@ public class ScnPsycholog implements Scene {
     public void display(PGraphics buffer) {
         if  (moving){
             movePoints();
+            counter++;
         }
         setPoints();
 
@@ -94,6 +101,7 @@ public class ScnPsycholog implements Scene {
     public void reset() {
         points = initPoints(NUM_POINTS);
         vectors = initVectors(NUM_POINTS);
+        counter=0;
     }
 
     @Override
@@ -186,11 +194,11 @@ public class ScnPsycholog implements Scene {
 
     @Override
     public int getCounter() {
-        return 0;
+        return counter;
     }
 
     @Override
     public PShader getShader() {
-        return null;
+        return bufferShader.getShader(counter);
     }
 }

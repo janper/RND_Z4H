@@ -1,0 +1,22 @@
+private final float BACK_START = 0f;
+    private final float PHASE_0 = 1f;  //initial fade-in
+    private final float PHASE_1 = 1f;  //door fade=in
+    private final float PHASE_2 = 1f;  //chair fade-in
+    private final float FRONT_START = BACK_START + PHASE_0 + PHASE_1 + PHASE_2;
+    private final float PHASE_3 = 1f;  //front fade-in
+    private final float PHASE_4 = 4f;  //just wait
+    private final float BUFFER_START = FRONT_START + PHASE_3+PHASE_4;
+    private final float BUFFER_FADE_IN = 1f;    //photo blending
+    private final float PHASE_5 = 4f;  //just wait
+    private final float PHASE_6 = 1f; //back fade-out
+    private final float BACK_END = BUFFER_START + PHASE_5 + PHASE_6;
+    private final float PHASE_7 = 1f;  //front 0-1 cross-fade
+    private final float PHASE_8 = 2f;  //just wait
+    private final float PHASE_9 = 1f;  //front 1-2 cross-fade
+    private final float PHASE_10 = 2f; //just wait
+    private final float PHASE_11 = 1f;  //front 2-3 cross-fade
+    private final float PHASE_12 = 2f; //just wait
+    private final float PHASE_13 = 1f;  //front 3-4 cross-fade
+    private final float PHASE_14 = 4f; //just wait
+    private final float PHASE_15 = 1f; //front fade-out
+    private final float FRONT_END = BACK_END + PHASE_7+PHASE_8+PHASE_9 + PHASE_10+PHASE_11+PHASE_12+PHASE_13+PHASE_14+PHASE_15;

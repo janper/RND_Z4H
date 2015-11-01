@@ -44,7 +44,7 @@ public class ScnPrechod1 implements Scene {
         limits.setExtent(new Vec3D (3500,1000,4000));
         reset();
         FRONTAL = new Vec3D(parent.width / 2f, 2f*parent.height / 3f, limits.z+limits.getExtent().z/1.5f);
-        SIDEWAYS = new Vec3D (-parent.width , 2f*parent.height / 3f, limits.z);
+        SIDEWAYS = new Vec3D (-parent.width , 1f*parent.height / 4f, limits.z);
 
         currentEye = FRONTAL.copy();
         targetEye = FRONTAL.copy();

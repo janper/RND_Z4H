@@ -16,8 +16,8 @@ public class BuffPrechod1 implements BufferShader{
     private final float PHASE_1 = 1f;  //cars fade-in
     private final float PHASE_2 = 1f;  //zebra fade-in
     private final float PHASE_3 = 2f;  //just wait
+    private final float BUFFER_START = BACK_START + PHASE_0+ PHASE_1+ PHASE_2+ PHASE_3;
     private final float PHASE_4 = 1f;  //remove cars
-    private final float BUFFER_START = BACK_START + PHASE_0+ PHASE_1+ PHASE_2+ PHASE_3+ PHASE_4;
     private final float BUFFER_FADE_IN = 1f;    //photo blending
     private final float PHASE_5 = 10f; //just wait
     private final float PHASE_6 = 1f;  //back fade-out

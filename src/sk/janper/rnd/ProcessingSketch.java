@@ -79,6 +79,7 @@ public class ProcessingSketch extends PApplet{
     public void setup() {
         buffer = createGraphics(width, height, P3D);
         blurShader = loadShader("blur.glsl");
+        noCursor();
         connect();
         printInstructions();
     }

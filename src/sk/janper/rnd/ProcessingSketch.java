@@ -33,6 +33,7 @@ public class ProcessingSketch extends PApplet{
     private OscP5 osc;
     private NetAddress broadcastLocation;
     private boolean reset  =false;
+    private boolean nothing = true;
 
 
     public void settings(){
@@ -90,47 +91,56 @@ public class ProcessingSketch extends PApplet{
     }
 
     public void draw (){
-        background(bgColors[currentBgColor]);
-
-        if (frameCount<SCENES+2) {
-            loadScene();
+        if (nothing){
+            background (0);
+        } else {
+            background(bgColors[currentBgColor]);
         }
 
-        if (frameCount==SCENES+2){
-            progressbar(1);
-            for (int i = 0; i < SCENES; i++) {
-                setScene(i);
-                scene.display(buffer);
-            }
-            setScene(whichScene);
-        }
 
-        if (frameCount>SCENES+2) {
 
-            if (reset){
-                scene.reset();
-                reset=false;
+            if (frameCount < SCENES + 2) {
+                loadScene();
             }
 
-            if (action){
-                action (actionChar);
-                action = false;
+            if (frameCount == SCENES + 2) {
+                progressbar(1);
+                for (int i = 0; i < SCENES; i++) {
+                    setScene(i);
+                    scene.display(buffer);
+                }
+                setScene(whichScene);
             }
 
-            scene.setBGColour(bgColors[currentBgColor]);
-            PShader shader = scene.getShader();
-            if (shader != null) {
-                shader(shader);
-            }
-            scene.display(buffer);
-            image(buffer, 0, 0, width, height);
-            resetShader();
+            if (frameCount > SCENES + 2) {
 
-            if (blur){
-                filter(blurShader);
+                if (reset) {
+                    scene.reset();
+                    reset = false;
+                }
+
+                if (action) {
+                    action(actionChar);
+                    action = false;
+                }
+                if (!nothing) {
+
+                    scene.setBGColour(bgColors[currentBgColor]);
+                    PShader shader = scene.getShader();
+                    if (shader != null) {
+                        shader(shader);
+                    }
+                    scene.display(buffer);
+                    image(buffer, 0, 0, width, height);
+                    resetShader();
+
+                    if (blur) {
+                        filter(blurShader);
+                    }
+                    recordIfNeeded();
+                }
             }
-            recordIfNeeded();
-        }
+
 
     }
 
@@ -256,6 +266,7 @@ public class ProcessingSketch extends PApplet{
         System.out.println("a : Blur");
         System.out.println("0-1 : Scene modes");
         System.out.println("h : Halt");
+        System.out.println("k : Nothing");
     }
 
     public void keyPressed(){
@@ -354,6 +365,9 @@ public class ProcessingSketch extends PApplet{
             case 'h' : System.out.println("Halt!");
                 osc.dispose();
                 exit();
+                break;
+            case 'k' : System.out.println("Nothing");
+                nothing = !nothing;
                 break;
 
         }

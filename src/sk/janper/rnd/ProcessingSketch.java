@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class ProcessingSketch extends PApplet{
 
-    private final int SCENES = 11;
+    private final int SCENES = 1;
     int WIDTH = 1920;
     int HEIGHT = 1080;
     private boolean record = false;
@@ -23,6 +23,7 @@ public class ProcessingSketch extends PApplet{
     private int whichScene = 0;
     private Scene scene;
     private PShader blurShader;
+    private PShader shader;
     private boolean blur = false;
     private PGraphics buffer;
     private int mode = 0;
@@ -33,15 +34,16 @@ public class ProcessingSketch extends PApplet{
     private OscP5 osc;
     private NetAddress broadcastLocation;
     private boolean reset  =false;
-    private boolean nothing = true;
+    private boolean blank = true;
 
 
     public void settings(){
         GraphicsDevice devices[] = getDevices();
 
         if(devices.length>1){
+            System.out.println("More displays detected");
             setSize();
-            fullScreen(2);
+            fullScreen(1);
         }
 
         size(WIDTH, HEIGHT, P2D);
@@ -91,7 +93,7 @@ public class ProcessingSketch extends PApplet{
     }
 
     public void draw (){
-        if (nothing){
+        if (blank){
             background (0);
         } else {
             background(bgColors[currentBgColor]);
@@ -123,10 +125,10 @@ public class ProcessingSketch extends PApplet{
                     action(actionChar);
                     action = false;
                 }
-                if (!nothing) {
+                if (!blank) {
 
                     scene.setBGColour(bgColors[currentBgColor]);
-                    PShader shader = scene.getShader();
+                    shader = scene.getShader();
                     if (shader != null) {
                         shader(shader);
                     }
@@ -151,13 +153,18 @@ public class ProcessingSketch extends PApplet{
                 break;
 
             case 2:
+                scenes.add(new ScnStavebniny(this));
+                progressbar((frameCount-1) / SCENES);
+                break;
+
+            case 13:
                 scenes.add(new ScnKuchyna(this));
-                progressbar(13f / SCENES);
+                progressbar((float)((frameCount-1) / SCENES));
                 break;
 
             case 3:
                 scenes.add(new ScnPrechod1(this));
-                progressbar(2f / SCENES);
+                progressbar((float)((frameCount-1) / SCENES));
                 break;
 
 //            case 4:
@@ -167,12 +174,12 @@ public class ProcessingSketch extends PApplet{
 
             case 5:
                 scenes.add(new ScnKlenotnictvo(this));
-                progressbar(4f / SCENES);
+                progressbar((float)((frameCount-1) / SCENES));
                 break;
 
             case 6:
                 scenes.add(new ScnMuchy(this));
-                progressbar(5f / SCENES);
+                progressbar((float)((frameCount-1) / SCENES));
                 break;
 
 //            case 7:
@@ -182,37 +189,37 @@ public class ProcessingSketch extends PApplet{
 
             case 8:
                 scenes.add(new ScnBoh(this));
-                progressbar(7f / SCENES);
+                progressbar((float)((frameCount-1) / SCENES));
                 break;
 
             case 9:
                 scenes.add(new ScnSpalna(this));
-                progressbar(8f / SCENES);
+                progressbar((float)((frameCount-1) / SCENES));
                 break;
 
             case 10:
                 scenes.add(new ScnPyramidy(this));
-                progressbar(9f / SCENES);
+                progressbar((float)((frameCount-1) / SCENES));
                 break;
 
             case 11:
                 scenes.add(new ScnPsycholog(this));
-                progressbar(10f / SCENES);
+                progressbar((frameCount-1) / SCENES);
                 break;
 
             case 12:
                 scenes.add(new ScnKruhy(this));
-                progressbar(11f / SCENES);
+                progressbar((frameCount-1) / SCENES);
                 break;
 
             case 7:
                 scenes.add(new ScnMravce(this));
-                progressbar(12f / SCENES);
+                progressbar((frameCount-1) / SCENES);
                 break;
 
             case 4:
                 scenes.add(new ScnUmyvarka(this));
-                progressbar(1f / SCENES);
+                progressbar((frameCount-1) / SCENES);
                 break;
         }
     }
@@ -367,7 +374,7 @@ public class ProcessingSketch extends PApplet{
                 exit();
                 break;
             case 'k' : System.out.println("Nothing");
-                nothing = !nothing;
+                blank = !blank;
                 break;
 
         }

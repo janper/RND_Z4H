@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class ProcessingSketch extends PApplet{
 
-    private final int SCENES = 1;
+    private final int SCENES = 12;
     int WIDTH = 1920;
     int HEIGHT = 1080;
     private boolean record = false;
@@ -151,13 +151,13 @@ public class ProcessingSketch extends PApplet{
             case 1:
                 progressbar(0);
                 break;
+//
+//            case 2:
+//                scenes.add(new ScnStavebniny(this));
+//                progressbar((frameCount-1) / SCENES);
+//                break;
 
-            case 2:
-                scenes.add(new ScnStavebniny(this));
-                progressbar((frameCount-1) / SCENES);
-                break;
-
-            case 13:
+            case 12:
                 scenes.add(new ScnKuchyna(this));
                 progressbar((float)((frameCount-1) / SCENES));
                 break;
@@ -207,7 +207,7 @@ public class ProcessingSketch extends PApplet{
                 progressbar((frameCount-1) / SCENES);
                 break;
 
-            case 12:
+            case 2:
                 scenes.add(new ScnKruhy(this));
                 progressbar((frameCount-1) / SCENES);
                 break;
@@ -373,7 +373,7 @@ public class ProcessingSketch extends PApplet{
                 osc.dispose();
                 exit();
                 break;
-            case 'k' : System.out.println("Nothing");
+            case 'k' : System.out.println("Blank: "+!blank);
                 blank = !blank;
                 break;
 

@@ -178,6 +178,7 @@ public class ScnPrechod1 implements Scene {
 
     @Override
     public PShader getShader() {
+        bufferShader.setFPS((int)parent.frameRate);
         return (mode==0)?bufferShader.getShader(counter):null;
     }
 }

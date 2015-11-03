@@ -26,7 +26,6 @@ public class ScnKuchyna implements Scene {
         System.out.print("Constructing "+name);
         this.parent = parent;
         bufferShader = new BuffKuchyna(parent);
-        bufferShader.setFPS(12);
         reset();
         System.out.println(" done!");
     }
@@ -113,6 +112,7 @@ public class ScnKuchyna implements Scene {
 
     @Override
     public PShader getShader() {
+        bufferShader.setFPS((int)parent.frameRate);
         return bufferShader.getShader(counter);
     }
 

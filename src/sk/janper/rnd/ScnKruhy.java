@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class ScnKruhy implements Scene {
     private PApplet parent;
-    private String name = "Kruhy v obil�";
+    private String name = "Kruhy v obili";
     private int bgColour;
 
     private boolean moving = false;
@@ -32,7 +32,9 @@ public class ScnKruhy implements Scene {
 
     private ArrayList<Gear> gears = new ArrayList<Gear>();
 
-    private int transitionSteps = 4800;
+    private int transitionSteps = 50000;
+
+    private BufferShader bufferShader;
 
     private int counter;
 
@@ -40,6 +42,7 @@ public class ScnKruhy implements Scene {
     public ScnKruhy(PApplet parent) {
         System.out.print("Constructing "+name);
         this.parent = parent;
+        bufferShader = new BuffKruhy(parent);
         reset();
         randomize();
         System.out.println(" done!");
@@ -207,6 +210,7 @@ public class ScnKruhy implements Scene {
 
     @Override
     public PShader getShader() {
-        return null;
+//        bufferShader.setFPS((int)parent.frameRate);
+        return bufferShader.getShader(counter);
     }
 }

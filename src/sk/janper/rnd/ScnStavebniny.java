@@ -30,6 +30,8 @@ public class ScnStavebniny implements Scene {
 
     private int counter = 0;
 
+    private boolean direct = false;
+
 
     public ScnStavebniny(PApplet parent) {
         this.parent = parent;
@@ -170,5 +172,15 @@ public class ScnStavebniny implements Scene {
     @Override
     public PShader getShader() {
         return null;
+    }
+
+    @Override
+    public void display() {
+
+    }
+
+    @Override
+    public boolean isDirect() {
+        return false;
     }
 }

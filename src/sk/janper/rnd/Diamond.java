@@ -1,8 +1,8 @@
 package sk.janper.rnd;
 
 import processing.core.*;
-import processing.core.PApplet;import processing.core.PImage;import processing.core.PMatrix3D;import processing.core.PShape;import toxi.geom.Vec3D;
-import toxi.physics.VerletParticle;import java.lang.String;
+import toxi.geom.Vec3D;
+import toxi.physics.VerletParticle;
 
 /**
  * Created by Jan on 4.5.2015.
@@ -69,7 +69,7 @@ public class Diamond extends VerletParticle {
         mainShape.vertex(50 - 12.5f, -25, 0);
         mainShape.vertex(50, 0, 0);
         mainShape.vertex(0, 75, 0);
-        mainShape.endShape(parent.CLOSE);
+        mainShape.endShape(PConstants.CLOSE);
 
         PShape edgeShape = parent.createShape();
 
@@ -82,11 +82,11 @@ public class Diamond extends VerletParticle {
         edgeShape.vertex(0, 75, 0);
         edgeShape.vertex((float)(50-100/4), 0, 0);
         edgeShape.vertex((float) (50 - 12.5 - 75 / 4), -25, 0);
-        edgeShape.endShape(parent.CLOSE);
+        edgeShape.endShape(PConstants.CLOSE);
 
         PShape creaseShape = parent.createShape();
 
-        creaseShape.beginShape(parent.LINES);
+        creaseShape.beginShape(PConstants.LINES);
         creaseShape.stroke(255);
         creaseShape.strokeWeight(2f);
         creaseShape.noFill();
@@ -94,7 +94,7 @@ public class Diamond extends VerletParticle {
         creaseShape.vertex(50, 0, 0);
         creaseShape.endShape();
 
-        this.s = parent.createShape(parent.GROUP);
+        this.s = parent.createShape(PConstants.GROUP);
         this.s.addChild(mainShape);
         this.s.addChild(creaseShape);
         this.s.addChild(edgeShape);
@@ -158,6 +158,26 @@ public class Diamond extends VerletParticle {
 
         buffer.popMatrix();
         buffer.popStyle();
+
+    }
+
+    public void display(Vec3D normal) {
+        parent.pushStyle();
+        parent.pushMatrix();
+        
+        float zRotation = Vec3D.Y_AXIS.angleBetween(new Vec3D(normal.x,normal.y, 0));
+
+        PMatrix3D transformationMatrix = new PMatrix3D();
+        transformationMatrix.translate(this.x, this.y, this.z);
+
+        parent.applyMatrix(transformationMatrix);
+
+        float diamondWidth = 60f;
+        float diamondHeight = 40f;
+        parent.shape(this.s, 0, 0,diamondWidth, diamondHeight);
+
+        parent.popMatrix();
+        parent.popStyle();
 
     }
 }

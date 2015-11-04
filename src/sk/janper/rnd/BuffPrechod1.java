@@ -181,6 +181,12 @@ public class BuffPrechod1 implements BufferShader{
     }
 
     @Override
+    public boolean isJustAnim(int counter) {
+        setCounter(counter);
+        return (counter > BACK_END * FPS) || (counter < BACK_START * FPS);
+    }
+
+    @Override
     public int getFPS() {
         return FPS;
     }

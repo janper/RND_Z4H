@@ -19,6 +19,8 @@ public class ScnBoh implements Scene {
     private Vec3D tip;
     private Vec3D bottom;
 
+    private boolean direct = true;
+
     public ScnBoh(PApplet parent) {
         System.out.print("Constructing "+name);
         this.parent = parent;
@@ -49,6 +51,18 @@ public class ScnBoh implements Scene {
             r.display(buffer);
         });
         buffer.endDraw();
+    }
+
+    @Override
+    public void display() {
+        if (moving){
+            rays.forEach(r -> {
+                r.update();
+            });
+        }
+        rays.forEach(r -> {
+            r.display();
+        });
     }
 
     @Override
@@ -113,5 +127,10 @@ public class ScnBoh implements Scene {
     @Override
     public PShader getShader() {
         return null;
+    }
+
+    @Override
+    public boolean isDirect() {
+        return false;
     }
 }

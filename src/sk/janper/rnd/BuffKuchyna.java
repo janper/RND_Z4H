@@ -256,6 +256,10 @@ public class BuffKuchyna implements BufferShader {
 //        }
     }
 
+    public boolean isJustAnim(int counter){
+        return (counter > FRONT_END * FPS && counter > BACK_END * FPS) || (counter < BACK_START * FPS && counter < FRONT_START * FPS);
+    }
+
     @Override
     public int getFPS() {
         return FPS;

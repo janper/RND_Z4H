@@ -11,6 +11,7 @@ public interface Scene {
     void start();
     void stop();
     void display(PGraphics buffer);
+    void display();
     void reset();
     void shuffle();
     void jitter();
@@ -19,6 +20,7 @@ public interface Scene {
     int getCounter();
 
     boolean isPlaying();
+    boolean isDirect();
 
     PShader getShader();
 

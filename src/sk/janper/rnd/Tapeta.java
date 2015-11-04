@@ -22,11 +22,12 @@ public class Tapeta extends PolyCurve {
     private int lineColor = 255;
     private float lineWidth = 1f;
 
-    private float itemSize = 25f;
+    private float itemSize = 50f;
 
     private PImage outImg;
     private PGraphics pattern;
     private boolean smooth = true;
+    private boolean dots = true;
 
     public Tapeta(PApplet parent) {
         super();
@@ -114,6 +115,7 @@ public class Tapeta extends PolyCurve {
         }
     }
 
+
     public void drawPolyLine (PGraphics tempPG, ArrayList<Vec2D> points){
         tempPG.beginShape();
         if (smooth){
@@ -122,6 +124,32 @@ public class Tapeta extends PolyCurve {
             points.forEach(p -> tempPG.vertex(p.x, p.y));
         }
         tempPG.endShape();
+    }
+
+    public void drawPolyLineDirect (ArrayList<Vec2D> points){
+        if (dots) {
+            float inBetween = 2f;
+            parent.beginShape(PApplet.POINTS);
+            parent.stroke (parent.color(12, 52, 173));
+            parent.strokeWeight(2f);
+            for (int i = 0; i < points.size()-1; i++) {
+                Vec2D first = points.get(i);
+                Vec2D second = points.get(i+1);
+                for (int j = 0; j<inBetween; j++){
+                    Vec2D current = first.interpolateTo(second,inBetween/j);
+                    parent.vertex(current.x, current.y);
+                }
+            }
+            parent.endShape();
+        } else {
+            parent.beginShape();
+            if (smooth) {
+                points.forEach(p -> parent.curveVertex(p.x, p.y));
+            } else {
+                points.forEach(p -> parent.vertex(p.x, p.y));
+            }
+            parent.endShape();
+        }
     }
 
 //    public PImage drawWallpaper (int xCount, int yCount){
@@ -203,14 +231,11 @@ public class Tapeta extends PolyCurve {
     }
 
 
-    public void drawWallpaperDirect (int xCount, int yCount, PGraphics buffer){
-
-        buffer.pushStyle();
-
-        buffer.stroke(lineColor);
-        buffer.strokeWeight(lineWidth);
-        buffer.noFill();
-
+    public void drawWallpaperBuffer (int xCount, int yCount, PGraphics buffer){
+            buffer.pushStyle();
+            buffer.stroke(lineColor);
+            buffer.strokeWeight(lineWidth);
+            buffer.noFill();
         float xStep = (buffer.width-itemSize)/(xCount-1);
         float yStep = (buffer.height-itemSize)/(yCount-1);
 
@@ -234,7 +259,36 @@ public class Tapeta extends PolyCurve {
             }
         }
         buffer.popStyle();
-        buffer.endDraw();
+    }
+
+    public void drawWallpaperDirect (int xCount, int yCount){
+        parent.pushStyle();
+        parent.stroke(lineColor);
+        parent.strokeWeight(lineWidth);
+        parent.noFill();
+        float xStep = (parent.width-itemSize)/(xCount-1);
+        float yStep = (parent.height-itemSize)/(yCount-1);
+
+        for (int y=0; y<yCount; y++){
+            for (int x=0; x<xCount+y%2; x++){
+                parent.pushMatrix();
+                float currentX = x*xStep-y%2*xStep/2;
+                float currentY = y*yStep;
+
+                parent.translate(currentX+itemSize/2, currentY+itemSize/2);
+
+                for (int step = 0; step < axes; step++) {
+                    float angle = (float) Math.PI * 2 / axes * step;
+                    this.setRotation(angle);
+                    this.setReflect(false);
+                    drawPolyLineDirect(this.getCurrentPointPositions());
+                    this.setReflect(true);
+                    drawPolyLineDirect(this.getCurrentPointPositions());
+                }
+                parent.popMatrix();
+            }
+        }
+        parent.popStyle();
     }
 
 }

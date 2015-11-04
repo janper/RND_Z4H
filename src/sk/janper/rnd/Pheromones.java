@@ -130,4 +130,20 @@ public class Pheromones {
         }
     }
 
+    public void display2() {
+        try {
+            pheromones.forEach(p -> {
+                int alpha = Math.round(PApplet.map(p.getAge(), 0, this.getMaxAge(), 255, 0));
+                parent.pushStyle();
+                parent.stroke(this.getColor(),alpha);
+                parent.strokeWeight(this.getWeight());
+                parent.point(p.x,p.y,p.z);
+                parent.popStyle();
+            });
+        } catch (NullPointerException e)
+        {
+
+        }
+        
+    }
 }

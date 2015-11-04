@@ -28,6 +28,8 @@ public class ScnUmyvarka implements Scene {
     private String name = "Umyvarka";
     private int bgColour;
 
+    private boolean direct = true;
+
 
     public ScnUmyvarka(PApplet parent) {
         System.out.print("Constructing "+name);
@@ -65,7 +67,7 @@ public class ScnUmyvarka implements Scene {
     }
 
     public void jitter() {
-        tiles.forEach(t -> t.jitter(10));
+//        tiles.forEach(t -> t.jitter(10));
     }
 
     public void display(PGraphics buffer) {
@@ -179,5 +181,28 @@ public class ScnUmyvarka implements Scene {
     @Override
     public PShader getShader() {
         return null;
+    }
+
+    @Override
+    public boolean isDirect() {
+        return direct;
+    }
+
+    @Override
+    public void display() {
+        if (realistic && moving) {
+            mirror.displayReal();
+        } else {
+            mirror.display();
+        }
+
+        drawTiles();
+    }
+
+    private void drawTiles() {
+        tiles.forEach(t -> {
+            t.update();
+            t.display();
+        });
     }
 }

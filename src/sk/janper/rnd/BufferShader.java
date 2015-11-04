@@ -23,4 +23,6 @@ public interface BufferShader {
     int getFPS();
 
     void setFPS(int fps);
+
+    boolean isJustAnim(int counter);
 }

@@ -139,11 +139,7 @@ public class Ant extends Vec3D{
 
     private boolean pheromoneAround(Pheromone closestPheromone){
         if (closestPheromone != null) {
-            if (closestPheromone.distanceToSquared(this) < this.searchDistance * this.searchDistance){
-                return true;
-            } else {
-                return false;
-            }
+            return closestPheromone.distanceToSquared(this) < this.searchDistance * this.searchDistance;
         } else {
             return false;
         }
@@ -152,11 +148,7 @@ public class Ant extends Vec3D{
 
     private boolean pickingFood(FoodSource closestFood){
         if (closestFood != null) {
-            if (closestFood.distanceToSquared(this) <= closestFood.getSize() * closestFood.getSize()) {
-                return true;
-            } else{
-                return false;
-            }
+            return closestFood.distanceToSquared(this) <= closestFood.getSize() * closestFood.getSize();
         } else {
             return false;
         }
@@ -245,5 +237,22 @@ public class Ant extends Vec3D{
 
         buffer.popMatrix();
         buffer.popStyle();
+    }
+
+    public void display() {
+        parent.pushStyle();
+        parent.pushMatrix();
+
+        float rotationAngle = angleBetweenVectors(this.calculateAverageVector(),Vec3D.Y_AXIS);
+
+        parent.translate(this.x, this.y);
+        parent.rotate(rotationAngle+(float)Math.PI);
+
+        float antWidth = 30f;
+        float antHeight = 30f;
+        parent.shape(this.antShape, -0.5f * antWidth, -0.5f * antHeight, antWidth, antHeight);
+
+        parent.popMatrix();
+        parent.popStyle();
     }
 }

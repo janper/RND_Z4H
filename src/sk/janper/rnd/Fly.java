@@ -4,7 +4,7 @@ import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PShape;
 import toxi.geom.ReadonlyVec3D;
-import toxi.geom.Vec3D;import java.lang.Exception;import java.lang.Math;import java.lang.System;
+import toxi.geom.Vec3D;
 
 /**
  * Created by Jan on 17.5.2015.
@@ -99,7 +99,7 @@ public class Fly extends Vec3D {
 
 
     private Vec3D getCurrentBowingVector(){
-        float currentBowing = parent.map(getAge() - getLastSaccadeAge(), 0, getCurrentSaccadePeriod(), getBowingFactor() * getMaxSpeed(), -1 * getBowingFactor() * getMaxSpeed());
+        float currentBowing = PApplet.map(getAge() - getLastSaccadeAge(), 0, getCurrentSaccadePeriod(), getBowingFactor() * getMaxSpeed(), -1 * getBowingFactor() * getMaxSpeed());
         return getBowingVector().copy().getNormalizedTo(currentBowing);
     }
 
@@ -113,12 +113,12 @@ public class Fly extends Vec3D {
     }
 
     private void accelerationMove() {
-        float currentSpeed = parent.map(getAge()-getLastSaccadeAge(), 0, getSaccadeSlowdownMoment()*getCurrentSaccadePeriod(),getMinSpeed(), getMaxSpeed());
+        float currentSpeed = PApplet.map(getAge()-getLastSaccadeAge(), 0, getSaccadeSlowdownMoment()*getCurrentSaccadePeriod(),getMinSpeed(), getMaxSpeed());
         moveFly(currentSpeed);
     }
 
     private void deccelerationMove() {
-        float currentSpeed = parent.map(getAge()-getLastSaccadeAge(), (1-getSaccadeSlowdownMoment())*getCurrentSaccadePeriod(), getCurrentSaccadePeriod(), getMaxSpeed(), getMinSpeed());
+        float currentSpeed = PApplet.map(getAge()-getLastSaccadeAge(), (1-getSaccadeSlowdownMoment())*getCurrentSaccadePeriod(), getCurrentSaccadePeriod(), getMaxSpeed(), getMinSpeed());
         moveFly(currentSpeed);
     }
     public void incAge(){
@@ -274,5 +274,24 @@ public class Fly extends Vec3D {
 
     public void setBowingFactor(float bowingFactor) {
         this.bowingFactor = bowingFactor;
+    }
+
+    public void display() {
+        parent.pushStyle();
+        parent.strokeWeight (1f);
+
+        parent.pushMatrix();
+
+        float rotationAngle = angleBetweenVectors(new Vec3D(this.compoundVector.x, this.compoundVector.y, 0),Vec3D.Y_AXIS);
+
+        parent.translate(this.x, this.y, this.z);
+        parent.rotate(rotationAngle+(float)Math.PI);
+
+        float flyWidth = 40f;
+        float flyHeight = 40f;
+        parent.shape(this.flyShape, -0.5f * flyWidth, -0.5f * flyHeight, flyWidth, flyHeight);
+
+        parent.popMatrix();
+        parent.popStyle();
     }
 }

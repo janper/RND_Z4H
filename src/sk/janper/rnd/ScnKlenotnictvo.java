@@ -24,6 +24,8 @@ public class ScnKlenotnictvo implements Scene {
 
     private int mode = 0;
 
+    private boolean direct = true;
+
     public ScnKlenotnictvo(PApplet parent) {
         System.out.print("Constructing "+name);
         this.parent = parent;
@@ -169,5 +171,24 @@ public class ScnKlenotnictvo implements Scene {
     @Override
     public PShader getShader() {
         return null;
+    }
+
+    @Override
+    public void display() {
+        if (enablePhysics) {
+            adjustLocked(0.1f);
+            physics.update();
+        }
+
+        physics.particles.forEach(particle ->{
+            Diamond d = (Diamond) particle;
+            Vec3D direction = diamondDirection(d);
+            d.display(direction);
+        });
+    }
+
+    @Override
+    public boolean isDirect() {
+        return direct;
     }
 }

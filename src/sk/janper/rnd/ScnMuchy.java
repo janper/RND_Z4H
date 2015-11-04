@@ -18,6 +18,8 @@ public class ScnMuchy implements Scene {
     private boolean move = false;
     private int bgColour;
 
+    private boolean direct = true;
+
     public ScnMuchy(PApplet parent) {
         System.out.print("Constructing "+name);
         this.parent = parent;
@@ -38,6 +40,14 @@ public class ScnMuchy implements Scene {
         }
         flies.forEach(f -> f.display(buffer));
         buffer.endDraw();
+    }
+
+    @Override
+    public void display() {
+        if (move) {
+            flies.forEach(f -> f.update());
+        }
+        flies.forEach(f -> f.display());
     }
 
     public void shuffle(){
@@ -86,5 +96,10 @@ public class ScnMuchy implements Scene {
     @Override
     public PShader getShader() {
         return null;
+    }
+
+    @Override
+    public boolean isDirect() {
+        return direct;
     }
 }

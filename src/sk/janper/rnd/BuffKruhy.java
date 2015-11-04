@@ -14,18 +14,19 @@ public class BuffKruhy implements BufferShader {
     private final float BACK_END = 1f;
     private final float FRONT_START = 0f;
     private final float PHASE_0 = 0.1f;
-    private final float PHASE_1 = 5f;
-    private final float PHASE_2 = 1f;
+    private final float PHASE_1 = 10f;
+    private final float PHASE_2 = 0.5f;
     private final float PHASE_3 = 0.1f;
-    private final float PHASE_4 = 5f;
-    private final float PHASE_5 = 1f;
+    private final float PHASE_4 = 10f;
+    private final float PHASE_5 = 0.5f;
     private final float PHASE_6 = 0.1f;
-    private final float PHASE_7 = 5f;
-    private final float PHASE_8 = 1f;
+    private final float PHASE_7 = 10f;
+    private final float PHASE_8 = 0.5f;
     private final float PHASE_9 = 0.1f;
-    private final float PHASE_10 = 5f;
-    private final float PHASE_11 = 1f;
+    private final float PHASE_10 = 10f;
+    private final float PHASE_11 = 0.5f;
     private final float BUFFER_START = PHASE_0+PHASE_1+PHASE_2+PHASE_3+PHASE_4+PHASE_5+PHASE_6+PHASE_7+PHASE_8+PHASE_9;
+//    private final float BUFFER_START = 0f;
     private final float BUFFER_FADE_IN = 5f;    //photo blending
     private final float FRONT_END = BUFFER_START+PHASE_10+PHASE_11;
     private PApplet parent;
@@ -121,7 +122,7 @@ public class BuffKruhy implements BufferShader {
             bottom = top;
             top += PHASE_1 * FPS;
             if ((counter >= bottom) && (counter <= top)) {
-                frontOpacities.set(0, PApplet.map(counter, bottom, top, 1f, 0f));
+                frontOpacities.set(0, PApplet.map(counter, bottom, top, 1f, 0.25f));
                 frontOpacities.set(1, 0f);
                 frontOpacities.set(2, 0f);
                 frontOpacities.set(3, 0f);
@@ -149,7 +150,7 @@ public class BuffKruhy implements BufferShader {
             top += PHASE_4 * FPS;
             if ((counter >= bottom) && (counter <= top)) {
                 frontOpacities.set(0, 0f);
-                frontOpacities.set(1, PApplet.map(counter, bottom, top, 1f, 0f));
+                frontOpacities.set(1, PApplet.map(counter, bottom, top, 1f, 0.25f));
                 frontOpacities.set(2, 0f);
                 frontOpacities.set(3, 0f);
             }
@@ -176,7 +177,7 @@ public class BuffKruhy implements BufferShader {
             top += PHASE_7 * FPS;
             if ((counter >= bottom) && (counter <= top)) {
                 frontOpacities.set(0, 0f);
-                frontOpacities.set(2, PApplet.map(counter, bottom, top, 1f, 0f));
+                frontOpacities.set(2, PApplet.map(counter, bottom, top, 1f, 0.25f));
                 frontOpacities.set(1, 0f);
                 frontOpacities.set(3, 0f);
             }
@@ -247,6 +248,10 @@ public class BuffKruhy implements BufferShader {
             setCounter(counter);
             return getShader();
         }
+    }
+
+    public boolean isJustAnim(int counter) {
+        return (counter > FRONT_END * FPS && counter > BACK_END * FPS) || (counter < BACK_START * FPS && counter < FRONT_START * FPS);
     }
 
     @Override

@@ -37,6 +37,8 @@ public class ScnPrechod1 implements Scene {
 
     private BufferShader bufferShader;
 
+    private boolean direct = true;
+
     public ScnPrechod1(PApplet parent) {
         System.out.print("Constructing "+name);
         this.parent = parent;
@@ -180,5 +182,25 @@ public class ScnPrechod1 implements Scene {
     public PShader getShader() {
         bufferShader.setFPS((int)parent.frameRate);
         return (mode==0)?bufferShader.getShader(counter):null;
+    }
+
+    @Override
+    public void display() {
+        if (moving) {
+            check();
+            lights.forEach(l -> l.update(speed));
+            currentEye.interpolateToSelf(targetEye, TRANSTITION_SPEED);
+            counter++;
+        }
+
+        parent.camera(currentEye.x, currentEye.y, currentEye.z, limits.x, limits.y+parent.height, limits.z-parent.height*0.5f, 0f, 1f, 0f);
+
+        lights.forEach(l -> l.display());
+
+    }
+
+    @Override
+    public boolean isDirect() {
+        return direct;
     }
 }

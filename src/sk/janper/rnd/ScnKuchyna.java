@@ -12,20 +12,21 @@ public class ScnKuchyna implements Scene {
     private String name = "Kuchyna";
     private int bgColour;
 
-    private int xCount = 15;
-    private int yCount = 12;
+    private int xCount = 10;
+    private int yCount = 8;
 
     private Tapeta tapeta;
     private boolean moving = false;
 
     private int counter;
+    private boolean direct = true;
 
-    private BufferShader bufferShader;
+//    private BufferShader bufferShader;
 
     public ScnKuchyna(PApplet parent) {
         System.out.print("Constructing "+name);
         this.parent = parent;
-        bufferShader = new BuffKuchyna(parent);
+//        bufferShader = new BuffKuchyna(parent);
         reset();
         System.out.println(" done!");
     }
@@ -45,16 +46,23 @@ public class ScnKuchyna implements Scene {
         if (moving) {
             counter++;
         }
-
-        buffer.beginDraw();
-        buffer.clear();
+            buffer.beginDraw();
+            buffer.clear();
 
         if (moving) {
             tapeta.update();
         }
-        tapeta.drawWallpaperDirect(xCount, yCount, buffer);
+            tapeta.drawWallpaper(xCount, yCount, buffer);
+            buffer.endDraw();
+    }
 
-        buffer.endDraw();
+    @Override
+    public void display() {
+        if (moving) {
+            counter++;
+            tapeta.update();
+        }
+        tapeta.drawWallpaperDirect(xCount, yCount);
     }
 
     @Override
@@ -112,8 +120,13 @@ public class ScnKuchyna implements Scene {
 
     @Override
     public PShader getShader() {
-        bufferShader.setFPS((int)parent.frameRate);
-        return bufferShader.getShader(counter);
+//        bufferShader.setFPS((int)parent.frameRate);
+//        return bufferShader.getShader(counter);
+        return null;
     }
 
+    @Override
+    public boolean isDirect() {
+        return direct;
+    }
 }

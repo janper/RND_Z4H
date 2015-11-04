@@ -31,9 +31,10 @@ public class ScnPyramidy implements Scene {
     private int counter = 0;
 
     private AABB boundingBox = new AABB();
-    private float rotationSpeed = 60*60;
+    private float rotationSpeed = 240*60;
     private float shift;
     private int mode = 0;
+    private boolean direct = true;
 
     public ScnPyramidy(PApplet parent) {
         System.out.print("Constructing "+name);
@@ -166,5 +167,27 @@ public class ScnPyramidy implements Scene {
     @Override
     public PShader getShader() {
         return null;
+    }
+
+    @Override
+    public void display() {
+        if (moving) {
+            blocks.forEach(b -> b.adjust(0.025f));
+            counter++;
+            if (getCounter()%speed==1){
+                randomPoint = Vec3D.randomVector().normalizeTo(5000f);
+                turnOnClosest(randomPoint);
+            }
+            shift*=0.9;
+        }
+
+        Vec3D diagonal = boundingBox.getExtent().rotateY(PApplet.map(counter, 0, rotationSpeed, 0, 2 * PConstants.PI));
+        parent.camera(boundingBox.x+diagonal.x*1.5f*(1-shift),boundingBox.y-diagonal.y*2f*(1-shift), boundingBox.z+diagonal.z*1.5f*(1-shift), boundingBox.x,boundingBox.y*1.5f,boundingBox.z,0f, 1f, 0f);
+        blocks.forEach(b -> b.display());
+    }
+
+    @Override
+    public boolean isDirect() {
+        return direct;
     }
 }

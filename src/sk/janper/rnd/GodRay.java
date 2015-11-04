@@ -161,11 +161,23 @@ public class GodRay extends Vec3D {
         buffer.pushMatrix();
         buffer.pushStyle();
         for (int i=0; i<currentPoints.size()-1; i++){
-            buffer.strokeWeight(parent.map(i, 0, currentPoints.size()-1, weight1, weight2));
+            buffer.strokeWeight(PApplet.map(i, 0, currentPoints.size()-1, weight1, weight2));
             buffer.stroke (parent.lerpColor(color1, color2, (i/currentPoints.size()-1)));
             buffer.line (currentPoints.get(i).x, currentPoints.get(i).y, currentPoints.get(i).z,currentPoints.get(i+1).x, currentPoints.get(i+1).y, currentPoints.get(i+1).z);
         }
         buffer.popStyle();
         buffer.popMatrix();
+    }
+
+    public void display() {
+        parent.pushMatrix();
+        parent.pushStyle();
+        for (int i=0; i<currentPoints.size()-1; i++){
+            parent.strokeWeight(PApplet.map(i, 0, currentPoints.size()-1, weight1, weight2));
+            parent.stroke (parent.lerpColor(color1, color2, (i/currentPoints.size()-1)));
+            parent.line (currentPoints.get(i).x, currentPoints.get(i).y, currentPoints.get(i).z,currentPoints.get(i+1).x, currentPoints.get(i+1).y, currentPoints.get(i+1).z);
+        }
+        parent.popStyle();
+        parent.popMatrix();
     }
 }

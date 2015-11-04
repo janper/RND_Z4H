@@ -200,4 +200,21 @@ public class Block extends Vec3D {
     public void setLayer(int layer) {
         this.layer = layer;
     }
+
+    public void display() {
+        if (this.used) {
+            parent.pushMatrix();
+            parent.pushStyle();
+            parent.translate(this.x, this.y, this.z);
+
+            parent.noFill();
+            parent.stroke(strokeColour);
+            parent.strokeWeight(strokeWeight);
+            parent.fill(bgColour);
+            parent.box(size.x, size.y, size.x);
+
+            parent.popStyle();
+            parent.popMatrix();
+        }
+    }
 }

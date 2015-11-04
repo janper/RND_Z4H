@@ -24,6 +24,9 @@ public class ScnSpalna implements Scene {
 
     private boolean moving = false;
 
+    private boolean direct = true;
+    private int mode = 0;
+
     public ScnSpalna(PApplet parent) {
         System.out.print("Constructing "+name);
         this.parent = parent;
@@ -65,6 +68,7 @@ public class ScnSpalna implements Scene {
         makeFur(80);
         makePhysics();
         rememberColors();
+        reColor(mode);
     }
 
     private void rememberColors() {
@@ -89,7 +93,12 @@ public class ScnSpalna implements Scene {
 
     @Override
     public void mode(int which) {
-        if (which==1){
+        mode = which;
+        reColor(which);
+    }
+
+    private void reColor(int which) {
+        if (which==0){
             fur.forEach(r -> r.setColour(parent.color(255)));
         } else {
             for (int i=0; i<fur.size(); i++) {
@@ -122,8 +131,19 @@ public class ScnSpalna implements Scene {
                 Vec3D direction = new Vec3D(0, 0, 100);
                 GravityBehavior gravity = new GravityBehavior(gravityVector);
                 Rod rod = new Rod(parent, position, direction, gravity);
-                int topColour = parent.lerpColor(parent.color(8, 204, 135), parent.color(125, 90, 7), PApplet.map(x, 0, xSteps - 1, 0, 1));
-                int bottomColour = parent.lerpColor(parent.color(0, 255, 255), parent.color(255, 0, 255), PApplet.map(x, 0, xSteps - 1, 0, 1));
+
+                int topLeft = parent.color(12, 52, 173);
+                int topRight = parent.color(96, 113, 163);
+                int bottomLeft = parent.color(232, 121, 2);
+                int bottomRight = parent.color(232, 18, 2);
+
+//                int topLeft = parent.color(8, 204, 135);
+//                int topRight = parent.color(125, 90, 7);
+//                int bottomLeft = parent.color(0, 255, 255);
+//                int bottomRight = parent.color(255, 0, 255);
+
+                int topColour = parent.lerpColor(topLeft, topRight, PApplet.map(x, 0, xSteps - 1, 0, 1));
+                int bottomColour = parent.lerpColor(bottomLeft, bottomRight, PApplet.map(x, 0, xSteps - 1, 0, 1));
                 int colour = parent.lerpColor(topColour, bottomColour, PApplet.map(y, 0, ySteps - 1, 0, 1));
                 rod.setColour(colour);
                 rod.calculate();
@@ -147,5 +167,19 @@ public class ScnSpalna implements Scene {
     @Override
     public PShader getShader() {
         return null;
+    }
+
+    @Override
+    public boolean isDirect() {
+        return direct;
+    }
+
+    @Override
+    public void display() {
+        if (moving) {
+            physics.update();
+            fur.forEach(r -> r.stabilize(0.1f));
+        }
+        fur.forEach(r -> r.display());
     }
 }

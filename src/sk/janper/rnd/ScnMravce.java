@@ -24,6 +24,8 @@ public class ScnMravce implements Scene {
     private int mode = 0;
     private boolean moving;
 
+    private boolean direct = true;
+
     public ScnMravce(PApplet parent) {
         System.out.print("Constructing "+name);
         this.parent = parent;
@@ -62,6 +64,24 @@ public class ScnMravce implements Scene {
 
         displayAnts(buffer);
         buffer.endDraw();
+    }
+
+    @Override
+    public void display() {
+        removeEmptyFoodSources();
+        if (moving) {
+            pheromones.update();
+            updateAnts();
+        }
+
+        pheromones.display2();
+        displayAnts();
+        displayAnts();
+    }
+
+
+    private void displayAnts() {
+        ants.forEach(a -> a.display());
     }
 
     @Override
@@ -176,5 +196,10 @@ public class ScnMravce implements Scene {
     @Override
     public PShader getShader() {
         return null;
+    }
+
+    @Override
+    public boolean isDirect() {
+        return direct;
     }
 }

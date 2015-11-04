@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="minim">
+    <CLASSES>
+      <root url="file://$USER_HOME$/Documents/Processing/libraries/minim/library" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/Documents/Processing/libraries/minim/library" />
+    </SOURCES>
+    <jarDirectory url="file://$USER_HOME$/Documents/Processing/libraries/minim/library" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/Documents/Processing/libraries/minim/library" recursive="false" type="SOURCES" />
+  </library>
+</component>

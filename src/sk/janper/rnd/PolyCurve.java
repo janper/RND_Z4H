@@ -226,13 +226,14 @@ public class PolyCurve extends Vec2D {
         return getPointPositions(this.currentAngles);
     }
 
+
     public boolean isStable(){
         for (int i=0; i<targetAngles.size();i++) {
-            if (Math.abs(currentAngles.get(i) - targetAngles.get(i))>this.targetTreshold){
-                return false;
+            if (Math.abs(currentAngles.get(i) - targetAngles.get(i))<this.targetTreshold){
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
 }

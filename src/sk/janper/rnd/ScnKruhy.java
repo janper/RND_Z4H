@@ -37,6 +37,7 @@ public class ScnKruhy implements Scene {
     private BufferShader bufferShader;
 
     private int counter;
+    private boolean direct = false;
 
 
     public ScnKruhy(PApplet parent) {
@@ -67,12 +68,57 @@ public class ScnKruhy implements Scene {
         mapCurrent();
         makeGears();
 
-        buffer.beginDraw();
-        buffer.clear();
+        if (bufferShader.isJustAnim(counter)){
+            direct = true;
+            display();
+        } else {
+            direct = false;
+            buffer.beginDraw();
+            buffer.clear();
+            displayCurrentSpirograph(1500, buffer);
+            buffer.endDraw();
+        }
+    }
 
-        displayCurrentSpirograph(1500, buffer);
+    @Override
+    public void display() {
+        if (moving){
+            counter++;
+        }
 
-        buffer.endDraw();
+        mapCurrent();
+        makeGears();
+        
+        displayCurrentSpirograph(1500);
+
+        if (!bufferShader.isJustAnim(counter)){
+            direct = false;
+        }
+    }
+
+    private void displayCurrentSpirograph(int count) {
+        ArrayList<Vec2D> points = getPoints(count);
+        parent.pushStyle();
+        parent.strokeWeight(4f);
+        parent.beginShape(PConstants.POINTS);
+        parent.noFill();
+//        parent.camera(parent.width/2,parent.height/2,parent.height/2, 0,parent.height,0, 0,1,0);
+
+        int fade = 100;
+        for (int i=0; i<points.size();i++){
+            if (i>=0 && i<=fade){
+                parent.stroke(parent.lerpColor(parent.color(255, 0), parent.color(255, 255), PApplet.map(i, 0, fade, 0, 1)));
+            } else{
+                if (i>=points.size()-fade && i<=points.size()){
+                    parent.stroke(parent.lerpColor(parent.color(255, 0), parent.color(255, 255), PApplet.map(i, points.size() - fade, points.size(), 1, 0)));
+                }else{
+                    parent.stroke(255);
+                }
+            }
+            parent.vertex(points.get(i).x, points.get(i).y);
+        }
+        parent.endShape();
+        parent.popStyle();
     }
 
     @Override
@@ -179,6 +225,7 @@ public class ScnKruhy implements Scene {
         buffer.strokeWeight(4f);
         buffer.beginShape(PConstants.POINTS);
         buffer.noFill();
+//        buffer.camera(parent.width/2,parent.height/2,parent.height/2, 0,parent.height,0, 0,1,0);
 
         int fade = 100;
         for (int i=0; i<points.size();i++){
@@ -212,5 +259,10 @@ public class ScnKruhy implements Scene {
     public PShader getShader() {
 //        bufferShader.setFPS((int)parent.frameRate);
         return bufferShader.getShader(counter);
+    }
+
+    @Override
+    public boolean isDirect() {
+        return direct;
     }
 }

@@ -190,4 +190,18 @@ public class Rod extends Vec3D {
     public ArrayList<VerletSpring> getSprings() {
         return this.springs;
     }
+
+    public void display() {
+        parent.pushStyle();
+        parent.noFill();
+        parent.stroke(this.colour);
+        parent.strokeWeight(this.weight);
+        parent.beginShape();
+        parent.curveVertex(this.particles.get(0).x, this.particles.get(0).y, this.particles.get(0).z); // the first control point
+        this.particles.forEach(p -> parent.curveVertex(p.x, p.y, p.z));
+        int last = this.particles.size()-1;
+        parent.vertex(this.particles.get(last).x, this.particles.get(last).y, this.particles.get(last).z);
+        parent.endShape();
+        parent.popStyle();
+    }
 }

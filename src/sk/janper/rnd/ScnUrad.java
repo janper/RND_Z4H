@@ -20,6 +20,8 @@ public class ScnUrad implements Scene {
     private String name = "Urad";
     private int bgColour;
 
+    private boolean direct = true;
+
 
     public ScnUrad(PApplet parent) {
         System.out.print("Constructing "+name);
@@ -184,5 +186,15 @@ public class ScnUrad implements Scene {
     @Override
     public PShader getShader() {
         return null;
+    }
+
+    @Override
+    public void display() {
+
+    }
+
+    @Override
+    public boolean isDirect() {
+        return false;
     }
 }

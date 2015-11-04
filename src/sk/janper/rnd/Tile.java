@@ -1,10 +1,10 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PShape;
 import toxi.geom.ReadonlyVec2D;
-import toxi.geom.ReadonlyVec3D;
 import toxi.geom.Vec2D;
 
 /**
@@ -66,7 +66,7 @@ public class Tile extends Vec2D {
         graphics.vertex(5, h - 5);
         graphics.vertex(w - 5, h - 5);
         graphics.vertex(w - 5, 5);
-        graphics.endShape(parent.CLOSE);
+        graphics.endShape(PConstants.CLOSE);
 
         graphics.beginShape();
         graphics.stroke(255);
@@ -90,7 +90,7 @@ public class Tile extends Vec2D {
         shape.vertex(5, h - 5);
         shape.vertex(w-5, h-5);
         shape.vertex(w-5, 5);
-        shape.endShape(parent.CLOSE);
+        shape.endShape(PConstants.CLOSE);
     }
 
     public void update(){
@@ -102,4 +102,7 @@ public class Tile extends Vec2D {
 //        parent.shape(shape,x,y);
     }
 
+    public void display() {
+        parent.image(graphics, x, y);
+    }
 }

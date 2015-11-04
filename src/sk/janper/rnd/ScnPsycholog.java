@@ -29,6 +29,8 @@ public class ScnPsycholog implements Scene {
     private BufferShader bufferShader;
     private int counter = 0;
 
+    private boolean direct = true;
+
     public ScnPsycholog(PApplet parent) {
         System.out.print("Constructing "+name);
         this.parent = parent;
@@ -200,5 +202,45 @@ public class ScnPsycholog implements Scene {
     @Override
     public PShader getShader() {
         return bufferShader.getShader(counter);
+    }
+
+    @Override
+    public void display() {
+        if  (moving){
+            movePoints();
+            counter++;
+        }
+        setPoints();
+
+        parent.shader(shader);
+        parent.pushStyle();
+        parent.noStroke();
+        parent.beginShape();
+        if (mode == 0) {
+            parent.fill(255);
+        } else {
+            parent.fill(255, 0, 0);
+        }
+        parent.vertex(0, 0);
+        if (mode != 0) {
+            parent.fill(0, 255, 0);
+        }
+        parent.vertex(0, parent.height);
+        if (mode != 0) {
+            parent.fill(0, 0, 255);
+        }
+        parent.vertex(parent.width, parent.height);
+        if (mode != 0) {
+            parent.fill(255, 255, 255);
+        }
+        parent.vertex(parent.width, 0);
+        parent.endShape(PConstants.CLOSE);
+        parent.popStyle();
+        parent.resetShader();
+    }
+
+    @Override
+    public boolean isDirect() {
+        return direct;
     }
 }

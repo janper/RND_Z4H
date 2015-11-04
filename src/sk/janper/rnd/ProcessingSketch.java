@@ -1,5 +1,7 @@
 package sk.janper.rnd;
 
+import ddf.minim.AudioInput;
+import ddf.minim.Minim;
 import netP5.NetAddress;
 import oscP5.OscMessage;
 import oscP5.OscP5;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 
 public class ProcessingSketch extends PApplet{
 
-    private final int SCENES = 12;
+    private final int SCENES = 11;
     int WIDTH = 1920;
     int HEIGHT = 1080;
     private boolean record = false;
@@ -27,6 +29,7 @@ public class ProcessingSketch extends PApplet{
     private boolean blur = false;
     private PGraphics buffer;
     private int mode = 0;
+    private int modeDirection = 1;
 
     private char actionChar;
     private boolean action = false;
@@ -36,17 +39,22 @@ public class ProcessingSketch extends PApplet{
     private boolean reset  =false;
     private boolean blank = true;
 
+    private boolean allowAudio = true;
+
+    Minim minim;
+    AudioInput in;
+
 
     public void settings(){
         GraphicsDevice devices[] = getDevices();
 
         if(devices.length>1){
             System.out.println("More displays detected");
-            setSize();
+//            setSize();
             fullScreen(1);
         }
 
-        size(WIDTH, HEIGHT, P2D);
+        size(WIDTH, HEIGHT, OPENGL);
         smooth();
 
         int density = displayDensity();
@@ -84,8 +92,41 @@ public class ProcessingSketch extends PApplet{
         blurShader = loadShader("blur.glsl");
         noCursor();
         connect();
+        setMinim();
         printInstructions();
     }
+
+    private void setMinim() {
+        System.out.print("Setting audio listener");
+        minim = new Minim(this);
+        in = minim.getLineIn();
+        System.out.println(" done!");
+    }
+
+    private void checkAudio(){
+        int val = (int)abs(max(in.left.get(0),in.right.get(0))*1000);
+        if (val>80){
+            action=true;
+            mode+=modeDirection;
+            modeDirection*=-1;
+            actionChar = 'm';
+            System.out.println("Audio: mode up");
+            return;
+        }
+        if (val>60){
+            action=true;
+            actionChar = 'q';
+            System.out.println("Audio: shuffle");
+            return;
+        }
+        if (val>20){
+            action=true;
+            actionChar = 'w';
+            System.out.println("Audio: jitter");
+            return;
+        }
+    }
+
 
     private void connect() {
         osc = new OscP5(this,8000);
@@ -98,8 +139,6 @@ public class ProcessingSketch extends PApplet{
         } else {
             background(bgColors[currentBgColor]);
         }
-
-
 
             if (frameCount < SCENES + 2) {
                 loadScene();
@@ -116,25 +155,32 @@ public class ProcessingSketch extends PApplet{
 
             if (frameCount > SCENES + 2) {
 
-                if (reset) {
-                    scene.reset();
-                    reset = false;
-                }
+                checkAudio();
 
                 if (action) {
                     action(actionChar);
                     action = false;
                 }
+
                 if (!blank) {
 
                     scene.setBGColour(bgColors[currentBgColor]);
-                    shader = scene.getShader();
-                    if (shader != null) {
-                        shader(shader);
+
+                    if (scene.isDirect()){
+                        scene.display();
+                    } else {
+                        shader = scene.getShader();
+                        if (shader != null) {
+                            shader(shader);
+                        }
+
+                        scene.display(buffer);
+                        image(buffer, 0, 0, width, height);
+
+                        if (shader != null) {
+                            resetShader();
+                        }
                     }
-                    scene.display(buffer);
-                    image(buffer, 0, 0, width, height);
-                    resetShader();
 
                     if (blur) {
                         filter(blurShader);
@@ -159,12 +205,12 @@ public class ProcessingSketch extends PApplet{
 
             case 12:
                 scenes.add(new ScnKuchyna(this));
-                progressbar((float)((frameCount-1) / SCENES));
+                progressbar((float)(frameCount-1) / SCENES);
                 break;
 
             case 3:
                 scenes.add(new ScnPrechod1(this));
-                progressbar((float)((frameCount-1) / SCENES));
+                progressbar((float)(frameCount-1) / SCENES);
                 break;
 
 //            case 4:
@@ -174,12 +220,12 @@ public class ProcessingSketch extends PApplet{
 
             case 5:
                 scenes.add(new ScnKlenotnictvo(this));
-                progressbar((float)((frameCount-1) / SCENES));
+                progressbar((float)(frameCount-1) / SCENES);
                 break;
 
             case 6:
                 scenes.add(new ScnMuchy(this));
-                progressbar((float)((frameCount-1) / SCENES));
+                progressbar((float)(frameCount-1) / SCENES);
                 break;
 
 //            case 7:
@@ -189,42 +235,43 @@ public class ProcessingSketch extends PApplet{
 
             case 8:
                 scenes.add(new ScnBoh(this));
-                progressbar((float)((frameCount-1) / SCENES));
+                progressbar((float)(frameCount-1) / SCENES);
                 break;
 
             case 9:
                 scenes.add(new ScnSpalna(this));
-                progressbar((float)((frameCount-1) / SCENES));
+                progressbar((float)(frameCount-1) / SCENES);
                 break;
 
             case 10:
                 scenes.add(new ScnPyramidy(this));
-                progressbar((float)((frameCount-1) / SCENES));
+                progressbar((float)(frameCount-1) / SCENES);
                 break;
 
             case 11:
                 scenes.add(new ScnPsycholog(this));
-                progressbar((frameCount-1) / SCENES);
+                progressbar((float)(frameCount-1) / SCENES);
                 break;
 
             case 2:
                 scenes.add(new ScnKruhy(this));
-                progressbar((frameCount-1) / SCENES);
+                progressbar((float)(frameCount-1) / SCENES);
                 break;
 
             case 7:
                 scenes.add(new ScnMravce(this));
-                progressbar((frameCount-1) / SCENES);
+                progressbar((float)(frameCount-1) / SCENES);
                 break;
 
             case 4:
                 scenes.add(new ScnUmyvarka(this));
-                progressbar((frameCount-1) / SCENES);
+                progressbar((float)(frameCount-1) / SCENES);
                 break;
         }
     }
 
     private void progressbar (float progress){
+//        System.out.println("Progress: "+progress);
         pushStyle();
         fill(255, 64);
         noStroke();
@@ -242,6 +289,7 @@ public class ProcessingSketch extends PApplet{
             playing = scene.isPlaying();
             scene.stop();
             buffer.camera(width / 2f, height / 2f, (height / 2f) / tan(PI * 30f / 180f), width / 2f, height / 2f, 0, 0, 1, 0);
+            camera(width / 2f, height / 2f, (height / 2f) / tan(PI * 30f / 180f), width / 2f, height / 2f, 0, 0, 1, 0);
         }
         int index = Math.abs(which % scenes.size());
         scene = scenes.get(index);
@@ -273,7 +321,12 @@ public class ProcessingSketch extends PApplet{
         System.out.println("a : Blur");
         System.out.println("0-1 : Scene modes");
         System.out.println("h : Halt");
-        System.out.println("k : Nothing");
+        System.out.println("k : Blank");
+        System.out.println("l : Allow audio listener");
+
+        if (blank) {
+            System.out.println("Currently blank");
+        }
     }
 
     public void keyPressed(){
@@ -290,7 +343,7 @@ public class ProcessingSketch extends PApplet{
                 scene.jitter();
                 break;
             case 'r' : System.out.println("Reset");
-                reset=true;
+                scene.reset();
                 break;
             case 's' :
                 record = !record;
@@ -376,7 +429,9 @@ public class ProcessingSketch extends PApplet{
             case 'k' : System.out.println("Blank: "+!blank);
                 blank = !blank;
                 break;
-
+            case 'l' : System.out.println("Allow audio listener: "+!allowAudio);
+                allowAudio = !allowAudio;
+                break;
         }
     }
 

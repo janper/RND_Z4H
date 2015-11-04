@@ -1,9 +1,10 @@
 package sk.janper.rnd;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
-import processing.video.*;
+import processing.video.Capture;
 import toxi.geom.ReadonlyVec2D;
 import toxi.geom.Vec2D;
 
@@ -84,7 +85,7 @@ public class Mirror extends Vec2D {
     public PImage getImage(){
         //TODO: shader
 
-        PImage output = parent.createImage(getWidth(), getHeight(), parent.ARGB);
+        PImage output = parent.createImage(getWidth(), getHeight(), PConstants.ARGB);
         if (video.available()) {
             video.read();
             video.loadPixels();
@@ -136,5 +137,13 @@ public class Mirror extends Vec2D {
             output = video.get(0,0,getWidth(), getHeight());
             }
         return output;
+    }
+
+    public void displayReal() {
+        parent.image(getRealImage(), x, y, getWidth(), getHeight());
+    }
+
+    public void display() {
+        parent.image(getImage(), x, y);
     }
 }

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class ProcessingSketch extends PApplet{
 
-    private final int SCENES = 11;
+    private final int SCENES = 1;
     int WIDTH = 1920;
     int HEIGHT = 1080;
     private boolean record = false;
@@ -39,7 +39,7 @@ public class ProcessingSketch extends PApplet{
     private boolean reset  =false;
     private boolean blank = true;
 
-    private boolean allowAudio = true;
+    private boolean allowAudio = false;
 
     Minim minim;
     AudioInput in;
@@ -54,7 +54,7 @@ public class ProcessingSketch extends PApplet{
             fullScreen(1);
         }
 
-        size(WIDTH, HEIGHT, OPENGL);
+        size(WIDTH, HEIGHT, P3D);
         smooth();
 
         int density = displayDensity();
@@ -105,21 +105,22 @@ public class ProcessingSketch extends PApplet{
 
     private void checkAudio(){
         int val = (int)abs(max(in.left.get(0),in.right.get(0))*1000);
-        if (val>80){
-            action=true;
-            mode+=modeDirection;
-            modeDirection*=-1;
-            actionChar = 'm';
-            System.out.println("Audio: mode up");
-            return;
-        }
+        System.out.println("Audio: "+val);
+//        if (val>80){
+//            action=true;
+//            mode+=modeDirection;
+//            modeDirection*=-1;
+//            actionChar = 'm';
+//            System.out.println("Audio: mode up");
+//            return;
+//        }
         if (val>60){
             action=true;
             actionChar = 'q';
             System.out.println("Audio: shuffle");
             return;
         }
-        if (val>20){
+        if (val>30){
             action=true;
             actionChar = 'w';
             System.out.println("Audio: jitter");
@@ -155,7 +156,9 @@ public class ProcessingSketch extends PApplet{
 
             if (frameCount > SCENES + 2) {
 
-                checkAudio();
+                if (allowAudio) {
+                    checkAudio();
+                }
 
                 if (action) {
                     action(actionChar);
@@ -248,12 +251,12 @@ public class ProcessingSketch extends PApplet{
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
-            case 11:
+            case 2:
                 scenes.add(new ScnPsycholog(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
-            case 2:
+            case 11:
                 scenes.add(new ScnKruhy(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;

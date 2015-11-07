@@ -11,10 +11,17 @@ import java.util.ArrayList;
 /**
  * Created by Jan on 06.10.2015.
  */
-public class ScnPrechod1 implements Scene {
+public class ScnPrechod implements Scene {
     private PApplet parent;
 
     private ArrayList<Light> lights;
+    private final int MIN_LIGHTS = 4;
+    private final int MAX_LIGHTS = 30;
+    private int numLights = MAX_LIGHTS;
+    private final int SLOWDOWN_PERIOD = 60*60;
+
+    private int slowdownMoment;
+
     private boolean moving = false;
 
     private Vec3D direction = new Vec3D( 0, 0, (float)Math.random()*5f+5f);
@@ -23,7 +30,7 @@ public class ScnPrechod1 implements Scene {
 
     private AABB limits = new AABB();
 
-    private String name = "Prechod 1";
+    private String name = "Prechod";
     private int mode = 0;
 
     private Vec3D currentEye;
@@ -39,7 +46,7 @@ public class ScnPrechod1 implements Scene {
 
     private boolean direct = true;
 
-    public ScnPrechod1(PApplet parent) {
+    public ScnPrechod(PApplet parent) {
         System.out.print("Constructing "+name);
         this.parent = parent;
         limits.set(new Vec3D(parent.width / 2, parent.height / 2, 0));
@@ -57,7 +64,7 @@ public class ScnPrechod1 implements Scene {
     }
 
     public void reset(){
-        initLights(30);
+        initLights(numLights);
         counter=0;
     }
 
@@ -90,11 +97,13 @@ public class ScnPrechod1 implements Scene {
         mode = which;
         if (mode==0){
             targetEye = FRONTAL;
-            speed=1f;
+//            speed=1f;
         }
         if (mode==1){
             targetEye = SIDEWAYS;
-            speed=0.1f;
+//            speed=1f;
+            slowdownMoment = counter;
+
         }
     }
 
@@ -166,16 +175,21 @@ public class ScnPrechod1 implements Scene {
         lights.forEach( l -> {
             if (l.isInAABB(limits)){
                 newLights.add(l);
-            } else{
-                newLights.add(getLight(Math.random() >= 0.5d, 100f));
             }
         });
+
+        numLights = (int) PApplet.map(counter, slowdownMoment, slowdownMoment+SLOWDOWN_PERIOD, MIN_LIGHTS, MAX_LIGHTS);
+        numLights = (numLights<MIN_LIGHTS)?MIN_LIGHTS:numLights;
+        while (newLights.size()<numLights){
+                newLights.add(getLight(Math.random() >= 0.5d, 100f));
+        }
+
         lights = newLights;
     }
 
     @Override
     public int getCounter() {
-        return 0;
+        return counter;
     }
 
     @Override

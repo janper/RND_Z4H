@@ -21,14 +21,25 @@ public class ScnKuchyna implements Scene {
     private int counter;
     private boolean direct = true;
 
+    private int mode = 0;
+    private int[] colours;
+
 //    private BufferShader bufferShader;
 
     public ScnKuchyna(PApplet parent) {
         System.out.print("Constructing "+name);
         this.parent = parent;
 //        bufferShader = new BuffKuchyna(parent);
+        makeColours();
         reset();
         System.out.println(" done!");
+    }
+
+    private void makeColours(){
+        colours = new int[3];
+        colours[0] = parent.color(12, 52, 173);
+        colours[1] = parent.color(199,172,143);
+        colours[2] = parent.color(12, 52, 173);
     }
 
     @Override
@@ -62,19 +73,32 @@ public class ScnKuchyna implements Scene {
             counter++;
             tapeta.update();
         }
+
+        if (mode==0){
+            parent.background(199,172,143);
+        }
+        if (mode==1){
+            parent.background(0);
+        }
+        if (mode==2){
+            parent.background(195,237, 236);
+        }
+
+        tapeta.setLineColor(colours[mode%colours.length]);
+
+
         tapeta.drawWallpaperDirect(xCount, yCount);
     }
 
     @Override
     public void reset() {
         tapeta = new Tapeta(parent);
-        tapeta.setLineColor(parent.color(255, 128));
+        tapeta.setLineColor(colours[mode%colours.length]);
         tapeta.setLinear(true);
-        tapeta.setLineWidth(2f);
+        tapeta.setLineWidth(4f);
         tapeta.setSegments(15);
         tapeta.setAxes(5);
         tapeta.setItemSize(150f);
-
         counter=0;
     }
 
@@ -90,12 +114,22 @@ public class ScnKuchyna implements Scene {
 
     @Override
     public void mode(int which) {
+//        if (which == 1){
+//            tapeta.setSmooth(!tapeta.isSmooth());
+//        }
+//        if (which == 2){
+//            tapeta.setLinear(!tapeta.isLinear());
+//        }
+        mode = which;
+
+        if (which == 0){
+            tapeta.setUpdateSteps(60*60);
+        }
+
         if (which == 1){
-            tapeta.setSmooth(!tapeta.isSmooth());
+            tapeta.setUpdateSteps(60*6);
         }
-        if (which == 2){
-            tapeta.setLinear(!tapeta.isLinear());
-        }
+
     }
 
     @Override

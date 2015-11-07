@@ -74,9 +74,9 @@ public class ScnMravce implements Scene {
             updateAnts();
         }
 
-        pheromones.display2();
+//        pheromones.display2();
         displayAnts();
-        displayAnts();
+
     }
 
 
@@ -103,6 +103,9 @@ public class ScnMravce implements Scene {
     @Override
     public void mode(int which) {
         mode = which;
+        if (mode!=3){
+            ants.forEach(a -> a.setState(1));
+        }
     }
 
     @Override
@@ -148,8 +151,8 @@ public class ScnMravce implements Scene {
             tempAnt.setAntNests(this.antNests);
             tempAnt.setFoodSources(this.foodSources);
             tempAnt.setPheromones(this.pheromones);
-            tempAnt.setJittering(0.25f);
-            tempAnt.setSpeed(parent.random(1f, 3f));
+            tempAnt.setJittering(0.05f);
+            tempAnt.setSpeed(parent.random(0.25f, 1.25f));
             tempAnt.setSearchDistance(tempAnt.getSpeed() * 100);
             tempAnt.setState(1);
             this.ants.add(tempAnt);
@@ -181,6 +184,9 @@ public class ScnMravce implements Scene {
     }
 
     private void updateAnts(){
+        if (mode == 0){
+            ants.forEach(a -> a.setState(3));
+        }
         ants.forEach(Ant::update);
     }
 

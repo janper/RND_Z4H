@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class ScnPsycholog implements Scene {
     public static final int MIN_RADIUS = 200;
-    public static final int MAX_RADIUS = 700;
+    public static final int MAX_RADIUS = 500;
     public static final float MIN_META = 0.05f;
     public static final float MAX_META = 0.35f;
     private static final int NUM_POINTS = 5;
@@ -36,6 +36,8 @@ public class ScnPsycholog implements Scene {
 
     private boolean direct = true;
     private float stepSpeed;
+
+    private float speedMultiplier = 0.25f;
 
     public ScnPsycholog(PApplet parent) {
         System.out.print("Constructing "+name);
@@ -156,6 +158,13 @@ public class ScnPsycholog implements Scene {
         if (mode!=9){
             stepSpeed = 0.01f;
         }
+        if (mode==2){
+            speedMultiplier = 0.25f;
+        }
+        if (mode==3){
+            speedMultiplier = 1f;
+        }
+
     }
 
     @Override
@@ -197,7 +206,7 @@ public class ScnPsycholog implements Scene {
 
     public void movePoints(){
         for (int i=0; i<points.size(); i++) {
-            points.get(i).add(new PVector(vectors.get(i).x, vectors.get(i).y, 0));
+            points.get(i).add(new PVector(vectors.get(i).x*speedMultiplier, vectors.get(i).y*speedMultiplier, 0));
             if (points.get(i).x<0){
                 points.get(i).x=0;
                 vectors.get(i).x*=-1;
@@ -214,7 +223,6 @@ public class ScnPsycholog implements Scene {
                 points.get(i).y=parent.height;
                 vectors.get(i).y*=-1;
             }
-            stepSpeed = 0.01f;
             points.get(i).z += (vectors.get(i).z-points.get(i).z)* stepSpeed;
             float difference = Math.abs(points.get(i).z - vectors.get(i).z);
             if (difference <0.01f && mode!=9){

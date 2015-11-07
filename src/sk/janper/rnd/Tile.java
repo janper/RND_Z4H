@@ -104,5 +104,6 @@ public class Tile extends Vec2D {
 
     public void display() {
         parent.image(graphics, x, y);
+//        parent.shape(shape,x,y);
     }
 }

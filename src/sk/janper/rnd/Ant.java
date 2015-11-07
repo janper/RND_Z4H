@@ -14,11 +14,11 @@ import java.util.ArrayList;
 public class Ant extends Vec3D{
 
     private PApplet parent;
-    //0=nothing, 1=explore, 2=supplying
+    //0=nothing, 1=explore, 2=supplying, 3=random wander
     private int state = 0;
-    private float speed = 10f;
-    private float jittering = 0.5f;
-    private float searchDistance = this.speed*100;
+    private float speed = 2f;
+    private float jittering = 0.05f;
+    private float searchDistance = 200;
     private Vec3D motionVector;
     private ArrayList<Vec3D> motionVectors = new ArrayList<>();
 
@@ -28,6 +28,8 @@ public class Ant extends Vec3D{
 
     private PShape antShape;
     private int pheromoneDensity = 8;
+
+    private int direction;
 
     public Ant(PApplet parent){
         this(parent, new Vec3D());
@@ -39,6 +41,7 @@ public class Ant extends Vec3D{
         Vec3D motionVector3D = Vec3D.randomVector();
         this.motionVector = new Vec3D (motionVector3D.x,motionVector3D.y,0).normalizeTo(this.speed);
         this.antShape = this.parent.loadShape("mravec.svg");
+        direction = Math.round(parent.random(-1, 1));
     }
 
     public int getState() {
@@ -118,10 +121,24 @@ public class Ant extends Vec3D{
         if (this.getState()==2){
             this.bringBackFood();
         }
+        if (getState()==3){
+            randomWander();
+        }
+
         if (this.getState()!=0) {
             this.updateAverageMotionVectors(this.motionVector);
             this.motionVector.jitter(this.getJittering(), this.getJittering(), 0).normalizeTo(this.getSpeed());
             this.addSelf(this.motionVector);
+            bounce();
+        }
+    }
+
+    private void bounce() {
+        if (x<0 || x>parent.width){
+            motionVector.y*=-1;
+        }
+        if (y<0 || y>parent.height){
+            motionVector.x*=-1;
         }
     }
 
@@ -155,7 +172,7 @@ public class Ant extends Vec3D{
     }
 
     private void followPheromone(Pheromone closestPheromone) {
-        this.motionVector = closestPheromone.sub(this).normalizeTo(this.getSpeed());
+        this.motionVector.interpolateToSelf(closestPheromone.sub(this).normalizeTo(this.getSpeed()), 0.1f);
     }
 
     private void explore() {
@@ -175,7 +192,7 @@ public class Ant extends Vec3D{
 
     private void randomWander() {
         float smoothness = 64;
-        this.motionVector.rotateZ(parent.random(-1 * (float) Math.PI / smoothness, (float) Math.PI / smoothness));
+        this.motionVector.rotateZ(parent.random(0, (float) Math.PI / smoothness)*direction);
     }
 
 
@@ -231,8 +248,8 @@ public class Ant extends Vec3D{
         buffer.translate(this.x, this.y);
         buffer.rotate(rotationAngle+(float)Math.PI);
 
-        float antWidth = 30f;
-        float antHeight = 30f;
+        float antWidth = 25f;
+        float antHeight = 25f;
         buffer.shape(this.antShape, -0.5f * antWidth, -0.5f * antHeight, antWidth, antHeight);
 
         buffer.popMatrix();

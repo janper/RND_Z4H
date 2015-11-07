@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class ProcessingSketch extends PApplet{
 
-    private final int SCENES = 1;
+    private final int SCENES = 9;
     int WIDTH = 1920;
     int HEIGHT = 1080;
     private boolean record = false;
@@ -26,7 +26,8 @@ public class ProcessingSketch extends PApplet{
     private Scene scene;
     private PShader blurShader;
     private PShader shader;
-    private boolean blur = false;
+    private boolean blur = true;
+    private boolean vignete = true;
     private PGraphics buffer;
     private int mode = 0;
     private int modeDirection = 1;
@@ -36,13 +37,19 @@ public class ProcessingSketch extends PApplet{
 
     private OscP5 osc;
     private NetAddress broadcastLocation;
-    private boolean reset  =false;
     private boolean blank = true;
+
+    private float blankFPS  = 60;
+    private final float BLANK_SECONDS = 1f;
+
+    private int blankTime = -1*(int)(blankFPS*BLANK_SECONDS);
 
     private boolean allowAudio = false;
 
     Minim minim;
     AudioInput in;
+    private PShader dimShader;
+    private PShader vigneteShader;
 
 
     public void settings(){
@@ -71,18 +78,18 @@ public class ProcessingSketch extends PApplet{
 
     public boolean setSize(){
         boolean returnValue = false;
-            GraphicsDevice devices[] = getDevices();
+        GraphicsDevice devices[] = getDevices();
 
-            if(devices.length>1 ){
-                returnValue = true;
-                WIDTH =devices[1].getDisplayMode().getWidth();
-                HEIGHT= devices[1].getDisplayMode().getHeight();
-                println("Adjusting animation size to "+WIDTH+"x"+HEIGHT+" b/c of 2ndary display");
-            }else{
-                WIDTH =devices[0].getDisplayMode().getWidth();
-                HEIGHT= devices[0].getDisplayMode().getHeight();
-                println("Adjusting animation size to "+WIDTH+"x"+HEIGHT+" to fit primary display");
-            }
+        if(devices.length>1 ){
+            returnValue = true;
+            WIDTH =devices[1].getDisplayMode().getWidth();
+            HEIGHT= devices[1].getDisplayMode().getHeight();
+            println("Adjusting animation size to "+WIDTH+"x"+HEIGHT+" b/c of 2ndary display");
+        }else{
+            WIDTH =devices[0].getDisplayMode().getWidth();
+            HEIGHT= devices[0].getDisplayMode().getHeight();
+            println("Adjusting animation size to "+WIDTH+"x"+HEIGHT+" to fit primary display");
+        }
         return returnValue;
     }
 
@@ -90,6 +97,8 @@ public class ProcessingSketch extends PApplet{
     public void setup() {
         buffer = createGraphics(width, height, P3D);
         blurShader = loadShader("blur.glsl");
+        dimShader = loadShader("dimmer.glsl");
+        vigneteShader = loadShader("vignette.glsl");
         noCursor();
         connect();
         setMinim();
@@ -105,7 +114,7 @@ public class ProcessingSketch extends PApplet{
 
     private void checkAudio(){
         int val = (int)abs(max(in.left.get(0),in.right.get(0))*1000);
-        System.out.println("Audio: "+val);
+//        System.out.println("Audio: "+val);
 //        if (val>80){
 //            action=true;
 //            mode+=modeDirection;
@@ -134,66 +143,81 @@ public class ProcessingSketch extends PApplet{
         broadcastLocation = new NetAddress("192.168.1.4", 8090);
     }
 
-    public void draw (){
-        if (blank){
-            background (0);
-        } else {
-            background(bgColors[currentBgColor]);
+    public void draw () {
+
+        if (frameCount < SCENES + 2) {
+            background(0);
+            loadScene();
         }
 
-            if (frameCount < SCENES + 2) {
-                loadScene();
+        if (frameCount == SCENES + 2) {
+            background(0);
+            progressbar(1);
+            for (int i = 0; i < SCENES; i++) {
+                setScene(i);
+                scene.display(buffer);
+            }
+            setScene(whichScene);
+        }
+
+        if (frameCount > SCENES + 2) {
+
+            if (allowAudio) {
+                checkAudio();
             }
 
-            if (frameCount == SCENES + 2) {
-                progressbar(1);
-                for (int i = 0; i < SCENES; i++) {
-                    setScene(i);
+            if (action) {
+                action(actionChar);
+                action = false;
+            }
+
+            scene.setBGColour(bgColors[currentBgColor]);
+            boolean inRange = (frameCount - blankTime < BLANK_SECONDS * blankFPS);
+
+            if (blank && !inRange) {
+                background(0);
+            } else {
+                background(bgColors[currentBgColor]);
+
+                if (scene.isDirect()) {
+                    scene.display();
+                } else {
+                    shader = scene.getShader();
+                    if (shader != null) {
+                        shader(shader);
+                    }
+
                     scene.display(buffer);
-                }
-                setScene(whichScene);
-            }
+                    image(buffer, 0, 0, width, height);
 
-            if (frameCount > SCENES + 2) {
-
-                if (allowAudio) {
-                    checkAudio();
+                    if (shader != null) {
+                        resetShader();
+                    }
                 }
 
-                if (action) {
-                    action(actionChar);
-                    action = false;
+                if (blur) {
+                    filter(blurShader);
                 }
 
-                if (!blank) {
+                if (vignete) {
+                    filter(vigneteShader);
+                }
 
-                    scene.setBGColour(bgColors[currentBgColor]);
-
-                    if (scene.isDirect()){
-                        scene.display();
+                if (inRange) {
+                    if (blank) {
+                        dimShader.set("dim", map(frameCount - blankTime, 0, BLANK_SECONDS * blankFPS, 0.01f, 0.99f));
                     } else {
-                        shader = scene.getShader();
-                        if (shader != null) {
-                            shader(shader);
-                        }
-
-                        scene.display(buffer);
-                        image(buffer, 0, 0, width, height);
-
-                        if (shader != null) {
-                            resetShader();
-                        }
+                        float value = map(frameCount - blankTime, 0, BLANK_SECONDS * blankFPS, 0.99f, 0.01f);
+                        dimShader.set("dim", value);
                     }
-
-                    if (blur) {
-                        filter(blurShader);
-                    }
-                    recordIfNeeded();
+                    filter(dimShader);
                 }
+                recordIfNeeded();
             }
 
-
+        }
     }
+
 
     private void loadScene() {
         switch(frameCount) {
@@ -206,13 +230,13 @@ public class ProcessingSketch extends PApplet{
 //                progressbar((frameCount-1) / SCENES);
 //                break;
 
-            case 12:
+            case 3:
                 scenes.add(new ScnKuchyna(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
-            case 3:
-                scenes.add(new ScnPrechod1(this));
+            case 5:
+                scenes.add(new ScnPrechod(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
@@ -221,12 +245,12 @@ public class ProcessingSketch extends PApplet{
 //                progressbar(3f / SCENES);
 //                break;
 
-            case 5:
+            case 4:
                 scenes.add(new ScnKlenotnictvo(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
-            case 6:
+            case 12:
                 scenes.add(new ScnMuchy(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
@@ -241,22 +265,22 @@ public class ProcessingSketch extends PApplet{
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
-            case 9:
+            case 10:
                 scenes.add(new ScnSpalna(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
-            case 10:
+            case 11:
                 scenes.add(new ScnPyramidy(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
-            case 2:
+            case 9:
                 scenes.add(new ScnPsycholog(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
-            case 11:
+            case 2:
                 scenes.add(new ScnKruhy(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
@@ -266,7 +290,7 @@ public class ProcessingSketch extends PApplet{
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
-            case 4:
+            case 6:
                 scenes.add(new ScnUmyvarka(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
@@ -326,6 +350,7 @@ public class ProcessingSketch extends PApplet{
         System.out.println("h : Halt");
         System.out.println("k : Blank");
         System.out.println("l : Allow audio listener");
+        System.out.println("v : Vignette");
 
         if (blank) {
             System.out.println("Currently blank");
@@ -347,6 +372,7 @@ public class ProcessingSketch extends PApplet{
                 break;
             case 'r' : System.out.println("Reset");
                 scene.reset();
+                currentBgColor = 0;
                 break;
             case 's' :
                 record = !record;
@@ -430,12 +456,21 @@ public class ProcessingSketch extends PApplet{
                 exit();
                 break;
             case 'k' : System.out.println("Blank: "+!blank);
-                blank = !blank;
+                makeBlank();
                 break;
             case 'l' : System.out.println("Allow audio listener: "+!allowAudio);
                 allowAudio = !allowAudio;
                 break;
+            case 'v' : System.out.println("Vignette: "+!vignete);
+                vignete= !vignete;
+                break;
         }
+    }
+
+    private void makeBlank() {
+        blank = !blank;
+        blankFPS = frameRate;
+        blankTime = frameCount;
     }
 
     private void printInfo() {

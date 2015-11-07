@@ -128,15 +128,13 @@ public class Tapeta extends PolyCurve {
 
     public void drawPolyLineDirect (ArrayList<Vec2D> points){
         if (dots) {
-            float inBetween = 2f;
+            int inBetween = 1;
             parent.beginShape(PApplet.POINTS);
-            parent.stroke (parent.color(12, 52, 173));
-            parent.strokeWeight(2f);
             for (int i = 0; i < points.size()-1; i++) {
                 Vec2D first = points.get(i);
                 Vec2D second = points.get(i+1);
                 for (int j = 0; j<inBetween; j++){
-                    Vec2D current = first.interpolateTo(second,inBetween/j);
+                    Vec2D current = first.interpolateTo(second,j/inBetween);
                     parent.vertex(current.x, current.y);
                 }
             }

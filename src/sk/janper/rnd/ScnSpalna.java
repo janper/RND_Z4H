@@ -25,7 +25,11 @@ public class ScnSpalna implements Scene {
     private boolean moving = false;
 
     private boolean direct = true;
-    private int mode = 0;
+    private int mode = 1;
+    private int bgColour = 0;
+    private int counter =0;
+    private float finishDuration = 20f;
+    private int endPoint;
 
     public ScnSpalna(PApplet parent) {
         System.out.print("Constructing "+name);
@@ -65,20 +69,21 @@ public class ScnSpalna implements Scene {
     @Override
     public void reset() {
         physics.clear();
-        makeFur(80);
+        makeFur(60);
         makePhysics();
         rememberColors();
         reColor(mode);
+        counter=0;
     }
 
     private void rememberColors() {
-        colors = new ArrayList<Integer>();
+        colors = new ArrayList<>();
         fur.forEach(r -> colors.add(r.getColour()));
     }
 
     @Override
     public void shuffle() {
-
+            fur.forEach(r -> r.shake(10f));
     }
 
     @Override
@@ -88,19 +93,24 @@ public class ScnSpalna implements Scene {
 
     @Override
     public void jitter() {
-        fur.forEach(r -> r.shake(10f));
+        fur.forEach(r -> r.shake(0.5f));
     }
 
     @Override
     public void mode(int which) {
         mode = which;
         reColor(which);
+        if (mode==9){
+            endPoint = counter;
+        }
     }
 
     private void reColor(int which) {
         if (which==0){
             fur.forEach(r -> r.setColour(parent.color(255)));
-        } else {
+        }
+
+        if (which==1) {
             for (int i=0; i<fur.size(); i++) {
                 fur.get(i).setColour(colors.get(i));
             }
@@ -109,7 +119,7 @@ public class ScnSpalna implements Scene {
 
     @Override
     public void setBGColour(int colour) {
-
+        bgColour = colour;
     }
 
 
@@ -118,7 +128,7 @@ public class ScnSpalna implements Scene {
     }
 
     private void makeFur(int number){
-        fur = new ArrayList<Rod>();
+        fur = new ArrayList<>();
         int xSteps = number;
         int ySteps = number;
         float xStep = parent.width/(xSteps-1);
@@ -146,7 +156,9 @@ public class ScnSpalna implements Scene {
                 int bottomColour = parent.lerpColor(bottomLeft, bottomRight, PApplet.map(x, 0, xSteps - 1, 0, 1));
                 int colour = parent.lerpColor(topColour, bottomColour, PApplet.map(y, 0, ySteps - 1, 0, 1));
                 rod.setColour(colour);
+                rod.setBgColour(bgColour);
                 rod.calculate();
+//                rod.upCurrent();
                 fur.add(rod);
             }
         }
@@ -177,9 +189,14 @@ public class ScnSpalna implements Scene {
     @Override
     public void display() {
         if (moving) {
+            counter++;
             physics.update();
             fur.forEach(r -> r.stabilize(0.1f));
         }
-        fur.forEach(r -> r.display());
+        if (mode ==9){
+            fur.forEach(r -> r.leave(PApplet.map( counter-endPoint, 0, finishDuration, 1f,0f)));
+        } else {
+            fur.forEach(r -> r.display());
+        }
     }
 }

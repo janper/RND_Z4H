@@ -15,10 +15,10 @@ public class Fly extends Vec3D {
     private PApplet parent;
     private Vec3D motionVector;
     private int age = 0;
-    private float minSpeed = 8f;
-    private float maxSpeed = 32f;
-    private int minSaccadePeriod = 10;
-    private int maxSaccadePeriod = 60;
+    private float minSpeed = 1f;
+    private float maxSpeed = 4f;
+    private int minSaccadePeriod = 60*2;
+    private int maxSaccadePeriod = 60*10;
     private int currentSaccadePeriod;
     private int lastSaccadeAge = age;
     private float saccadeSlowdownMoment = 0.2f;

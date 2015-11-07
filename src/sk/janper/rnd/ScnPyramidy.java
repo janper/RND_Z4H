@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class ScnPyramidy implements Scene {
     public static final Vec3D SIZE = new Vec3D(100f, 50f, 100f);
     private final String name = "Pyramidy";
-    public ArrayList <Block> blocks = new ArrayList<Block>();
+    public ArrayList <Block> blocks = new ArrayList<>();
     private PApplet parent;
 
     private Vec3D randomPoint;
@@ -40,7 +40,7 @@ public class ScnPyramidy implements Scene {
         System.out.print("Constructing "+name);
         this.parent = parent;
         colour = parent.color(255);
-        weight = 2f;
+        weight = 4f;
         makePyramids ();
         blocks.forEach(b -> boundingBox.includePoint(b));
         System.out.println(" done!");
@@ -89,13 +89,13 @@ public class ScnPyramidy implements Scene {
 
     @Override
     public void shuffle() {
-        shift = parent.random (-0.25f,0.25f);
+//        shift = parent.random (-0.25f,0.25f);
 
     }
 
     @Override
     public void jitter() {
-        blocks.forEach(b -> b.jitter(20f));
+        blocks.forEach(b -> b.jitter(10f));
     }
 
     @Override
@@ -108,7 +108,7 @@ public class ScnPyramidy implements Scene {
             blocks.forEach(b -> b.leave(500f));
         }
         if (mode != 9 && mode !=8){
-            blocks.forEach(b -> b.comeBack());
+            blocks.forEach(Block::comeBack);
         }
     }
 
@@ -127,17 +127,17 @@ public class ScnPyramidy implements Scene {
     public void makePyramids(){
         ArrayList <Block> tempBlocks;
 
-        tempBlocks= new ArrayList<Block>();
+        tempBlocks= new ArrayList<>();
         Block tempBlock = new Block(parent, new Vec3D(), 10, SIZE, tempBlocks, colour, weight, bgColour);
         tempBlocks.add(tempBlock);
         this.blocks.addAll(tempBlocks);
 
-        tempBlocks= new ArrayList<Block>();
+        tempBlocks= new ArrayList<>();
         tempBlock = new Block(parent, new Vec3D(-1250, SIZE.y * 4, -1250), 6, SIZE, tempBlocks, colour, weight, bgColour);
         tempBlocks.add(tempBlock);
         this.blocks.addAll(tempBlocks);
 
-        tempBlocks= new ArrayList<Block>();
+        tempBlocks= new ArrayList<>();
         tempBlock = new Block(parent, new Vec3D(-2000, SIZE.y * 7, -2000), 3, SIZE, tempBlocks, colour, weight, bgColour);
         tempBlocks.add(tempBlock);
         this.blocks.addAll(tempBlocks);
@@ -183,7 +183,7 @@ public class ScnPyramidy implements Scene {
 
         Vec3D diagonal = boundingBox.getExtent().rotateY(PApplet.map(counter, 0, rotationSpeed, 0, 2 * PConstants.PI));
         parent.camera(boundingBox.x+diagonal.x*1.5f*(1-shift),boundingBox.y-diagonal.y*2f*(1-shift), boundingBox.z+diagonal.z*1.5f*(1-shift), boundingBox.x,boundingBox.y*1.5f,boundingBox.z,0f, 1f, 0f);
-        blocks.forEach(b -> b.display());
+        blocks.forEach(Block::display);
     }
 
     @Override

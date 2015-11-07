@@ -27,7 +27,11 @@ public class Rod extends Vec3D {
     private int colour =255;
     private float weight = 2f;
 
+    private float motion;
+
     private Vec3D stablePosition0, stablePosition1;
+    private int counter = 0;
+    private int bgColour = 0;
 
     public Rod(PApplet parent, ReadonlyVec3D readonlyVec3D, Vec3D direction, GravityBehavior gravity) {
         super(readonlyVec3D);
@@ -35,16 +39,21 @@ public class Rod extends Vec3D {
         this.gravity = gravity;
         this.length = direction.magnitude();
         this.parent = parent;
+        this.motion = parent.random(parent.height*4f, parent.height*7f);
+    }
+
+    public void setBgColour(int colour){
+        bgColour = colour;
     }
 
     public void calculate() {
-        this.particles = new ArrayList<VerletParticle>();
-        this.springs = new ArrayList<VerletSpring>();
+        this.particles = new ArrayList<>();
+        this.springs = new ArrayList<>();
 
         float step = getLength() / this.getDivisions();
 
         for (int i = 0; i <= getDivisions(); i++) {
-            Vec3D stepVector = getDirection().copy().normalizeTo(i * step);
+            Vec3D stepVector = getDirection().copy().normalizeTo(i * step/10f);
             VerletParticle particle = new VerletParticle(this.add(stepVector));
             particle.addBehavior(getGravity());
             this.particles.add(particle);
@@ -86,6 +95,25 @@ public class Rod extends Vec3D {
         return this;
     }
 
+    public void upStable(){
+        stablePosition0.y-=motion;
+        stablePosition1.y-=motion;
+    }
+
+    public void upCurrent(){
+        this.particles.get(0).y-=motion;
+        this.particles.get(1).y-=motion;
+    }
+
+    public void downStable(){
+        stablePosition0.y+=motion;
+        stablePosition1.y+=motion;
+    }
+
+    public void downCurrent(){
+        this.particles.get(0).y+=motion;
+        this.particles.get(1).y+=motion;
+    }
 
     public void shake(float strength) {
         this.particles.get(0).jitter(strength);
@@ -192,16 +220,64 @@ public class Rod extends Vec3D {
     }
 
     public void display() {
+        counter++;
+        int duration = 120;
         parent.pushStyle();
         parent.noFill();
-        parent.stroke(this.colour);
         parent.strokeWeight(this.weight);
-        parent.beginShape();
-        parent.curveVertex(this.particles.get(0).x, this.particles.get(0).y, this.particles.get(0).z); // the first control point
-        this.particles.forEach(p -> parent.curveVertex(p.x, p.y, p.z));
-        int last = this.particles.size()-1;
-        parent.vertex(this.particles.get(last).x, this.particles.get(last).y, this.particles.get(last).z);
-        parent.endShape();
+        parent.stroke(colour);
+        int lines = particles.size() - 1;
+
+        if (counter < duration) {
+
+            ArrayList<Vec3D> relativePoints = new ArrayList<>();
+
+            for (int i = 1; i <= lines; i++) {
+                Vec3D v = particles.get(i).sub(particles.get(i - 1));
+                relativePoints.add(v);
+            }
+
+            Vec3D currentPosition = new Vec3D(this);
+
+            for (int i = 1; i < lines; i++) {
+                Vec3D nextPosition = currentPosition.add(relativePoints.get(i).getNormalizedTo(relativePoints.get(i).magnitude() * PApplet.map(counter, 0, duration, 0f, 1f)));
+                parent.line(currentPosition.x, currentPosition.y, currentPosition.z, nextPosition.x, nextPosition.y, nextPosition.z);
+                currentPosition = new Vec3D(nextPosition);
+            }
+        } else {
+
+            for (int i = 0; i < lines; i++) {
+                parent.line(particles.get(i).x, particles.get(i).y, particles.get(i).z, particles.get(i + 1).x, particles.get(i + 1).y, particles.get(i + 1).z);
+            }
+        }
         parent.popStyle();
+    }
+
+
+    public void leave(float percent) {
+        counter++;
+        if (percent>0) {
+            parent.pushStyle();
+            parent.noFill();
+            parent.strokeWeight(this.weight);
+            parent.stroke(colour);
+            int lines = particles.size() - 1;
+
+            ArrayList<Vec3D> relativePoints = new ArrayList<>();
+
+            for (int i = 1; i <= lines; i++) {
+                Vec3D v = particles.get(i).sub(particles.get(i - 1));
+                relativePoints.add(v);
+            }
+
+            Vec3D currentPosition = new Vec3D(this);
+
+            for (int i = 1; i < lines; i++) {
+                Vec3D nextPosition = currentPosition.add(relativePoints.get(i).getNormalizedTo(relativePoints.get(i).magnitude() * percent));
+                parent.line(currentPosition.x, currentPosition.y, currentPosition.z, nextPosition.x, nextPosition.y, nextPosition.z);
+                currentPosition = new Vec3D(nextPosition);
+            }
+            parent.popStyle();
+        }
     }
 }

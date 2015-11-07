@@ -15,8 +15,8 @@ public class ScnUmyvarka implements Scene {
     private final int videoWidth = 640;
     private final int videoHeight = 480;
     private PApplet parent;
-    private int thresholdMin = 130;
-    private int thresholdMax = 140;
+    private int thresholdMin = 100;
+    private int thresholdMax = 150;
 
     private Mirror mirror;
 

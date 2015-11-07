@@ -28,7 +28,7 @@ public class PolyCurve extends Vec2D {
     private boolean reflect = false;
     private Vec2D reflectionPoint;
     private Vec2D reflectionDirection;
-    private int updateSteps = 120*4;
+    private int updateSteps = 60*60;
 
 
     public PolyCurve() {

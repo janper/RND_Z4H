@@ -60,7 +60,7 @@ public class Diamond extends VerletParticle {
 
         mainShape.beginShape();
         mainShape.stroke(255);
-        mainShape.strokeWeight(2f);
+        mainShape.strokeWeight(5f);
 //        mainShape.fill(200, 225, 255, 50f);
         mainShape.noFill();
 //        mainShape.fill(32);
@@ -75,7 +75,7 @@ public class Diamond extends VerletParticle {
 
         edgeShape.beginShape();
         edgeShape.stroke(255);
-        edgeShape.strokeWeight(2f);
+        edgeShape.strokeWeight(5f);
         edgeShape.noFill();
         edgeShape.vertex((float) (-50 + 12.5 + 75 / 4), -25, 0);
         edgeShape.vertex((float)(-50+100/4), 0, 0);
@@ -88,7 +88,7 @@ public class Diamond extends VerletParticle {
 
         creaseShape.beginShape(PConstants.LINES);
         creaseShape.stroke(255);
-        creaseShape.strokeWeight(2f);
+        creaseShape.strokeWeight(5f);
         creaseShape.noFill();
         creaseShape.vertex(-50, 0, 0);
         creaseShape.vertex(50, 0, 0);

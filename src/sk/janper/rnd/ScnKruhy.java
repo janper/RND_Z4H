@@ -13,6 +13,7 @@ import java.util.ArrayList;
  */
 
 public class ScnKruhy implements Scene {
+    private final PShader halftoneShader;
     private PApplet parent;
     private String name = "Kruhy v obili";
     private int bgColour;
@@ -22,22 +23,27 @@ public class ScnKruhy implements Scene {
     private Gear gear;
 
     private int depth = 4;
-    private ArrayList<Float> originalRadii = new ArrayList<Float>();
-    private ArrayList<Float> currentRadii = new ArrayList<Float>();
-    private ArrayList<Float> targetRadii = new ArrayList<Float>();
+    private ArrayList<Float> originalRadii = new ArrayList<>();
+    private ArrayList<Float> currentRadii = new ArrayList<>();
+    private ArrayList<Float> targetRadii = new ArrayList<>();
 
-    private ArrayList<Float> originalSpeed = new ArrayList<Float>();
-    private ArrayList<Float> currentSpeed = new ArrayList<Float>();
-    private ArrayList<Float> targetSpeed = new ArrayList<Float>();
+    private ArrayList<Float> originalSpeed = new ArrayList<>();
+    private ArrayList<Float> currentSpeed = new ArrayList<>();
+    private ArrayList<Float> targetSpeed = new ArrayList<>();
 
-    private ArrayList<Gear> gears = new ArrayList<Gear>();
+    private ArrayList<Gear> gears = new ArrayList<>();
 
-    private int transitionSteps = 50000;
+    private final int TRANSITION_STEPS = 50000;
 
     private BufferShader bufferShader;
 
     private int counter;
     private boolean direct = false;
+
+    private int mode = 0;
+    private float z = 0;
+
+    private boolean finished = false;
 
 
     public ScnKruhy(PApplet parent) {
@@ -46,6 +52,7 @@ public class ScnKruhy implements Scene {
         bufferShader = new BuffKruhy(parent);
         reset();
         randomize();
+        halftoneShader = parent.loadShader("halftone.glsl");
         System.out.println(" done!");
     }
 
@@ -68,16 +75,17 @@ public class ScnKruhy implements Scene {
         mapCurrent();
         makeGears();
 
-        if (bufferShader.isJustAnim(counter)){
-            direct = true;
-            display();
-        } else {
-            direct = false;
+//        if (bufferShader.isJustAnim(counter)){
+//            setDirectTrue();
+//            display();
+//        } else {
+//            direct = false;
             buffer.beginDraw();
             buffer.clear();
+            buffer.camera(parent.width / 2f, parent.height*1.15f, (parent.height / 2f) / PApplet.tan(PApplet.PI * 30f / 180f)*0.3f, parent.width / 2f, parent.height / 1.5f, 0, 0, 1, 0);
             displayCurrentSpirograph(1500, buffer);
             buffer.endDraw();
-        }
+//        }
     }
 
     @Override
@@ -91,18 +99,21 @@ public class ScnKruhy implements Scene {
         
         displayCurrentSpirograph(1500);
 
-        if (!bufferShader.isJustAnim(counter)){
-            direct = false;
-        }
+//        if (!bufferShader.isJustAnim(counter)){
+//            parent.resetShader();
+//            direct = false;
+//        }
     }
 
     private void displayCurrentSpirograph(int count) {
         ArrayList<Vec2D> points = getPoints(count);
         parent.pushStyle();
-        parent.strokeWeight(4f);
+        parent.strokeWeight(8f);
         parent.beginShape(PConstants.POINTS);
         parent.noFill();
 //        parent.camera(parent.width/2,parent.height/2,parent.height/2, 0,parent.height,0, 0,1,0);
+        parent.camera(parent.width / 2f, parent.height*1.25f, (parent.height / 2f) / PApplet.tan(PApplet.PI * 30f / 180f)*0.5f, parent.width /2f, parent.height / 1.5f, 0, 0, 1, 0);
+//        parent.camera(parent.width / 2f, parent.height/3f , (parent.height / 2f) / parent.tan(parent.PI * 30f / 180f)*0.25f, parent.width / 2f, parent.height / 1.5f, 0, 0, 1, 0);
 
         int fade = 100;
         for (int i=0; i<points.size();i++){
@@ -115,7 +126,18 @@ public class ScnKruhy implements Scene {
                     parent.stroke(255);
                 }
             }
-            parent.vertex(points.get(i).x, points.get(i).y);
+
+//            float z = 0;
+
+            if (mode==9){
+//                z=this.z;
+//                this.z+=0.01f;
+                targetRadii.set(0, targetRadii.get(0)*1.1f);
+//
+//                gear.setRadius(gear.getRadius()*1.1f);
+            }
+
+            parent.vertex(points.get(i).x, points.get(i).y, 0);
         }
         parent.endShape();
         parent.popStyle();
@@ -126,6 +148,7 @@ public class ScnKruhy implements Scene {
         prepareGears();
         randomizeTarget();
         counter = 0;
+        mode =0;
     }
 
     @Override
@@ -140,6 +163,11 @@ public class ScnKruhy implements Scene {
 
     @Override
     public void mode(int which) {
+        mode = which;
+        if (mode!=9){
+//            this.z=0;
+            targetRadii.set(0, 350f);
+        }
     }
 
     @Override
@@ -177,14 +205,14 @@ public class ScnKruhy implements Scene {
     }
 
     private void mapCurrent(){
-        int step = counter%transitionSteps;
+        int step = counter% TRANSITION_STEPS;
 
         currentRadii.clear();
         currentSpeed.clear();
 
         for (int i=0 ; i<this.depth; i++){
-            currentRadii.add(PApplet.map(step, 0, transitionSteps, originalRadii.get(i), targetRadii.get(i)));
-            currentSpeed.add(PApplet.map(step, 0, transitionSteps, originalSpeed.get(i), targetSpeed.get(i)));
+            currentRadii.add(PApplet.map(step, 0, TRANSITION_STEPS, originalRadii.get(i), targetRadii.get(i)));
+            currentSpeed.add(PApplet.map(step, 0, TRANSITION_STEPS, originalSpeed.get(i), targetSpeed.get(i)));
         }
     }
 
@@ -209,7 +237,7 @@ public class ScnKruhy implements Scene {
 
 
     public ArrayList<Vec2D> getPoints(int count){
-        ArrayList <Vec2D> output = new ArrayList<Vec2D>();
+        ArrayList <Vec2D> output = new ArrayList<>();
         for (int i=0; i<count; i++){
             Vec2D currentPoint = gear.getPoint();
             output.add(currentPoint);
@@ -222,7 +250,7 @@ public class ScnKruhy implements Scene {
     public void displayCurrentSpirograph(int count, PGraphics buffer){
         ArrayList<Vec2D> points = getPoints(count);
         buffer.pushStyle();
-        buffer.strokeWeight(4f);
+        buffer.strokeWeight(6f);
         buffer.beginShape(PConstants.POINTS);
         buffer.noFill();
 //        buffer.camera(parent.width/2,parent.height/2,parent.height/2, 0,parent.height,0, 0,1,0);
@@ -238,7 +266,18 @@ public class ScnKruhy implements Scene {
                     buffer.stroke(255);
                 }
             }
-            buffer.vertex(points.get(i).x, points.get(i).y);
+
+            if (mode==9){
+//                gear.setRadius(gear.getRadius()*1.1f);
+                if (targetRadii.get(0)<1000000) {
+                    float newRadius = targetRadii.get(0) * 1.00001f;
+                    targetRadii.set(0, newRadius);
+                } else {
+                    finished = true;
+                }
+            }
+
+            buffer.vertex(points.get(i).x, points.get(i).y, 0);
         }
         buffer.endShape();
         buffer.popStyle();

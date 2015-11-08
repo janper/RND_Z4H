@@ -3,72 +3,64 @@ package sk.janper.rnd;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.opengl.PShader;
-
-import java.util.ArrayList;
+import toxi.geom.Vec3D;
+import toxi.physics.VerletParticle;
+import toxi.physics.VerletPhysics;
+import toxi.physics.VerletSpring;
+import toxi.physics.behaviors.GravityBehavior;
 
 /**
- * Created by rndzvuk on 2.11.2015.
+ * Created by rndzvuk on 8.11.2015.
  */
 public class ScnStavebniny implements Scene {
     private PApplet parent;
-
     private String name = "Stavebniny";
-    private int bgColour;
-    private boolean moving = false;
+
+    VerletPhysics physics;
+    Vec3D gravityVector = new Vec3D(0f,5f,0f);
+
+//    private ArrayList<Ladder> ladders = new ArrayList<>();
+
     private int mode = 0;
-
-    private FlakeBuffer fallen;
-
-    private PGraphics obstacles;
-    private PGraphics flakesBuffer;
-    private PGraphics tempFlakes;
-
-    private PShader flakesShader;
-    private PShader obstaclesShader;
-
-    private ArrayList<Flake> flakes = new ArrayList<>();
-
+    private boolean moving = true;
     private int counter = 0;
 
-    private boolean direct = false;
+    private boolean direct = true;
+    private final float LADDER_WIDTH = 150f;
+    private float ladderGap = 100f;
+    private final float STEP_HEIGHT = 100f;
+    private final float Y_OFFSET = -30f;
 
 
     public ScnStavebniny(PApplet parent) {
-        this.parent = parent;
         System.out.print("Constructing "+name);
         this.parent = parent;
-        fallen = new FlakeBuffer(parent.width, parent.height, 0.25f);
+        int count = (int)Math.floor(parent.width / (LADDER_WIDTH + ladderGap));
+        ladderGap = (parent.width-count * LADDER_WIDTH)/(count+1)+2f;
         reset();
-
-        flakesShader = parent.loadShader("flakesShader.glsl");
-        obstaclesShader = parent.loadShader("obstaclesShader.glsl");
-
-        obstacles = parent.createGraphics(parent.width, parent.height, PApplet.P2D);
-        obstacles.beginDraw();
-        obstacles.stroke(parent.color(255));
-        obstacles.strokeWeight(4f);
-        obstacles.line(0,0,0,parent.height-1);
-        obstacles.line(parent.width-1,0,parent.width-1,parent.height-1);
-        obstacles.line(0,parent.height-100,parent.width-1,parent.height-100);
-        obstacles.endDraw();
-
-        flakesBuffer = parent.createGraphics(parent.width, parent.height, PApplet.P2D);
-        flakesBuffer.beginDraw();
-        flakesBuffer.stroke(parent.color(255,0,0));
-        flakesBuffer.strokeWeight(10f);
-//        for (int i=0; i<3; i++){
-//            flakesBuffer.point (parent.random(flakesBuffer.width), parent.random(flakesBuffer.height));
-//        }
-
-        flakesBuffer.point (flakesBuffer.width/2, flakesBuffer.height/2);
-//        flakesBuffer.shader(flakesShader);
-        flakesBuffer.endDraw();
-
-        tempFlakes = parent.createGraphics(parent.width, parent.height, PApplet.P2D);
-        tempFlakes.shader(flakesShader);
-
-
         System.out.println(" done!");
+    }
+
+    private void initPhysics () {
+        physics = new VerletPhysics();
+    }
+
+    private void makeLadders() {
+        for (float x = - LADDER_WIDTH/2-10; x<=parent.width+ LADDER_WIDTH+10; x+= LADDER_WIDTH +ladderGap){
+            VerletParticle tempLadder = new Ladder(parent,new Vec3D(x,parent.height/2-Y_OFFSET,0), LADDER_WIDTH, STEP_HEIGHT);
+            tempLadder.addBehavior(new GravityBehavior(gravityVector));
+            physics.addParticle(tempLadder);
+        }
+        for (int i=0; i<physics.particles.size()-1; i++){
+            VerletParticle verletParticle1 = physics.particles.get(i);
+            VerletParticle verletParticle2 = physics.particles.get(i + 1);
+            float dist = verletParticle1.distanceTo(verletParticle2);
+            VerletSpring tempSpring = new VerletSpring(verletParticle1, verletParticle2, dist*1f, 0.5f);
+            physics.addSpring(tempSpring);
+        }
+
+        physics.particles.get(0).lock();
+        physics.particles.get(physics.particles.size()-1).lock();
     }
 
     @Override
@@ -83,68 +75,54 @@ public class ScnStavebniny implements Scene {
 
     @Override
     public void stop() {
-        moving=false;
+        moving = false;
     }
 
     @Override
     public void display(PGraphics buffer) {
-        if (moving){
-//            if  (counter%4==0) {
-//                flakes.add(new Flake(parent, parent.random(parent.width), 0, obstacles));
-//            }
-//            ArrayList<Flake> newFlakes = new ArrayList<>();
-//            flakes.forEach(f -> {
-//                f.update();
-//                if (!f.isSettled()){
-//                    newFlakes.add(f);
-//                }
-//            });
-//            flakes = newFlakes;
 
-            flakesShader.set("obstacles", obstacles.get());
+    }
 
-            buffer.beginDraw();
-            buffer.clear();
-
-            tempFlakes.beginDraw();
-            tempFlakes.clear();
-            tempFlakes.image(flakesBuffer, 0,0);
-            tempFlakes.endDraw();
-
-            flakesBuffer = tempFlakes;
-//            flakesBuffer.image(flakesBuffer,0,0);
-
-//            flakesBuffer.beginDraw();
-//            flakesBuffer.clear();
-//            flakesBuffer.image(tempFlakes,0,0);
-//            flakesBuffer.endDraw();
-
-            buffer.image (flakesBuffer.get(), 0,0);
-
-            buffer.image(obstacles.get(),0,0);
-
-            buffer.endDraw();
-
-//            parent.noLoop();
-
-            counter++;
+    @Override
+    public void display() {
+        counter++;
+        if (mode == 0) {
+            physics.update();
+        }
+        if (mode == 1){
+            physics.particles.forEach(p -> p.y-=0.25f);
+        }
+        if (mode == 2){
+            physics.particles.forEach(p -> p.y+=0.25f);
+        }
+        for (VerletParticle particle : physics.particles) {
+            Ladder tempLadder = (Ladder)particle;
+            tempLadder.displayDirect();
         }
     }
 
     @Override
     public void reset() {
-        fallen.reset();
-        counter = 0;
+        stop();
+        initPhysics();
+        makeLadders();
+        start();
     }
 
     @Override
     public void shuffle() {
-        flakes.forEach(f -> f.getFallDirection().jitter (1f));
+        int which = (int) parent.random(1, physics.particles.size() - 1);
+        float value = parent.random(100, 200);
+        int sign = (parent.random(1f) > 0.5f) ? 1 : -1;
+        physics.particles.get(which).z+=(value * sign);
     }
 
     @Override
     public void jitter() {
-        flakes.forEach(f -> f.jitter(1f));
+        int count = physics.particles.size();
+        int randomParticle = (int)parent.random(1, count-1);
+        float value = parent.random(-25,25);
+        physics.particles.get(randomParticle).y+=value;
     }
 
     @Override
@@ -155,7 +133,6 @@ public class ScnStavebniny implements Scene {
 
     @Override
     public void setBGColour(int colour) {
-        bgColour = colour;
 
     }
 
@@ -170,17 +147,12 @@ public class ScnStavebniny implements Scene {
     }
 
     @Override
+    public boolean isDirect() {
+        return direct;
+    }
+
+    @Override
     public PShader getShader() {
         return null;
-    }
-
-    @Override
-    public void display() {
-
-    }
-
-    @Override
-    public boolean isDirect() {
-        return false;
     }
 }

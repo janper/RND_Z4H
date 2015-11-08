@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class ProcessingSketch extends PApplet{
 
-    private final int SCENES = 9;
+    private final int SCENES = 1;
     int WIDTH = 1920;
     int HEIGHT = 1080;
     private boolean record = false;
@@ -37,7 +37,7 @@ public class ProcessingSketch extends PApplet{
 
     private OscP5 osc;
     private NetAddress broadcastLocation;
-    private boolean blank = true;
+    private boolean blank = false;
 
     private float blankFPS  = 60;
     private final float BLANK_SECONDS = 1f;
@@ -226,9 +226,14 @@ public class ProcessingSketch extends PApplet{
                 break;
 //
 //            case 2:
-//                scenes.add(new ScnStavebniny(this));
+//                scenes.add(new ScnStavebninyZle(this));
 //                progressbar((frameCount-1) / SCENES);
 //                break;
+
+            case 2:
+                scenes.add(new ScnStavebniny(this));
+                progressbar((float)(frameCount-1) / SCENES);
+                break;
 
             case 3:
                 scenes.add(new ScnKuchyna(this));
@@ -280,7 +285,7 @@ public class ProcessingSketch extends PApplet{
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
-            case 2:
+            case 13:
                 scenes.add(new ScnKruhy(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;

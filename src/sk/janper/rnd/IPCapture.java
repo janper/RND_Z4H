@@ -26,10 +26,14 @@ public class IPCapture extends PImage implements Runnable {
     private HttpURLConnection conn;
     private BufferedInputStream httpIn;
     private ByteArrayOutputStream jpgOut;
+    private int[] newPixels;
 
     private boolean started = false;
 
     public final static String VERSION = "0.1.0";
+
+    private int w = 0;
+    private int h = 0;
 
     public IPCapture(PApplet parent, String urlString, String user, String pass) {
         super();
@@ -130,20 +134,35 @@ public class IPCapture extends PImage implements Runnable {
             ByteArrayInputStream jpgIn = new ByteArrayInputStream(curFrame);
             BufferedImage bufImg = ImageIO.read(jpgIn);
             jpgIn.close();
-            int w = bufImg.getWidth();
-            int h = bufImg.getHeight();
-            if (w != this.width || h != this.height) {
-//                this.resize(bufImg.getWidth(),bufImg.getHeight());
-                System.out.println("w: "+w);
-                System.out.println("h: "+h);
-                this.resize(w,h);
-            }
-            bufImg.getRGB(0, 0, w, h, this.pixels, 0, w);
-            this.updatePixels();
+            w = bufImg.getWidth();
+            h = bufImg.getHeight();
+            newPixels = new int[w*h];
+            bufImg.getRGB(0, 0, w, h, newPixels, 0, w);
+//            this.updatePixels();
+//
+//            if (w != this.width || h != this.height) {
+////                this.resize(bufImg.getWidth(),bufImg.getHeight());
+//                System.out.println("w: "+w);
+//                System.out.println("h: "+h);
+//                this.resize(w,h);
+//            }
+
             frameAvailable = false;
         }
         catch (IOException e) {
             System.err.println("Error acquiring the frame: " + e.getMessage());
         }
+    }
+
+    public int[] getPixels(){
+        return newPixels;
+    }
+
+    public int getW() {
+        return w;
+    }
+
+    public int getH() {
+        return h;
     }
 }

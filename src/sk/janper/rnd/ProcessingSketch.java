@@ -36,7 +36,7 @@ public class ProcessingSketch extends PApplet{
 
     private OscP5 osc;
     private NetAddress broadcastLocation;
-    private boolean blank = true;
+    private boolean blank = false;
 
     private float blankFPS  = 60;
     private final float BLANK_SECONDS = 1f;
@@ -49,6 +49,8 @@ public class ProcessingSketch extends PApplet{
     AudioInput in;
     private PShader dimShader;
     private PShader vigneteShader;
+
+    private int stage = 0;
 
 
     public void settings(){
@@ -165,7 +167,7 @@ public class ProcessingSketch extends PApplet{
 
         if (frameCount > SCENES + 2) {
 
-            prepareEverything();
+            lineUp();
 
             if (allowAudio) {
                 checkAudio();
@@ -223,8 +225,10 @@ public class ProcessingSketch extends PApplet{
         }
     }
 
-    private void prepareEverything() {
+    private void lineUp() {
         //TODO: line-up
+
+
     }
 
 
@@ -234,22 +238,32 @@ public class ProcessingSketch extends PApplet{
                 progressbar(0);
                 break;
 
-            case 7:
-                scenes.add(new ScnStavebniny(this));
+            case 13:
+                scenes.add(new ScnSpalna(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
-            case 12:
+            case 3:
                 scenes.add(new ScnKuchyna(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
+            case 4:
+                scenes.add(new ScnKruhy(this));
+                progressbar((float)(frameCount-1) / SCENES);
+                break;
+
             case 5:
+                scenes.add(new ScnStavebniny(this));
+                progressbar((float)(frameCount-1) / SCENES);
+                break;
+
+            case 6:
                 scenes.add(new ScnPrechod(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
-            case 4:
+            case 7:
                 scenes.add(new ScnKlenotnictvo(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
@@ -259,32 +273,23 @@ public class ProcessingSketch extends PApplet{
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
-            case 6:
+            case 9:
                 scenes.add(new ScnBoh(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
             case 10:
-                scenes.add(new ScnSpalna(this));
-                progressbar((float)(frameCount-1) / SCENES);
-                break;
-
-            case 11:
                 scenes.add(new ScnPyramidy(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
-            case 9:
+            case 11:
                 scenes.add(new ScnPsycholog(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;
 
-            case 13:
-                scenes.add(new ScnKruhy(this));
-                progressbar((float)(frameCount-1) / SCENES);
-                break;
 
-            case 3:
+            case 12:
                 scenes.add(new ScnMravce(this));
                 progressbar((float)(frameCount-1) / SCENES);
                 break;

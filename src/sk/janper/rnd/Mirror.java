@@ -13,6 +13,7 @@ import toxi.geom.Vec2D;
 public class Mirror extends Vec2D{
     private PApplet parent;
     private IPCapture ipVideo;
+    private PImage img;
 
     private int stepSize = 120;
 
@@ -88,28 +89,31 @@ public class Mirror extends Vec2D{
     }
 
     private PImage getRealImage() {
-        System.out.println("Available: "+ipVideo.isAvailable());
+//        System.out.println("Available: "+ipVideo.isAvailable());
         if (ipVideo.isAvailable()) {
             ipVideo.read();
-            return ipVideo.get(0,0,getWidth(), getHeight());
-        } else {
-            return null;
+            int[] pixels = ipVideo.getPixels();
+            img = new PImage(ipVideo.getW(),ipVideo.getH());
+            img.loadPixels();
+            img.pixels = pixels;
+            img.updatePixels();
+        }
+        return img;
+    }
+
+    public void displayReal(float w, float h) {
+        PImage img = getRealImage();
+        if (img!=null) {
+            parent.image(getRealImage(), x, y, w, h);
         }
     }
 
-    public void displayReal() {
+    public void display(float w, float h) {
         PImage img = getRealImage();
         if (img!=null) {
-            parent.image(getRealImage(), x, y);
+            parent.shader(halftoneShader);
+            parent.image(img, x, y, w, h);
+            parent.resetShader();
         }
-    }
-
-    public void display() {
-        parent.shader(halftoneShader);
-        PImage img = getRealImage();
-        if (img!=null) {
-            parent.image(getRealImage(), x, y);
-        }
-        parent.resetShader();
     }
 }

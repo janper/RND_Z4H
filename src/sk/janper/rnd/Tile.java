@@ -60,7 +60,7 @@ public class Tile extends Vec2D {
         graphics.beginDraw();
         graphics.beginShape();
         graphics.stroke(255);
-        graphics.strokeWeight(2);
+        graphics.strokeWeight(4f);
         graphics.noFill();
         graphics.vertex(5, 5);
         graphics.vertex(5, h - 5);

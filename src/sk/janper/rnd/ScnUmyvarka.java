@@ -12,8 +12,8 @@ import java.util.ArrayList;
  */
 public class ScnUmyvarka implements Scene {
     private final int tileSize = 60;
-    private final int videoWidth = 640;
-    private final int videoHeight = 480;
+    private final int videoWidth = tileSize*16;
+    private final int videoHeight = tileSize*12;
     private PApplet parent;
     private int thresholdMin = 100;
     private int thresholdMax = 150;
@@ -109,13 +109,13 @@ public class ScnUmyvarka implements Scene {
     }
 
     private void initTiles(){
-        tiles = new ArrayList<Tile>();
+        tiles = new ArrayList<>();
         for (int y = 0; y<parent.height; y+= tileSize) {
             for (int x = 0; x < parent.width; x += tileSize) {
                 Tile tempTile = new Tile (new Vec2D(x,y), tileSize, tileSize, parent);
-                if ((x<mirror.x || x>=(mirror.x+mirror.getWidth()))||((y<mirror.y || y>= (mirror.y+mirror.getHeight())))) {
+//                if ((x<mirror.x || x>=(mirror.x+mirror.getWidth()))||((y<mirror.y || y>= (mirror.y+mirror.getHeight())))) {
                     tiles.add(tempTile);
-                }
+//                }
             }
         }
     }
@@ -137,7 +137,7 @@ public class ScnUmyvarka implements Scene {
             System.out.println ("fit");
             mirror.x+=x*tileSize;
             mirror.y+=y*tileSize;
-            initTiles();
+//            initTiles();
         }
     }
 
@@ -191,13 +191,17 @@ public class ScnUmyvarka implements Scene {
 
     @Override
     public void display() {
-        if (realistic && moving) {
-            mirror.displayReal();
-        } else {
-            mirror.display();
-        }
-
         drawTiles();
+        if (realistic && moving) {
+            mirror.displayReal(videoWidth, videoHeight);
+        } else {
+            parent.pushStyle();
+            parent.fill(0);
+            parent.noStroke();
+            parent.rect(mirror.x, mirror.y, videoWidth, videoHeight);
+            parent.popStyle();
+            mirror.display(videoWidth, videoHeight);
+        }
     }
 
     private void drawTiles() {

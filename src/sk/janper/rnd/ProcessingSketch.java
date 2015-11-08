@@ -154,7 +154,11 @@ public class ProcessingSketch extends PApplet{
             progressbar(1);
             for (int i = 0; i < SCENES; i++) {
                 setScene(i);
-                scene.display(buffer);
+                scene.display();
+                pushStyle();
+                fill(0);
+                rect (0,0,width, height);
+                popStyle();
             }
             setScene(whichScene);
         }

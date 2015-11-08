@@ -27,6 +27,8 @@ public class IPCapture extends PImage implements Runnable {
     private BufferedInputStream httpIn;
     private ByteArrayOutputStream jpgOut;
 
+    private boolean started = false;
+
     public final static String VERSION = "0.1.0";
 
     public IPCapture(PApplet parent, String urlString, String user, String pass) {
@@ -46,7 +48,10 @@ public class IPCapture extends PImage implements Runnable {
     }
 
     public void start() {
-        streamReader.start();
+        if (!started) {
+            streamReader.start();
+            started = true;
+        }
     }
 
     public void stop() {
@@ -70,6 +75,7 @@ public class IPCapture extends PImage implements Runnable {
 
         try {
             url = new URL(urlString);
+//            System.out.println("URL: "+url.toString());
         }
         catch (MalformedURLException e) {
             System.err.println("Invalid URL");
@@ -80,6 +86,7 @@ public class IPCapture extends PImage implements Runnable {
             conn = (HttpURLConnection)url.openConnection();
             conn.setRequestProperty("Authorization", "Basic " + base64.encode(user + ":" + pass));
             httpIn = new BufferedInputStream(conn.getInputStream(), 8192);
+//            System.out.println("Connected");
         }
         catch (IOException e) {
             System.err.println("Unable to connect: " + e.getMessage());
@@ -91,16 +98,21 @@ public class IPCapture extends PImage implements Runnable {
 
         try {
             while (httpIn != null && (cur = httpIn.read()) >= 0) {
+//                System.out.print("a");
                 if (prev == 0xFF && cur == 0xD8) {
                     jpgOut = new ByteArrayOutputStream(8192);
                     jpgOut.write((byte)prev);
+//                    System.out.print("b");
                 }
                 if (jpgOut != null) {
                     jpgOut.write((byte)cur);
+//                    System.out.print("c");
                 }
                 if (prev == 0xFF && cur == 0xD9) {
+//                    System.out.print("d");
                     synchronized(curFrame) {
                         curFrame = jpgOut.toByteArray();
+//                        System.out.print("e");
                     }
                     frameAvailable = true;
                     jpgOut.close();
@@ -121,7 +133,10 @@ public class IPCapture extends PImage implements Runnable {
             int w = bufImg.getWidth();
             int h = bufImg.getHeight();
             if (w != this.width || h != this.height) {
-                this.resize(bufImg.getWidth(),bufImg.getHeight());
+//                this.resize(bufImg.getWidth(),bufImg.getHeight());
+                System.out.println("w: "+w);
+                System.out.println("h: "+h);
+                this.resize(w,h);
             }
             bufImg.getRGB(0, 0, w, h, this.pixels, 0, w);
             this.updatePixels();

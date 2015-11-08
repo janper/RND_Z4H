@@ -72,18 +72,19 @@ public class ScnUmyvarka implements Scene {
 
     public void display(PGraphics buffer) {
 
-        buffer.beginDraw();
-        buffer.clear();
-
-        if (realistic && moving) {
-            mirror.displayReal(buffer);
-        } else {
-            mirror.display(buffer);
-        }
-
-        drawTiles(buffer);
-
-        buffer.endDraw();
+//        buffer.beginDraw();
+//        buffer.clear();
+//
+//        if (realistic && moving) {
+//            mirror.displayReal(buffer);
+//        } else {
+//            mirror.display(buffer);
+//        }
+//
+//        drawTiles(buffer);
+//
+//        buffer.endDraw();
+        System.out.println("Drawing to a buffer");
     }
 
     public String getName(){

@@ -20,7 +20,7 @@ public class Mirror extends Vec2D{
     private int thresholdMin;
     private int thresholdMax;
     private PShader halftoneShader;
-    public String stream = "http://192.168.2.100:80/video.cgi?resolution=320x240";
+    public String stream = "http://192.168.2.100:80/video.cgi?resolution=640x480";
 
 
     public Mirror(ReadonlyVec2D readonlyVec2D, PApplet parent, int w, int h) {

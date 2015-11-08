@@ -132,8 +132,8 @@ public class ScnUmyvarka implements Scene {
         int y = Math.round(parent.random(-1.25f, 1.25f));
 
         System.out.println("randomX:" + x + " randomY:" + y);
-        if ((mirror.x+x*tileSize>=0&&mirror.x+x*tileSize<=parent.width-mirror.getWidth())&&
-                (mirror.y+y*tileSize>=0&&mirror.y+y*tileSize<=parent.height-mirror.getHeight())){
+        if ((mirror.x+x*tileSize>=0&&mirror.x+x*tileSize<=parent.width-videoWidth)&&
+                (mirror.y+y*tileSize>=0&&mirror.y+y*tileSize<=parent.height-videoHeight)){
             System.out.println ("fit");
             mirror.x+=x*tileSize;
             mirror.y+=y*tileSize;

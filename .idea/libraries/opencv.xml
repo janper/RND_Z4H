@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="opencv">
+    <CLASSES>
+      <root url="file://$USER_HOME$/Documents/Processing/libraries/opencv" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/Documents/Processing/libraries/opencv/resources/code" />
+      <root url="file://$USER_HOME$/Documents/Processing/libraries/opencv/src" />
+    </SOURCES>
+  </library>
+</component>

@@ -15,7 +15,7 @@ public class Ladder extends VerletParticle {
     private float overalWidth = 100f;
     private float barWidth = 10f;
     private float stepHeight = 60f;
-    private int steps = 51;
+    private int steps = 201;
     private int strokeColor;
     private float strokeWeight = 4f;
 

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="ip-camera-api">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ip-camera-api.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

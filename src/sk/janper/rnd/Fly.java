@@ -15,15 +15,15 @@ public class Fly extends Vec3D {
     private PApplet parent;
     private Vec3D motionVector;
     private int age = 0;
-    private float minSpeed = 1f;
-    private float maxSpeed = 4f;
-    private int minSaccadePeriod = 60*2;
-    private int maxSaccadePeriod = 60*10;
+    private float minSpeed = 4f;
+    private float maxSpeed = 8f;
+    private int minSaccadePeriod = 60*1;
+    private int maxSaccadePeriod = 60*3;
     private int currentSaccadePeriod;
     private int lastSaccadeAge = age;
     private float saccadeSlowdownMoment = 0.2f;
     private float minSaccadeAngle = (float)Math.toRadians(30d);
-    private float maxSaccadeAngle = (float)Math.toRadians(100d);
+    private float maxSaccadeAngle = (float)Math.toRadians(75d);
     private Vec3D bowingVector;
     private Vec3D compoundVector;
     private float bowingFactor = 0.25f;
@@ -38,7 +38,7 @@ public class Fly extends Vec3D {
         saccade();
 
         try {
-            flyShape = parent.loadShape("mucha.svg");
+            flyShape = parent.loadShape("mucha03.svg");
         } catch(Exception e){
 //            flyShape = parent.createShape();
 //            flyShape.stroke(255);
@@ -55,7 +55,7 @@ public class Fly extends Vec3D {
         setMotionVector(motion);
         saccade();
 
-        flyShape = parent.loadShape("mucha.svg");
+        flyShape = parent.loadShape("mucha03.svg");
     }
     
     public void update(){
@@ -134,6 +134,11 @@ public class Fly extends Vec3D {
         setMotionVector(saccadeVector);
         setLastSaccadeAge(getAge());
         setCurrentSaccadePeriod((int) (getMinSaccadePeriod() + Math.random() * (getMaxSaccadePeriod() - getMinSaccadePeriod())));
+    }
+
+    public void leave(){
+        setMotionVector(new Vec3D (this.sub(new Vec3D(parent.width/2, parent.height/2, 0))));
+        moveFly(maxSpeed);
     }
 
     public float angleBetweenVectors(ReadonlyVec3D v1, ReadonlyVec3D v2){

@@ -23,6 +23,10 @@ public class Light extends Vec3D {
 
     private Vec3D offset = new Vec3D();
 
+    public Light(ReadonlyVec3D readonlyVec3D, PApplet parent) {
+        this (readonlyVec3D, parent, "");
+    }
+
     public Light(ReadonlyVec3D readonlyVec3D, PApplet parent, String imageFile) {
         super(readonlyVec3D);
         this.parent = parent;

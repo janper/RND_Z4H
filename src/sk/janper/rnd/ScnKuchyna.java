@@ -23,6 +23,13 @@ public class ScnKuchyna implements Scene {
 
     private int mode = 0;
     private int[] colours;
+    private int[] bgColours;
+
+    private int currentColorIndex = 0;
+    private int currentBgColorIndex = 0;
+
+    private int currentColor;
+    private int currentBgColor;
 
 //    private BufferShader bufferShader;
 
@@ -40,6 +47,14 @@ public class ScnKuchyna implements Scene {
         colours[0] = parent.color(12, 52, 173);
         colours[1] = parent.color(199,172,143);
         colours[2] = parent.color(12, 52, 173);
+
+        bgColours = new int[3];
+        bgColours[0] = parent.color(199,172,143);
+        bgColours[1] = parent.color(0);
+        bgColours[2] = parent.color(195,237, 236);
+
+        currentColor = colours[0];
+        currentBgColor = bgColours[0];
     }
 
     @Override
@@ -74,18 +89,11 @@ public class ScnKuchyna implements Scene {
             tapeta.update();
         }
 
-        if (mode==0){
-            parent.background(199,172,143);
-        }
-        if (mode==1){
-            parent.background(0);
-        }
-        if (mode==2){
-            parent.background(195,237, 236);
-        }
+        currentBgColor = parent.lerpColor(currentBgColor,bgColours[currentBgColorIndex], 0.2f);
+        currentColor = parent.lerpColor(currentColor, colours[currentColorIndex], 0.2f);
 
-        tapeta.setLineColor(colours[mode%colours.length]);
-
+        parent.background(currentBgColor);
+        tapeta.setLineColor(currentColor);
 
         tapeta.drawWallpaperDirect(xCount, yCount);
     }
@@ -93,7 +101,7 @@ public class ScnKuchyna implements Scene {
     @Override
     public void reset() {
         tapeta = new Tapeta(parent);
-        tapeta.setLineColor(colours[mode%colours.length]);
+        tapeta.setLineColor(colours[0]);
         tapeta.setLinear(true);
         tapeta.setLineWidth(4f);
         tapeta.setSegments(15);
@@ -122,11 +130,16 @@ public class ScnKuchyna implements Scene {
 //        }
         mode = which;
 
-        if (which == 0){
-            tapeta.setUpdateSteps(60*60);
+        if (mode<3 && mode>=0){
+            currentColorIndex = mode;
+            currentBgColorIndex = mode;
         }
 
-        if (which == 1){
+        if (which == 3){
+            tapeta.setUpdateSteps(60*90);
+        }
+
+        if (which == 4){
             tapeta.setUpdateSteps(60*6);
         }
 

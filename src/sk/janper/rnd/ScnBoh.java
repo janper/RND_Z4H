@@ -21,6 +21,8 @@ public class ScnBoh implements Scene {
 
     private boolean direct = true;
 
+    private int counter;
+
     public ScnBoh(PApplet parent) {
         System.out.print("Constructing "+name);
         this.parent = parent;
@@ -70,6 +72,7 @@ public class ScnBoh implements Scene {
         tip = new Vec3D(parent.width + 500, -1 * parent.height / 2 * 1.5f, -1000);
         bottom = new Vec3D(parent.width / 2, parent.height - 100, -250);
         initRays(tip, bottom, 300, 19);
+        counter=0;
     }
 
     @Override
@@ -120,7 +123,7 @@ public class ScnBoh implements Scene {
 
     @Override
     public int getCounter() {
-        return 0;
+        return counter;
     }
 
 
@@ -131,6 +134,6 @@ public class ScnBoh implements Scene {
 
     @Override
     public boolean isDirect() {
-        return false;
+        return direct;
     }
 }

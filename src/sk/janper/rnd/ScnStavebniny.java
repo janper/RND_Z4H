@@ -13,6 +13,7 @@ import toxi.physics.behaviors.GravityBehavior;
  * Created by rndzvuk on 8.11.2015.
  */
 public class ScnStavebniny implements Scene {
+    private static final int END_SEQUENCE = 60 * 2;
     private PApplet parent;
     private String name = "Stavebniny";
 
@@ -30,6 +31,10 @@ public class ScnStavebniny implements Scene {
     private float ladderGap = 100f;
     private final float STEP_HEIGHT = 100f;
     private final float Y_OFFSET = -30f;
+
+    private int endFrame = 0;
+
+    private Vec3D rightPosition;
 
 
     public ScnStavebniny(PApplet parent) {
@@ -61,6 +66,9 @@ public class ScnStavebniny implements Scene {
 
         physics.particles.get(0).lock();
         physics.particles.get(physics.particles.size()-1).lock();
+        rightPosition = new Vec3D(physics.particles.get(physics.particles.size()-1));
+
+        physics.particles.get(physics.particles.size()-1).x=-LADDER_WIDTH*3;
     }
 
     @Override
@@ -85,15 +93,38 @@ public class ScnStavebniny implements Scene {
 
     @Override
     public void display() {
-        counter++;
-        if (mode == 0) {
-            physics.update();
-        }
-        if (mode == 1){
-            physics.particles.forEach(p -> p.y-=0.25f);
-        }
-        if (mode == 2){
-            physics.particles.forEach(p -> p.y+=0.25f);
+        if (moving) {
+            counter++;
+            if (PApplet.abs(physics.particles.get(physics.particles.size() - 1).x - rightPosition.x) > 0.1) {
+                physics.particles.get(physics.particles.size() - 1).interpolateToSelf(rightPosition, 0.025f);
+            }
+
+
+            if (mode == 0) {
+                physics.update();
+            }
+            if (mode == 1) {
+                physics.particles.forEach(p -> p.y -= 0.25f);
+            }
+            if (mode == 2) {
+                physics.particles.forEach(p -> p.y += 0.25f);
+            }
+
+            if (mode==9){
+                physics.particles.get(physics.particles.size() - 1).x+=30f;
+
+                if (counter-endFrame==END_SEQUENCE){
+                    physics.particles.get(0).unlock();
+                    gravityVector.y=20f;
+                }
+
+                if (counter-endFrame<END_SEQUENCE+30){
+                    physics.update();
+                }
+
+
+
+            }
         }
         for (VerletParticle particle : physics.particles) {
             Ladder tempLadder = (Ladder)particle;
@@ -127,7 +158,15 @@ public class ScnStavebniny implements Scene {
 
     @Override
     public void mode(int which) {
+        if (mode==9 && which!=9){
+            reset();
+        }
+
         mode = which;
+
+        if (mode==9){
+            endFrame=counter;
+        }
 
     }
 

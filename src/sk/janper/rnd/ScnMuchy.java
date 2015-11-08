@@ -12,13 +12,15 @@ import java.util.ArrayList;
  */
 public class ScnMuchy implements Scene {
     public ArrayList<Fly> flies;
-    public int numFlies = 100;
+    public int numFlies = 50;
     public String name = "Muchy";
     private PApplet parent;
     private boolean move = false;
     private int bgColour;
 
     private boolean direct = true;
+
+    private int mode = 0;
 
     public ScnMuchy(PApplet parent) {
         System.out.print("Constructing "+name);
@@ -28,7 +30,7 @@ public class ScnMuchy implements Scene {
     }
 
     public void reset(){
-        flies= new ArrayList<Fly>();
+        flies= new ArrayList<>();
         initFlies();
     }
 
@@ -45,7 +47,11 @@ public class ScnMuchy implements Scene {
     @Override
     public void display() {
         if (move) {
-            flies.forEach(f -> f.update());
+            if (mode==9){
+                flies.forEach(f -> f.leave());
+            } else {
+                flies.forEach(f -> f.update());
+            }
         }
         flies.forEach(f -> f.display());
     }
@@ -67,6 +73,7 @@ public class ScnMuchy implements Scene {
     }
 
     public void mode(int which){
+        mode = which;
     }
 
     public boolean isPlaying(){
@@ -83,7 +90,7 @@ public class ScnMuchy implements Scene {
 
     public void initFlies(){
         for (int i=0 ; i<numFlies; i++) {
-            Fly f = new Fly(parent, new Vec3D());
+            Fly f = new Fly(parent, new Vec3D(parent.random (-parent.width/2, -50), parent.random (-parent.height/2, -50), 0f));
             flies.add(f);
         }
     }

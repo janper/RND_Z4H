@@ -24,8 +24,14 @@ public class GodRay extends Vec3D {
 
     private float updateSpeed = 0.025f;
 
+    private int counter = 0;
+
     private ArrayList<Vec3D> points;
     private ArrayList<Vec3D> currentPoints;
+    private float growSteps = 60*5;
+
+    private float initSize = 0.25f;
+    private float growthRatio = 1.0001f;
 
     public GodRay(PApplet parent, ReadonlyVec3D location, ReadonlyVec3D target, int subdivisions) {
         super(location);
@@ -116,6 +122,7 @@ public class GodRay extends Vec3D {
     }
 
     public void update(){
+        counter++;
         for (int i=0; i<points.size(); i++){
             currentPoints.get(i).interpolateToSelf(points.get(i), updateSpeed);
         }
@@ -148,7 +155,7 @@ public class GodRay extends Vec3D {
     }
 
     public void alignTo (){
-        ArrayList<Vec3D> newPoints = new ArrayList<Vec3D>();
+        ArrayList<Vec3D> newPoints = new ArrayList<>();
         points.forEach( p -> {
             Vec3D randomVector = Vec3D.randomVector().normalizeTo((float)Math.random()*(stickDistance2-stickDistance1)+stickDistance1);
             newPoints.add(p.add(randomVector));
@@ -172,10 +179,27 @@ public class GodRay extends Vec3D {
     public void display() {
         parent.pushMatrix();
         parent.pushStyle();
+
+        ArrayList<Vec3D> relativePoints = new ArrayList<>();
+        for (int i=0; i<currentPoints.size()-1; i++) {
+            relativePoints.add(currentPoints.get(i+1).sub(currentPoints.get(i)));
+        }
+
+        Vec3D first = currentPoints.get(0);
+        Vec3D second;
+
         for (int i=0; i<currentPoints.size()-1; i++){
             parent.strokeWeight(PApplet.map(i, 0, currentPoints.size()-1, weight1, weight2));
             parent.stroke (parent.lerpColor(color1, color2, (i/currentPoints.size()-1)));
-            parent.line (currentPoints.get(i).x, currentPoints.get(i).y, currentPoints.get(i).z,currentPoints.get(i+1).x, currentPoints.get(i+1).y, currentPoints.get(i+1).z);
+//            float percent = (float) counter / growSteps;
+            initSize *= growthRatio;
+            if (initSize<1) {
+                second = first.add(relativePoints.get(i).scale(initSize));
+            } else {
+                second = first.add(relativePoints.get(i));
+            }
+            parent.line (first.x, first.y, first.z,second.x, second.y, second.z);
+            first = new Vec3D(second);
         }
         parent.popStyle();
         parent.popMatrix();

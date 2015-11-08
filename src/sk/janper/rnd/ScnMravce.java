@@ -3,6 +3,7 @@ package sk.janper.rnd;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.opengl.PShader;
+import toxi.geom.AABB;
 import toxi.geom.Vec3D;
 
 import java.util.ArrayList;
@@ -25,6 +26,10 @@ public class ScnMravce implements Scene {
     private boolean moving;
 
     private boolean direct = true;
+
+    private final float ARRIVAL_SPEED = 1f;
+    private final float STIGMERGY_SPEED = 0.75f;
+    private final float DEPARTURE_SPEED = 6f;
 
     public ScnMravce(PApplet parent) {
         System.out.print("Constructing "+name);
@@ -74,7 +79,7 @@ public class ScnMravce implements Scene {
             updateAnts();
         }
 
-//        pheromones.display2();
+        pheromones.display2();
         displayAnts();
 
     }
@@ -92,21 +97,41 @@ public class ScnMravce implements Scene {
 
     @Override
     public void shuffle() {
-
+        ants.forEach(a -> a.jitter(10f));
+        ants.forEach(a -> a.getMotionVector().rotateZ(parent.random(-PApplet.PI/2,PApplet.PI/2)));
     }
 
     @Override
     public void jitter() {
-
+        ants.forEach(a -> a.getMotionVector().rotateZ(parent.random(-PApplet.PI/8,PApplet.PI/8)));
+        ants.forEach(a -> a.jitter(3f));
     }
 
     @Override
     public void mode(int which) {
         mode = which;
-        if (mode!=3){
+
+        if (mode == 0){
+            ants.forEach(a -> a.setSpeed(ARRIVAL_SPEED));
+        }
+
+        if (mode == 1){
+            ants.forEach(a -> a.setSpeed(STIGMERGY_SPEED));
+        }
+
+        if (mode == 9){
+            ants.forEach(a -> a.setSpeed(DEPARTURE_SPEED));
+        }
+
+        if (mode!=0){
             ants.forEach(a -> a.setState(1));
         }
-    }
+
+        if (mode==9) {
+            ants.forEach(a -> a.setState(4));
+        }
+
+        }
 
     @Override
     public String getName() {
@@ -144,15 +169,22 @@ public class ScnMravce implements Scene {
 
     private void addAnts(int number){
         this.ants = new ArrayList<>();
+        AABB screen = new AABB(new Vec3D(0,0,0), new Vec3D(parent.width, parent.height ,0));
         for (int i=0; i<number; i++){
 //            Ant tempAnt = new Ant(this,this.antNests.get((int) random(this.antNests.size())));
-            Ant tempAnt = new Ant(parent,new Vec3D (parent.random(parent.width), parent.random(parent.height),0));
+
+            Vec3D position;
+            do {
+                position = new Vec3D(parent.random(-parent.width, parent.width*2), parent.random(-parent.height, 2*parent.height), 0);
+            } while (position.isInAABB(screen));
+
+            Ant tempAnt = new Ant(parent, position);
             tempAnt.jitter(10f, 10f, 0);
             tempAnt.setAntNests(this.antNests);
             tempAnt.setFoodSources(this.foodSources);
             tempAnt.setPheromones(this.pheromones);
             tempAnt.setJittering(0.05f);
-            tempAnt.setSpeed(parent.random(0.25f, 1.25f));
+            tempAnt.setSpeed(parent.random(ARRIVAL_SPEED*0.75f, ARRIVAL_SPEED*1.25f));
             tempAnt.setSearchDistance(tempAnt.getSpeed() * 100);
             tempAnt.setState(1);
             this.ants.add(tempAnt);

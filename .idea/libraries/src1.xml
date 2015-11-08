@@ -1,0 +1,24 @@
+<component name="libraryTable">
+  <library name="src1">
+    <CLASSES />
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/Documents/opencv/modules/java/android_test/src" />
+      <root url="file://$USER_HOME$/Documents/opencv/modules/java/common_test/src" />
+      <root url="file://$USER_HOME$/Documents/opencv/modules/java/pure_test/src" />
+      <root url="file://$USER_HOME$/Documents/opencv/platforms/android/service/engine/src" />
+      <root url="file://$USER_HOME$/Documents/opencv/samples/android/15-puzzle/src" />
+      <root url="file://$USER_HOME$/Documents/opencv/samples/android/camera-calibration/src" />
+      <root url="file://$USER_HOME$/Documents/opencv/samples/android/color-blob-detection/src" />
+      <root url="file://$USER_HOME$/Documents/opencv/samples/android/face-detection/src" />
+      <root url="file://$USER_HOME$/Documents/opencv/samples/android/image-manipulations/src" />
+      <root url="file://$USER_HOME$/Documents/opencv/samples/android/tutorial-1-camerapreview/src" />
+      <root url="file://$USER_HOME$/Documents/opencv/samples/android/tutorial-2-mixedprocessing/src" />
+      <root url="file://$USER_HOME$/Documents/opencv/samples/android/tutorial-3-cameracontrol/src" />
+      <root url="file://$USER_HOME$/Documents/opencv/samples/java" />
+      <root url="file://$USER_HOME$/Documents/opencv/samples/java/ant/src" />
+      <root url="file://$USER_HOME$/Documents/opencv/samples/java/eclipse/HelloCV/src" />
+      <root url="file://$USER_HOME$/Documents/opencv/samples/java/sbt/src/main/java" />
+    </SOURCES>
+  </library>
+</component>

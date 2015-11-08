@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class Ant extends Vec3D{
 
     private PApplet parent;
-    //0=nothing, 1=explore, 2=supplying, 3=random wander
+    //0=nothing, 1=explore, 2=supplying, 3=random wander, 4=leave
     private int state = 0;
     private float speed = 2f;
     private float jittering = 0.05f;
@@ -125,20 +125,28 @@ public class Ant extends Vec3D{
             randomWander();
         }
 
-        if (this.getState()!=0) {
+        if (this.getState()!=0 && getState()!=4) {
             this.updateAverageMotionVectors(this.motionVector);
             this.motionVector.jitter(this.getJittering(), this.getJittering(), 0).normalizeTo(this.getSpeed());
             this.addSelf(this.motionVector);
-            bounce();
+            arrive();
+        }
+
+        if (this.getState()==4) {
+            leave();
+            this.updateAverageMotionVectors(this.motionVector);
+            this.motionVector.jitter(this.getJittering(), this.getJittering(), 0).normalizeTo(this.getSpeed());
+            this.addSelf(this.motionVector);
         }
     }
 
-    private void bounce() {
-        if (x<0 || x>parent.width){
-            motionVector.y*=-1;
-        }
-        if (y<0 || y>parent.height){
-            motionVector.x*=-1;
+    private void leave() {
+        motionVector = new Vec3D(this.sub(new Vec3D(parent.width/2, parent.height/2, 0)).normalizeTo(speed));
+    }
+
+    private void arrive() {
+        if (x<0 || x>parent.width || y<0 || y>parent.height) {
+            motionVector = new Vec3D(parent.width/2, parent.height/2, 0).sub(this).normalizeTo(speed);
         }
     }
 
@@ -271,5 +279,13 @@ public class Ant extends Vec3D{
 
         parent.popMatrix();
         parent.popStyle();
+    }
+
+    public Vec3D getMotionVector() {
+        return motionVector;
+    }
+
+    public void setMotionVector(Vec3D motionVector) {
+        this.motionVector = motionVector;
     }
 }

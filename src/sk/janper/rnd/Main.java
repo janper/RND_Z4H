@@ -6,6 +6,6 @@ public class Main {
     public static void main(String args[]) {
         // full-screen mode can be activated via parameters to PApplets main method.
         PApplet.main(new String[] {"sk.janper.rnd.ProcessingSketch"});
-        PApplet.main(new String[] {"sk.janper.rnd.SecondSketch"});
+//        PApplet.main(new String[] {"sk.janper.rnd.SecondSketch"});
     }
 }

@@ -9,7 +9,7 @@ public class SecondSketch extends PApplet {
     private static final int MULTIPLIER = 20;
     public static final int SECOND_WIDTH = 16 * MULTIPLIER;
     public static final int SECOND_HEIGHT = 9 * MULTIPLIER;
-    private PApplet mainWIndow;
+    private PApplet mainWindow;
 
     public void settings(){
         size (SECOND_WIDTH, 9*20, P2D);
@@ -17,7 +17,6 @@ public class SecondSketch extends PApplet {
     }
 
     public void setup(){
-
         stroke(255);
         strokeWeight(2f);
         noFill();
@@ -28,7 +27,7 @@ public class SecondSketch extends PApplet {
         ellipse(width/2, height/2, 100,100);
     }
 
-    public PApplet getMainWIndow() {
-        return mainWIndow;
+    public void setMainWindow(PApplet mainWindow) {
+        this.mainWindow = mainWindow;
     }
 }

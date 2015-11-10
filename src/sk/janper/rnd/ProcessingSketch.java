@@ -56,8 +56,14 @@ public class ProcessingSketch extends PApplet{
     private int subStage = 0;
     private boolean stageChange = true;
 
+//    private SecondSketch secondSketch;
 
     public void settings(){
+//        secondSketch=new SecondSketch();
+//        secondSketch.settings();
+//        secondSketch.setMainWindow(this);
+
+
         GraphicsDevice devices[] = getDevices();
 
         if(devices.length>1){

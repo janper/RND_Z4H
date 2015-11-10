@@ -258,7 +258,7 @@ public class ProcessingSketch extends PApplet{
                         scene.mode(0);
                     }
                     blur= true;
-                    makeBlank(false);
+                    if (blank) makeBlank(false);
                     stageChange = false;
                     System.out.println((char) 27 + "[35mPrepinace N/M: Farebne->Ciernobiele->Farebne"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[35mKeby nieco: 0=CB, 1=FAREBNE, l=VYPNUT AUDIO"+ (char) 27 + "[0m");
@@ -290,7 +290,7 @@ public class ProcessingSketch extends PApplet{
                         scene.mode(1);
                     }
                     blur= false;
-                    makeBlank(false);
+                    if (blank) makeBlank(false);
                     stageChange = false;
                     System.out.println((char) 27 + "[35mPrepinace N/M: Standard->Scenika->Standard"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[35mKeby nieco: 0=STANDARD, 1=RETROSPEKCIE, 2=POOBEDIE"+ (char) 27 + "[0m");
@@ -319,7 +319,7 @@ public class ProcessingSketch extends PApplet{
                     allowAudio=false;
                     scene.mode(0);
                     blur= false;
-                    makeBlank(false);
+                    if (blank) makeBlank(false);
                     stageChange = false;
                     System.out.println((char) 27 + "[35mPrepinace N/M: nic"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[35mKeby nieco: q/w=SHUFFLE, k=BLANK, 9=KONIEC, 0=STANDARD"+ (char) 27 + "[0m");
@@ -333,7 +333,7 @@ public class ProcessingSketch extends PApplet{
                     System.out.println("Cakam (stale v kruhoch)");
                     allowAudio=false;
                     scene.mode(9);
-//                    makeBlank(false);
+//                    if (blank) makeBlank(false);
                     stageChange = false;
                     System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(3).getName() + (char) 27 + "[0m");
                 }
@@ -349,7 +349,7 @@ public class ProcessingSketch extends PApplet{
                     allowAudio = abs(subStage % 2) == 0;
                     scene.mode(0);
                     blur= false;
-                    makeBlank(false);
+                    if (blank) makeBlank(false);
                     stageChange = false;
                     System.out.println((char) 27 + "[35mPrepinace N/M: Audio v pesnicke->Bez audia->Audio"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[35mKeby nieco: 0=STANDARD, 1=REBRIKY HORE, 2=REBRIKY DOLE, l=AUDIO"+ (char) 27 + "[0m");
@@ -364,7 +364,7 @@ public class ProcessingSketch extends PApplet{
                     allowAudio=false;
                     scene.mode(9);
                     stageChange = false;
-                    System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(4).getName() + (char) 27 + " 'dupne'[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: 'dupne' "+scenes.get(4).getName() + (char) 27 + "[0m");
                 }
                 break;
 
@@ -378,7 +378,7 @@ public class ProcessingSketch extends PApplet{
                     allowAudio=true;
                     scene.mode(0);
                     blur= false;
-                    makeBlank(false);
+                    if (blank) makeBlank(false);
                     stageChange = false;
                     System.out.println((char) 27 + "[35mPrepinace N/M: nic"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[35mKeby nieco: q=SHUFFLE, w=JITTER, l=AUDIO on/off"+ (char) 27 + "[0m");
@@ -440,7 +440,7 @@ public class ProcessingSketch extends PApplet{
                         scene.mode(1);
                     }
                     blur= false;
-                    makeBlank(false);
+                    if (blank) makeBlank(false);
                     stageChange = false;
                     System.out.println((char) 27 + "[35mPrepinace N/M: Standard -> Alica hovori sen"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[35mKeby nieco: 2=STANDARD, 1=RETROSPEKCIE, k=BLANK"+ (char) 27 + "[0m");
@@ -473,7 +473,7 @@ public class ProcessingSketch extends PApplet{
                         scene.mode(8);
                     }
                     blur= false;
-                    makeBlank(false);
+                    if (blank) makeBlank(false);
                     stageChange = false;
                     System.out.println((char) 27 + "[35mPrepinace N/M: Standard->Zdvihnute 'vesmirne parkoviska''"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[35mKeby nieco: 0=STANDARD, 8=ZDVIH"+ (char) 27 + "[0m");
@@ -506,20 +506,20 @@ public class ProcessingSketch extends PApplet{
                         scene.mode(1);
                     }
                     blur= true;
-                    makeBlank(false);
+                    if (blank) makeBlank(false);
                     stageChange = false;
                     System.out.println((char) 27 + "[35mPrepinace N/M: Predne->Bocne - pri naraze'"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[35mKeby nieco: 0=STANDARD, 1=PO NARAZE"+ (char) 27 + "[0m");
-                    System.out.println((char) 27 + "[31mNasleduje: BLANK"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: falosny BLANK"+ (char) 27 + "[0m");
                 }
                 break;
 
             case 18:
                 if(stageChange) {
-                    System.out.println((char) 27 + "[32mBLANK" + (char) 27 + "[0m");
-                    System.out.println("Cakam");
+                    System.out.println((char) 27 + "[32m  falosnyBLANK" + (char) 27 + "[0m");
+                    System.out.println("Cakam (stale na ceste)");
                     allowAudio=false;
-                    makeBlank(true);
+                    scene.mode(9);
                     stageChange = false;
                     System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(3).getName() + (char) 27 + "[0m");
                 }
@@ -532,17 +532,27 @@ public class ProcessingSketch extends PApplet{
                         whichScene = 3;
                         setScene(whichScene);
                     }
-                    allowAudio=false;
-                    if (abs(subStage%2)==0) {
+                    if (abs(subStage%4)==0) {
+                        scene.mode(0);
+                        allowAudio=true;
+                    }
+                    if (abs(subStage%4)==1) {
                         scene.mode(1);
-                    } else {
+                        allowAudio=false;
+                    }
+                    if (abs(subStage%4)==2) {
                         scene.mode(0);
                         scene.shuffle();
+                        allowAudio=false;
+                    }
+                    if (abs(subStage%4)==3) {
+                        scene.mode(1);
+                        allowAudio=false;
                     }
                     blur= false;
-                    makeBlank(false);
+                    if (blank) makeBlank(false);
                     stageChange = false;
-                    System.out.println((char) 27 + "[35mPrepinace N/M: Hore->Stop 'Milota sa zlakne Bohusa' -> Hore"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mPrepinace N/M: Pesnicka-> Rebriky hore->Stop 'Milota sa zlakne Bohusa' -> Hore"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[35mKeby nieco: 0=STANDARD, 1=REBRIKY HORE, 2=REBRIKY DOLE"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[31mNasleduje: falosny BLANK" + (char) 27 + "[0m");
                 }
@@ -566,18 +576,21 @@ public class ProcessingSketch extends PApplet{
                         whichScene = 8;
                         setScene(whichScene);
                     }
-                    allowAudio=false;
+
                     if (abs(subStage%3)==0) {
+                        allowAudio=false;
                         scene.mode(1);
                     }
                     if (abs(subStage%3)==1) {
+                        allowAudio=false;
                         scene.mode(0);
                     }
                     if (abs(subStage%3)==2) {
+                        allowAudio=true;
                         scene.mode(2);
                     }
                     blur= false;
-                    makeBlank(false);
+                    if (blank) makeBlank(false);
                     stageChange = false;
                     System.out.println((char) 27 + "[35mPrepinace N/M: Farebne->Ciernobiele 'Zela sa rozbehne k doktorovi' -> Pesnicka"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[35mKeby nieco: 0=CB, 1=FAREBNE, 2=POMALY, 3=RYCHLO"+ (char) 27 + "[0m");
@@ -610,7 +623,7 @@ public class ProcessingSketch extends PApplet{
                         scene.mode(3);
                     }
                     blur= false;
-                    makeBlank(false);
+                    if (blank) makeBlank(false);
                     stageChange = false;
                     System.out.println((char) 27 + "[35mPrepinace N/M: Standard->Dodo a Kristof sami->Standard"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[35mKeby nieco: 2=STANDARD, 3=TMAAVE"+ (char) 27 + "[0m");
@@ -643,7 +656,7 @@ public class ProcessingSketch extends PApplet{
                         scene.mode(1);
                     }
                     blur= false;
-                    makeBlank(false);
+                    if (blank) makeBlank(false);
                     stageChange = false;
                     System.out.println((char) 27 + "[35mPrepinace N/M: Pesnicka->Kornel"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[35mKeby nieco: 0=CHAOS, 1=KORNEL, 9=ODCHOD "+ (char) 27 + "[0m");
@@ -668,16 +681,27 @@ public class ProcessingSketch extends PApplet{
                         whichScene = 3;
                         setScene(whichScene);
                     }
-                    allowAudio=true;
-                    if (abs(subStage%2)==0) {
-                        scene.mode(2);
-                    } else {
+
+                    if (abs(subStage%4)==0) {
                         scene.mode(0);
+                        allowAudio=true;
+                    }
+                    if (abs(subStage%4)==1) {
+                        scene.mode(2);
+                        allowAudio=false;
+                    }
+                    if (abs(subStage%4)==2) {
+                        scene.mode(0);
+                        allowAudio=false;
+                    }
+                    if (abs(subStage%4)==3) {
+                        scene.mode(2);
+                        allowAudio=false;
                     }
                     blur= false;
-                    makeBlank(false);
+                    if (blank) makeBlank(false);
                     stageChange = false;
-                    System.out.println((char) 27 + "[35mPrepinace N/M: Pesnicka->Rebriky dole->stop"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mPrepinace N/M: Pesnicka->Rebriky dole->stop->Rebriky dole"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[35mKeby nieco: 0=STANDARD, 1=REBRIKY HORE, 2=REBRIKY DOLE"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[31mNasleduje: falosny BLANK" + (char) 27 + "[0m");
                 }
@@ -730,7 +754,7 @@ public class ProcessingSketch extends PApplet{
                     allowAudio=true;
                     scene.mode(2);
                     blur= true;
-                    makeBlank(false);
+                    if (blank) makeBlank(false);
                     stageChange = false;
                     System.out.println((char) 27 + "[35mPrepinace N/M: nic"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[35mKeby nieco: 0=CB, 1=FAREBNE, l=VYPNUT AUDIO"+ (char) 27 + "[0m");
@@ -749,7 +773,7 @@ public class ProcessingSketch extends PApplet{
                 break;
             case 33:
                 if(stageChange) {
-                    System.out.println((char) 27 + "[32mObraz 14: Muchy : "+ scenes.get(10).getName() + (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[32mObraz 17: Muchy : "+ scenes.get(10).getName() + (char) 27 + "[0m");
                     if (whichScene!=10){
                         whichScene = 10;
                         setScene(whichScene);
@@ -757,7 +781,7 @@ public class ProcessingSketch extends PApplet{
                     allowAudio=false;
                     scene.mode(0);
                     blur= true;
-                    makeBlank(false);
+                    if (blank) makeBlank(false);
                     stageChange = false;
                     System.out.println((char) 27 + "[35mPrepinace N/M: nic"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[35mKeby nieco: k=BLANK"+ (char) 27 + "[0m");
@@ -778,7 +802,7 @@ public class ProcessingSketch extends PApplet{
 
             case 35:
                 if(stageChange) {
-                    System.out.println((char) 27 + "[32mObraz 14: Boh: "+ scenes.get(11).getName() + (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[32mObraz 18: Boh: "+ scenes.get(11).getName() + (char) 27 + "[0m");
                     if (whichScene!=11){
                         whichScene = 11;
                         setScene(whichScene);
@@ -788,9 +812,11 @@ public class ProcessingSketch extends PApplet{
                         scene.mode(0);
                     } else {
                         scene.mode(1);
+                        scene.shuffle();
+                        scene.shuffle();
                     }
                     blur= true;
-                    makeBlank(false);
+                    if (blank) makeBlank(false);
                     stageChange = false;
                     System.out.println((char) 27 + "[35mPrepinace N/M: Chvenie -> Shuffle 'Big bang' "+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[35mKeby nieco: w = JITTER, q=SHUFFLE"+ (char) 27 + "[0m");
@@ -801,7 +827,6 @@ public class ProcessingSketch extends PApplet{
             case 36:
                 if(stageChange) {
                     System.out.println((char) 27 + "[32mBLANK" + (char) 27 + "[0m");
-                    System.out.println("KONIEC");
                     allowAudio=false;
                     makeBlank(true);
                     stageChange = false;
@@ -924,10 +949,11 @@ public class ProcessingSketch extends PApplet{
     }
 
     private void printInstructions(){
+        System.out.println("h+mouse button : Halt");
         System.out.println("i : Display info");
         System.out.println("x : Start");
         System.out.println("z : Stop");
-        System.out.println("b : Change background");
+//        System.out.println("b : Change background");
         System.out.println("o: Previous scene");
         System.out.println("p: Next scene");
         System.out.println("s : Save/record frames");
@@ -936,7 +962,6 @@ public class ProcessingSketch extends PApplet{
         System.out.println("w : Jitter");
         System.out.println("a : Blur");
         System.out.println("0-1 : Scene modes");
-        System.out.println("h : Halt");
         System.out.println("k : Blank");
         System.out.println("l : Allow audio listener");
         System.out.println("v : Vignette");
@@ -945,6 +970,8 @@ public class ProcessingSketch extends PApplet{
         System.out.println("c : Previous stage");
         System.out.println("m : Next sub-stage");
         System.out.println("n : Previous sub-stage");
+        System.out.println();
+        System.out.println();
 
         if (blank) {
             System.out.println("Currently blank");
@@ -952,6 +979,10 @@ public class ProcessingSketch extends PApplet{
     }
 
     public void keyPressed(){
+        if (key=='h' && mousePressed){
+            osc.dispose();
+            exit();
+        }
         actionChar = key;
         action = true;
     }
@@ -1029,10 +1060,10 @@ public class ProcessingSketch extends PApplet{
                 scene.mode(mode);
                 break;
 
-//            case 'm':
-//                System.out.println("Scene mode "+mode);
-//                scene.mode(mode);
-//                break;
+            case 'd':
+                System.out.println("Scene mode "+mode);
+                scene.mode(mode);
+                break;
 
             case 'o' : System.out.println("Previous scene");
                 whichScene--;
@@ -1045,10 +1076,10 @@ public class ProcessingSketch extends PApplet{
             case 'a' : System.out.println("Toggle blur to "+!blur);
                 blur = !blur;
                 break;
-            case 'h' : System.out.println("Halt!");
-                osc.dispose();
-                exit();
-                break;
+//            case 'h' : System.out.println("Halt!");
+//                osc.dispose();
+//                exit();
+//                break;
             case 'k' : System.out.println("Blank: "+!blank);
                 makeBlank();
                 break;
@@ -1075,6 +1106,7 @@ public class ProcessingSketch extends PApplet{
             case 'c' :
                 System.out.println();
                 System.out.println("Previous stage: "+(stage-1));
+                makeBlank(true);
                 stageChange = true;
                 subStage = 0;
                 stage--;
@@ -1124,14 +1156,14 @@ public class ProcessingSketch extends PApplet{
                 mode--;
                 mode = (mode<0)?0:mode;
                 mode = (mode>9)?9:mode;
-                actionChar = 'm';
+                actionChar = 'd';
                 action=true;
                 break;
             case 'm':
                 mode++;
                 mode = (mode<0)?0:mode;
                 mode = (mode>9)?9:mode;
-                actionChar = 'm';
+                actionChar = 'd';
                 action=true;
                 break;
 //            case 'c':

@@ -1,0 +1,21 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="RND_Z4H:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/RND_Z4H_jar</output-path>
+    <root id="root">
+      <element id="archive" name="RND_Z4H.jar">
+        <element id="module-output" name="RND_Z4H" />
+        <element id="dir-copy" path="$USER_HOME$/Documents/Processing/libraries/opencv" />
+      </element>
+      <element id="library" level="project" name="library" />
+      <element id="library" level="project" name="ip-camera-api" />
+      <element id="library" level="project" name="minim" />
+      <element id="library" level="project" name="ant-launcher" />
+      <element id="library" level="project" name="src" />
+      <element id="library" level="project" name="toxiclibscore" />
+      <element id="library" level="project" name="gluegen-rt-natives-macosx-universal" />
+      <element id="library" level="project" name="verletphysics" />
+      <element id="library" level="project" name="oscP5" />
+      <element id="library" level="project" name="src1" />
+    </root>
+  </artifact>
+</component>

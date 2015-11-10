@@ -120,7 +120,11 @@ public class ScnStavebniny implements Scene {
                 if (counter-endFrame==END_SEQUENCE){
                     physics.particles.get(0).unlock();
                     gravityVector.y=20f;
-                    physics.particles.get(physics.particles.size() - 1).x+=1000f;
+                    physics.particles.get(physics.particles.size() - 1).x+=2000f;
+                }
+
+                if (counter-endFrame==END_SEQUENCE+20){
+                    physics.particles.forEach(p->p.lock());
                 }
 
                 if (counter-endFrame<END_SEQUENCE+20){

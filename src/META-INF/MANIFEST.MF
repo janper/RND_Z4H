@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Class-Path: jna.jar video.jar gstreamer-java.jar ip-camera-api.jar min
+ im.jar jl1.0.1.jar jsminim.jar mp3spi1.9.5.jar tritonus_aos.jar trito
+ nus_share.jar ant-launcher.jar ant.jar core.jar jna.jar pde.jar toxic
+ libscore.jar gluegen-rt-natives-macosx-universal.jar gluegen-rt-nativ
+ es-windows-amd64.jar gluegen-rt-natives-windows-i586.jar core.jar glu
+ egen-rt.jar jogl-all-natives-windows-amd64.jar jogl-all-natives-macos
+ x-universal.jar jogl-all.jar jogl-all-natives-windows-i586.jar jogl-a
+ ll-natives-linux-i586.jar jogl-all-natives-linux-armv6hf.jar jogl-all
+ -natives-linux-amd64.jar gluegen-rt-natives-linux-amd64.jar gluegen-r
+ t-natives-linux-armv6hf.jar gluegen-rt-natives-linux-i586.jar verletp
+ hysics.jar oscP5.jar
+Main-Class: sk.janper.rnd.Main
+

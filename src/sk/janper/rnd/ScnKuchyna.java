@@ -135,11 +135,11 @@ public class ScnKuchyna implements Scene {
             currentBgColorIndex = mode;
         }
 
-        if (which == 0 || which == 2){
+        if (which == 0 || which == 2 || which == 3){
             tapeta.setUpdateSteps(60*90);
         }
 
-        if (which == 1 || which == 3){
+        if (which == 1){
             tapeta.setUpdateSteps(60*6);
         }
 

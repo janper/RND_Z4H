@@ -105,6 +105,12 @@ public class ScnPrechod implements Scene {
         if (mode==1){
             targetEye = SIDEWAYS;
         }
+
+        if (mode==9){
+//            lights.forEach(l -> l.getMotionVector().scaleSelf(10f));
+            speed*=10f;
+        }
+
     }
 
     public void jitter(){
@@ -183,13 +189,16 @@ public class ScnPrechod implements Scene {
         if (mode == 1) {
             numLights = (int) PApplet.map(counter, slowdownMoment, slowdownMoment + SLOWDOWN_PERIOD, MAX_LIGHTS, MIN_LIGHTS);
             numLights = (numLights < MIN_LIGHTS) ? MIN_LIGHTS : numLights;
-        } else {
+        }
+        if (mode ==9){
+            numLights=0;
+        }
+        if (mode == 0){
             numLights = MAX_LIGHTS;
         }
         while (newLights.size()<numLights){
                 newLights.add(getLight(Math.random() >= 0.5d, 500f));
         }
-
         lights = newLights;
     }
 

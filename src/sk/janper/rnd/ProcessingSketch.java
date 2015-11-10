@@ -41,9 +41,11 @@ public class ProcessingSketch extends PApplet{
     private float blankFPS  = 60;
     private final float BLANK_SECONDS = 1f;
 
-    private int blankTime = -1*(int)(blankFPS*BLANK_SECONDS);
+    private int blankTime = 1000;
 
     private boolean allowAudio = false;
+
+    private boolean audioShuffle = true;
 
     Minim minim;
     AudioInput in;
@@ -51,6 +53,7 @@ public class ProcessingSketch extends PApplet{
     private PShader vigneteShader;
 
     private int stage = 0;
+    private int subStage = 0;
     private boolean stageChange = true;
 
 
@@ -59,7 +62,6 @@ public class ProcessingSketch extends PApplet{
 
         if(devices.length>1){
             System.out.println("More displays detected");
-//            setSize();
             fullScreen(1);
         }
 
@@ -125,7 +127,7 @@ public class ProcessingSketch extends PApplet{
 //            System.out.println("Audio: mode up");
 //            return;
 //        }
-        if (val>60){
+        if (val>60 && audioShuffle){
             action=true;
             actionChar = 'q';
 //            System.out.println("Audio: shuffle");
@@ -158,12 +160,12 @@ public class ProcessingSketch extends PApplet{
             for (int i = 0; i < SCENES; i++) {
                 setScene(i);
                 scene.display();
-                pushStyle();
-                fill(0);
-                rect (0,0,width, height);
-                popStyle();
             }
             setScene(whichScene);
+            pushStyle();
+            fill(0);
+            rect (0,0,width, height);
+            popStyle();
         }
 
         if (frameCount > SCENES + 2) {
@@ -244,21 +246,22 @@ public class ProcessingSketch extends PApplet{
                 break;
             case 1:
                 if(stageChange) {
-                    System.out.println((char) 27 + "[32mObraz 1: Zela a Leo : "+scenes.get(2).getName() + (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[32mObraz 1: Zela a Leo : "+scenes.get(0).getName() + (char) 27 + "[0m");
                     if (whichScene!=0){
                         whichScene = 0;
                         setScene(whichScene);
-                        System.out.println("Nastavujem scenu");
                     }
                     allowAudio=true;
-                    System.out.println("Audio zapnute");
-                    scene.mode(1);
-                    System.out.println("Blur zapnuty");
+                    if (abs(subStage%2)==0) {
+                        scene.mode(1);
+                    } else {
+                        scene.mode(0);
+                    }
                     blur= true;
-                    System.out.println("Nastavene farebne");
                     makeBlank(false);
                     stageChange = false;
-                    System.out.println((char) 27 + "[35mPouzi: 0=CB, 1=FAREBNE"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mPrepinace N/M: Farebne->Ciernobiele->Farebne"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mKeby nieco: 0=CB, 1=FAREBNE, l=VYPNUT AUDIO"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[31mNasleduje: falosny BLANK"+ (char) 27 + "[0m");
                 }
                 break;
@@ -268,29 +271,29 @@ public class ProcessingSketch extends PApplet{
                     System.out.println("Cakam (stale v spalni)");
                     allowAudio=false;
                     scene.mode(9);
-//                    makeBlank(false);
                     stageChange = false;
-                    System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(3).getName() + (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(1).getName() + (char) 27 + "[0m");
                 }
                 break;
 
             case 3:
                 if(stageChange) {
-                    System.out.println((char) 27 + "[32mObraz 2: Alica a Bohus : "+scenes.get(2).getName() + (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[32mObraz 2: Alica a Bohus : "+scenes.get(1).getName() + (char) 27 + "[0m");
                     if (whichScene!=1){
                         whichScene = 1;
                         setScene(whichScene);
-                        System.out.println("Nastavujem scenu");
                     }
                     allowAudio=false;
-                    System.out.println("Audio vypnute");
-                    scene.mode(0);
-                    System.out.println("Blur vypnuty");
+                    if (abs(subStage%2)==0) {
+                        scene.mode(0);
+                    }else {
+                        scene.mode(1);
+                    }
                     blur= false;
-                    System.out.println("Nastavene farebne - rano");
                     makeBlank(false);
                     stageChange = false;
-                    System.out.println((char) 27 + "[35mPouzi: 0=STANDARD, 1=RETROSPEKCIE, 3=POMALY, 4=RYCHLO"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mPrepinace N/M: Standard->Scenika->Standard"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mKeby nieco: 0=STANDARD, 1=RETROSPEKCIE, 2=POOBEDIE"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[31mNasleduje: BLANK"+ (char) 27 + "[0m");
                 }
                 break;
@@ -312,17 +315,15 @@ public class ProcessingSketch extends PApplet{
                     if (whichScene!=2){
                         whichScene = 2;
                         setScene(whichScene);
-                        System.out.println("Nastavujem scenu");
                     }
                     allowAudio=false;
-                    System.out.println("Audio vypnute");
                     scene.mode(0);
-                    System.out.println("Blur vypnuty");
                     blur= false;
                     makeBlank(false);
                     stageChange = false;
-                    System.out.println((char) 27 + "[35mPouzi: q=SHUFFLE, w=JITTER"+ (char) 27 + "[0m");
-                    System.out.println((char) 27 + "[31mNasleduje: falosny BLANK" + (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mPrepinace N/M: nic"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mKeby nieco: q/w=SHUFFLE, k=BLANK, 9=KONIEC, 0=STANDARD"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: falosny BLANK (az po fotkach)" + (char) 27 + "[0m");
                 }
                 break;
 
@@ -344,16 +345,14 @@ public class ProcessingSketch extends PApplet{
                     if (whichScene!=3){
                         whichScene = 3;
                         setScene(whichScene);
-                        System.out.println("Nastavujem scenu");
                     }
-                    allowAudio=true;
-                    System.out.println("Audio zapnute");
+                    allowAudio = abs(subStage % 2) == 0;
                     scene.mode(0);
-                    System.out.println("Blur vypnuty");
                     blur= false;
                     makeBlank(false);
                     stageChange = false;
-                    System.out.println((char) 27 + "[35mPouzi: 0=STANDARD, 1=REBRIKY HORE, 2=REBRIKY DOLE"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mPrepinace N/M: Audio v pesnicke->Bez audia->Audio"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mKeby nieco: 0=STANDARD, 1=REBRIKY HORE, 2=REBRIKY DOLE, l=AUDIO"+ (char) 27 + "[0m");
                     System.out.println((char) 27 + "[31mNasleduje: falosny BLANK" + (char) 27 + "[0m");
                 }
                 break;
@@ -364,9 +363,8 @@ public class ProcessingSketch extends PApplet{
                     System.out.println("Cakam (stale v stavebninach)");
                     allowAudio=false;
                     scene.mode(9);
-//                    makeBlank(false);
                     stageChange = false;
-                    System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(4).getName() + (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(4).getName() + (char) 27 + " 'dupne'[0m");
                 }
                 break;
 
@@ -376,30 +374,441 @@ public class ProcessingSketch extends PApplet{
                     if (whichScene!=4){
                         whichScene = 4;
                         setScene(whichScene);
-                        System.out.println("Nastavujem scenu");
                     }
                     allowAudio=true;
-                    System.out.println("Audio zapnute");
                     scene.mode(0);
-                    System.out.println("Blur vypnuty");
                     blur= false;
                     makeBlank(false);
                     stageChange = false;
-                    System.out.println((char) 27 + "[35mPouzi: q=SHUFFLE, w=JITTER, l=AUDIO on/off"+ (char) 27 + "[0m");
-                    System.out.println((char) 27 + "[31mNasleduje: BLANK" + (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mPrepinace N/M: nic"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mKeby nieco: q=SHUFFLE, w=JITTER, l=AUDIO on/off"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: falosny BLANK" + (char) 27 + "[0m");
                 }
                 break;
 
             case 10:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mfalosny BLANK" + (char) 27 + "[0m");
+                    System.out.println("Cakam (stale v klenotnictve)");
+                    allowAudio=false;
+                    scene.mode(9);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(5).getName() + (char) 27 + "[0m");
+                }
+                break;
+
+            case 11:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mObraz 6: Umyvarka : "+ scenes.get(5).getName() + (char) 27 + "[0m");
+                    if (whichScene!=5){
+                        whichScene = 5;
+                        setScene(whichScene);
+                    }
+                    allowAudio=false;
+                    scene.mode(1);
+                    blur= false;
+                    makeBlank(false);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[35mPrepinace N/M: nic"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mKeby nieco: q=SHUFFLE, k=BLANK, 1=realisticky mod"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: BLANK" + (char) 27 + "[0m");
+                }
+                break;
+
+            case 12:
                 if(stageChange) {
                     System.out.println((char) 27 + "[32mBLANK" + (char) 27 + "[0m");
                     System.out.println("Cakam");
                     allowAudio=false;
                     makeBlank(true);
                     stageChange = false;
+                    System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(1).getName() + (char) 27 + "[0m");
+                }
+                break;
+
+            case 13:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mObraz 7: Alica a Bohus : "+scenes.get(1).getName() + (char) 27 + "[0m");
+                    if (whichScene!=1){
+                        whichScene = 1;
+                        setScene(whichScene);
+                    }
+                    allowAudio=false;
+                    if (abs(subStage%2)==0) {
+                        scene.mode(2);
+                    } else {
+                        scene.mode(1);
+                    }
+                    blur= false;
+                    makeBlank(false);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[35mPrepinace N/M: Standard -> Alica hovori sen"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mKeby nieco: 2=STANDARD, 1=RETROSPEKCIE, k=BLANK"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: BLANK 'zaciatok pesnicky'"+ (char) 27 + "[0m");
+                }
+                break;
+
+            case 14:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mBLANK" + (char) 27 + "[0m");
+                    System.out.println("Cakam");
+                    allowAudio=false;
+                    makeBlank(true);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(6).getName() + (char) 27 + "[0m");
+                }
+                break;
+
+            case 15:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mObraz 8: Pyramidy : "+scenes.get(6).getName() + (char) 27 + "[0m");
+                    if (whichScene!=6){
+                        whichScene = 6;
+                        setScene(whichScene);
+                    }
+                    allowAudio=true;
+                    if (abs(subStage%2)==0) {
+                        scene.mode(0);
+                    } else {
+                        scene.mode(8);
+                    }
+                    blur= false;
+                    makeBlank(false);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[35mPrepinace N/M: Standard->Zdvihnute 'vesmirne parkoviska''"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mKeby nieco: 0=STANDARD, 8=ZDVIH"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: falosny BLANK"+ (char) 27 + "[0m");
+                }
+                break;
+
+            case 16:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mfalosny BLANK" + (char) 27 + "[0m");
+                    System.out.println("Cakam (stale v pyramidach)");
+                    allowAudio=false;
+                    scene.mode(9);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(7).getName() + (char) 27 + "[0m");
+                }
+                break;
+
+            case 17:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mObraz 9: Prechod : "+scenes.get(7).getName() + (char) 27 + "[0m");
+                    if (whichScene!=7){
+                        whichScene = 7;
+                        setScene(whichScene);
+                    }
+                    allowAudio=true;
+                    if (abs(subStage%2)==0) {
+                        scene.mode(0);
+                    } else {
+                        scene.mode(1);
+                    }
+                    blur= true;
+                    makeBlank(false);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[35mPrepinace N/M: Predne->Bocne - pri naraze'"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mKeby nieco: 0=STANDARD, 1=PO NARAZE"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: BLANK"+ (char) 27 + "[0m");
+                }
+                break;
+
+            case 18:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mBLANK" + (char) 27 + "[0m");
+                    System.out.println("Cakam");
+                    allowAudio=false;
+                    makeBlank(true);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(3).getName() + (char) 27 + "[0m");
+                }
+                break;
+
+            case 19:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mObraz 10: Stavebniny s Bohusom : "+ scenes.get(3).getName() + (char) 27 + "[0m");
+                    if (whichScene!=3){
+                        whichScene = 3;
+                        setScene(whichScene);
+                    }
+                    allowAudio=false;
+                    if (abs(subStage%2)==0) {
+                        scene.mode(1);
+                    } else {
+                        scene.mode(0);
+                        scene.shuffle();
+                    }
+                    blur= false;
+                    makeBlank(false);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[35mPrepinace N/M: Hore->Stop 'Milota sa zlakne Bohusa' -> Hore"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mKeby nieco: 0=STANDARD, 1=REBRIKY HORE, 2=REBRIKY DOLE"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: falosny BLANK" + (char) 27 + "[0m");
+                }
+                break;
+
+            case 20:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mfalosny BLANK" + (char) 27 + "[0m");
+                    System.out.println("Cakam (stale v stavebninach)");
+                    allowAudio=false;
+                    scene.mode(9);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(8).getName() + (char) 27 + "[0m");
+                }
+                break;
+
+            case 21:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mObraz 11: Psycholog : "+ scenes.get(8).getName() + (char) 27 + "[0m");
+                    if (whichScene!=8){
+                        whichScene = 8;
+                        setScene(whichScene);
+                    }
+                    allowAudio=false;
+                    if (abs(subStage%3)==0) {
+                        scene.mode(1);
+                    }
+                    if (abs(subStage%3)==1) {
+                        scene.mode(0);
+                    }
+                    if (abs(subStage%3)==2) {
+                        scene.mode(2);
+                    }
+                    blur= false;
+                    makeBlank(false);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[35mPrepinace N/M: Farebne->Ciernobiele 'Zela sa rozbehne k doktorovi' -> Pesnicka"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mKeby nieco: 0=CB, 1=FAREBNE, 2=POMALY, 3=RYCHLO"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: falosny BLANK" + (char) 27 + "[0m");
+                }
+                break;
+
+            case 22:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mfalosny BLANK - PRESTAVKA - UPRAVIT KAMERU!" + (char) 27 + "[0m");
+                    System.out.println("Cakam (stale v u psychologa)");
+                    allowAudio=false;
+                    scene.mode(9);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(1).getName() + (char) 27 + "[0m");
+                }
+                break;
+
+            case 23:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mObraz 12: Bumbajovci, Zela, Dodo: "+scenes.get(1).getName() + (char) 27 + "[0m");
+                    if (whichScene!=1){
+                        whichScene = 1;
+                        setScene(whichScene);
+                    }
+                    allowAudio=false;
+                    if (abs(subStage%2)==0) {
+                        scene.mode(2);
+                    } else {
+                        scene.mode(3);
+                    }
+                    blur= false;
+                    makeBlank(false);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[35mPrepinace N/M: Standard->Dodo a Kristof sami->Standard"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mKeby nieco: 2=STANDARD, 3=TMAAVE"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: BLANK"+ (char) 27 + "[0m");
+                }
+                break;
+
+            case 24:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mBLANK" + (char) 27 + "[0m");
+                    System.out.println("Cakam");
+                    allowAudio=false;
+                    makeBlank(true);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(9).getName() + (char) 27 + "[0m");
+                }
+                break;
+
+            case 25:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mObraz 13: Mravce : "+ scenes.get(9).getName() + (char) 27 + "[0m");
+                    if (whichScene!=9){
+                        whichScene = 9;
+                        setScene(whichScene);
+                    }
+                    allowAudio=false;
+                    if (abs(subStage%2)==0) {
+                        scene.mode(0);
+                    } else {
+                        scene.mode(1);
+                    }
+                    blur= false;
+                    makeBlank(false);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[35mPrepinace N/M: Pesnicka->Kornel"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mKeby nieco: 0=CHAOS, 1=KORNEL, 9=ODCHOD "+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: falosny BLANK" + (char) 27 + "[0m");
+                }
+
+            case 26:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mfalosny BLANK" + (char) 27 + "[0m");
+                    System.out.println("Cakam (stale v mravcoch)");
+                    allowAudio=false;
+                    scene.mode(9);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[31mNasleduje: "+ scenes.get(3).getName() +  (char) 27 + "[0m");
+                }
+                break;
+
+            case 27:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mObraz 14: Stavebniny : "+ scenes.get(3).getName() + (char) 27 + "[0m");
+                    if (whichScene!=3){
+                        whichScene = 3;
+                        setScene(whichScene);
+                    }
+                    allowAudio=true;
+                    if (abs(subStage%2)==0) {
+                        scene.mode(2);
+                    } else {
+                        scene.mode(0);
+                    }
+                    blur= false;
+                    makeBlank(false);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[35mPrepinace N/M: Pesnicka->Rebriky dole->stop"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mKeby nieco: 0=STANDARD, 1=REBRIKY HORE, 2=REBRIKY DOLE"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: falosny BLANK" + (char) 27 + "[0m");
+                }
+                break;
+
+            case 28:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mfalosny BLANK" + (char) 27 + "[0m");
+                    System.out.println("Cakam (stale v stavebninach)");
+                    allowAudio=false;
+                    scene.mode(9);
+                    stageChange = false;
                     System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(5).getName() + (char) 27 + "[0m");
                 }
                 break;
+
+            case 29:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mObraz 15: Umyvarka : "+ scenes.get(5).getName() + (char) 27 + "[0m");
+                    if (whichScene!=5){
+                        whichScene = 5;
+                        setScene(whichScene);
+                    }
+                    allowAudio=false;
+                    scene.mode(1);
+                    blur= false;
+                    makeBlank(false);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[35mPrepinace N/M: nic"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mPouzi: q=SHUFFLE, 1=REALISTICKY, 0=STYLIZOVANY"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: BLANK" + (char) 27 + "[0m");
+                }
+
+            case 30:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mBLANK" + (char) 27 + "[0m");
+                    allowAudio=false;
+                    makeBlank(true);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(0).getName() + (char) 27 + "[0m");
+                }
+                break;
+            case 31:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mObraz 16: Zela a Furby : "+scenes.get(0).getName() + (char) 27 + "[0m");
+                    if (whichScene!=0){
+                        whichScene = 0;
+                        setScene(whichScene);
+                    }
+                    allowAudio=true;
+                    scene.mode(2);
+                    blur= true;
+                    makeBlank(false);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[35mPrepinace N/M: nic"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mKeby nieco: 0=CB, 1=FAREBNE, l=VYPNUT AUDIO"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: falosny BLANK"+ (char) 27 + "[0m");
+                }
+                break;
+            case 32:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mfalosny BLANK" + (char) 27 + "[0m");
+                    System.out.println("Cakam (stale v spalni)");
+                    allowAudio=false;
+                    scene.mode(9);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(10).getName() + (char) 27 + "[0m");
+                }
+                break;
+            case 33:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mObraz 14: Muchy : "+ scenes.get(10).getName() + (char) 27 + "[0m");
+                    if (whichScene!=10){
+                        whichScene = 10;
+                        setScene(whichScene);
+                    }
+                    allowAudio=false;
+                    scene.mode(0);
+                    blur= true;
+                    makeBlank(false);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[35mPrepinace N/M: nic"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mKeby nieco: k=BLANK"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: falosny BLANK" + (char) 27 + "[0m");
+                }
+                break;
+
+            case 34:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mfalosny BLANK" + (char) 27 + "[0m");
+                    System.out.println("Cakam (stale v muchach)");
+                    allowAudio=false;
+                    scene.mode(9);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[31mNasleduje: "+scenes.get(11).getName() + (char) 27 + "[0m");
+                }
+                break;
+
+            case 35:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mObraz 14: Boh: "+ scenes.get(11).getName() + (char) 27 + "[0m");
+                    if (whichScene!=11){
+                        whichScene = 11;
+                        setScene(whichScene);
+                    }
+                    allowAudio=true;
+                    if (abs(subStage%2)==0) {
+                        scene.mode(0);
+                    } else {
+                        scene.mode(1);
+                    }
+                    blur= true;
+                    makeBlank(false);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[35mPrepinace N/M: Chvenie -> Shuffle 'Big bang' "+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[35mKeby nieco: w = JITTER, q=SHUFFLE"+ (char) 27 + "[0m");
+                    System.out.println((char) 27 + "[31mNasleduje: KONIEC, BLANK" + (char) 27 + "[0m");
+                }
+                break;
+
+            case 36:
+                if(stageChange) {
+                    System.out.println((char) 27 + "[32mBLANK" + (char) 27 + "[0m");
+                    System.out.println("KONIEC");
+                    allowAudio=false;
+                    makeBlank(true);
+                    stageChange = false;
+                    System.out.println((char) 27 + "[31mKONIEC" + (char) 27 + "[0m");
+                }
+                break;
+
 
 
         }
@@ -531,8 +940,11 @@ public class ProcessingSketch extends PApplet{
         System.out.println("k : Blank");
         System.out.println("l : Allow audio listener");
         System.out.println("v : Vignette");
+        System.out.println();
         System.out.println("SPACE : Next stage");
         System.out.println("c : Previous stage");
+        System.out.println("m : Next sub-stage");
+        System.out.println("n : Previous sub-stage");
 
         if (blank) {
             System.out.println("Currently blank");
@@ -546,10 +958,10 @@ public class ProcessingSketch extends PApplet{
 
     public void action(char key){
         switch (key){
-            case 'q' : System.out.println("Shuffle");
+            case 'q' : System.out.print("o");
                 scene.shuffle();
                 break;
-            case 'w' : System.out.println("Jitter");
+            case 'w' : System.out.print(".");
                 scene.jitter();
                 break;
             case 'r' : System.out.println("Reset");
@@ -560,12 +972,12 @@ public class ProcessingSketch extends PApplet{
                 record = !record;
                 System.out.println("Recording: " + record);
                 break;
-            case 'b' : currentBgColor+=cycleDir;
-                if (currentBgColor==bgColors.length-1 || currentBgColor==0){
-                    cycleDir*=-1;
-                }
-                System.out.println("BgColor: "+currentBgColor);
-                break;
+//            case 'b' : currentBgColor+=cycleDir;
+//                if (currentBgColor==bgColors.length-1 || currentBgColor==0){
+//                    cycleDir*=-1;
+//                }
+//                System.out.println("BgColor: "+currentBgColor);
+//                break;
             case 'z' : System.out.println("Stop");
                 scene.stop();
                 break;
@@ -617,10 +1029,10 @@ public class ProcessingSketch extends PApplet{
                 scene.mode(mode);
                 break;
 
-            case 'm':
-                System.out.println("Scene mode "+mode);
-                scene.mode(mode);
-                break;
+//            case 'm':
+//                System.out.println("Scene mode "+mode);
+//                scene.mode(mode);
+//                break;
 
             case 'o' : System.out.println("Previous scene");
                 whichScene--;
@@ -646,14 +1058,37 @@ public class ProcessingSketch extends PApplet{
             case 'v' : System.out.println("Vignette: "+!vignete);
                 vignete= !vignete;
                 break;
-            case ' ' : System.out.println("Next stage: "+(stage+1));
+            case ' ' :
+//                System.out.println("Next stage: "+(stage+1));
+                System.out.println();
                 stageChange = true;
+                subStage = 0;
                 stage++;
                 break;
-            case 'c' : System.out.println("Previous stage: "+(stage-1));
+            case 'f' :
+//                System.out.println("Next stage: "+(stage+1));
+                System.out.println();
                 stageChange = true;
+                subStage = 0;
+                stage++;
+                break;
+            case 'c' :
+                System.out.println();
+                System.out.println("Previous stage: "+(stage-1));
+                stageChange = true;
+                subStage = 0;
                 stage--;
                 if (stage<0) stage = 0;
+                break;
+            case 'm' :
+                System.out.println("->");
+                stageChange = true;
+                subStage++;
+                break;
+            case 'n' :
+                System.out.println("<-");
+                stageChange = true;
+                subStage--;
                 break;
         }
     }

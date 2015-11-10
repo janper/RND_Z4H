@@ -2,7 +2,6 @@ package sk.janper.rnd;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
-import processing.core.PImage;
 import processing.core.PShape;
 import toxi.geom.ReadonlyVec3D;
 import toxi.geom.Vec3D;
@@ -11,17 +10,19 @@ import toxi.geom.Vec3D;
  * Created by Jan on 07.08.2015.
  */
 public class Light extends Vec3D {
-    private PShape shape;
-    private PImage halo;
-    private PImage full;
-    private PApplet parent;
-    private float span = 600;
+    public PShape shape;
+    public PApplet parent;
+    public float span = 300;
     private Vec3D motionVector = new Vec3D(0,0,-1);
     private Vec3D ideal = new Vec3D(0,0,-1);
-    private PGraphics tempGraphics;
-    private float rotationAngle = 0f;
+    public float rotationAngle = 0f;
 
-    private Vec3D offset = new Vec3D();
+    public Vec3D offset = new Vec3D();
+
+    private int mode = 0;
+
+    private int colour;
+    private int haloColour;
 
     public Light(ReadonlyVec3D readonlyVec3D, PApplet parent) {
         this (readonlyVec3D, parent, "");
@@ -73,16 +74,12 @@ public class Light extends Vec3D {
         this.ideal = ideal;
     }
 
-    private void generateShape(String imageFile){
+    public void generateShape(String imageFile){
         try {
             shape = parent.loadShape(imageFile);
         } catch(Exception e){
             System.out.println(e);
         }
-    }
-
-    public PImage getImage(){
-        return full;
     }
 
     public void display(PGraphics buffer){
@@ -122,8 +119,50 @@ public class Light extends Vec3D {
         parent.translate(x+offset.x, y+offset.y, z+offset.z);
         parent.rotateY(rotationAngle);
 
+        float weight;
+
+        if (mode == 0){
+            weight = PApplet.map(z + offset.z, -4500, 4500, 1f, 20f);
+        } else {
+            weight = 8f;
+        }
+
+//        shape.setStroke(getHaloColour());
+//        shape.setStrokeWeight(weight+10f);
+//        parent.shape(shape, -span / 2, 0, shape.width, shape.height);
+//        parent.shape(shape, span / 2, 0, shape.width, shape.height);
+//
+//        parent.translate(0, 0, 2f);
+
+        shape.setStroke(getColour());
+        shape.setStrokeWeight(weight);
         parent.shape(shape, -span / 2, 0, shape.width, shape.height);
         parent.shape(shape, span / 2, 0, shape.width, shape.height);
+
         parent.popMatrix();
+    }
+
+    public int getMode() {
+        return mode;
+    }
+
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
+
+    public int getColour() {
+        return colour;
+    }
+
+    public void setColour(int colour) {
+        this.colour = colour;
+    }
+
+    public int getHaloColour() {
+        return haloColour;
+    }
+
+    public void setHaloColour(int haloColour) {
+        this.haloColour = haloColour;
     }
 }

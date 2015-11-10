@@ -15,7 +15,7 @@ public class ScnPrechod implements Scene {
     private PApplet parent;
 
     private ArrayList<Light> lights;
-    private final int MIN_LIGHTS = 4;
+    private final int MIN_LIGHTS = 8;
     private final int MAX_LIGHTS = 30;
     private int numLights = MAX_LIGHTS;
     private final int SLOWDOWN_PERIOD = 60*60;
@@ -50,7 +50,7 @@ public class ScnPrechod implements Scene {
         System.out.print("Constructing "+name);
         this.parent = parent;
         limits.set(new Vec3D(parent.width / 2, parent.height / 2, 0));
-        limits.setExtent(new Vec3D (3500,1000,4000));
+        limits.setExtent(new Vec3D (3500,1000,4500));
         reset();
         FRONTAL = new Vec3D(parent.width / 2f, 2f*parent.height / 3f, limits.z+limits.getExtent().z/1.5f);
         SIDEWAYS = new Vec3D (-parent.width , 1f*parent.height / 4f, limits.z);
@@ -94,16 +94,16 @@ public class ScnPrechod implements Scene {
 
     public void mode(int which){
         System.out.println("Mode: "+which);
+        if (mode!=1 && which==1){
+            slowdownMoment = counter;
+        }
         mode = which;
+        lights.forEach(l -> l.setMode(mode));
         if (mode==0){
             targetEye = FRONTAL;
-//            speed=1f;
         }
         if (mode==1){
             targetEye = SIDEWAYS;
-//            speed=1f;
-            slowdownMoment = counter;
-
         }
     }
 
@@ -151,22 +151,25 @@ public class ScnPrechod implements Scene {
     private Light getLight(boolean head, float spread) {
         Vec3D location;
         Vec3D motion;
-        String imageFile;
+//        String imageFile;
+        Light l;
 
         if (head){
             location = new Vec3D(300, parent.height / 2 + 200, parent.random(limits.getMin().z+10, limits.getMin().z+10+spread));
             motion = direction;
-            imageFile =  ("predne_kruhy.svg");
+//            imageFile =  ("predne_kruhy.svg");
+            l = new HeadLight(location, parent);
         }else {
             location = new Vec3D(parent.width - 500, parent.height / 2 + 200, parent.random(limits.getMax().z-10-spread, limits.getMax().z-10));
             motion = direction.getInverted();
-            imageFile =  ("zadne_kruhy.svg");
+//            imageFile =  ("zadne_kruhy.svg");
+            l = new TailLight(location, parent);
         }
 
-        Light l = new Light(location, parent, imageFile);
         l.setRotationAngle(0);
         l.setMotionVector(motion);
         l.setIdeal(motion.copy());
+        l.setMode(mode);
         return l;
     }
 
@@ -177,11 +180,14 @@ public class ScnPrechod implements Scene {
                 newLights.add(l);
             }
         });
-
-        numLights = (int) PApplet.map(counter, slowdownMoment, slowdownMoment+SLOWDOWN_PERIOD, MIN_LIGHTS, MAX_LIGHTS);
-        numLights = (numLights<MIN_LIGHTS)?MIN_LIGHTS:numLights;
+        if (mode == 1) {
+            numLights = (int) PApplet.map(counter, slowdownMoment, slowdownMoment + SLOWDOWN_PERIOD, MAX_LIGHTS, MIN_LIGHTS);
+            numLights = (numLights < MIN_LIGHTS) ? MIN_LIGHTS : numLights;
+        } else {
+            numLights = MAX_LIGHTS;
+        }
         while (newLights.size()<numLights){
-                newLights.add(getLight(Math.random() >= 0.5d, 100f));
+                newLights.add(getLight(Math.random() >= 0.5d, 500f));
         }
 
         lights = newLights;
@@ -201,10 +207,10 @@ public class ScnPrechod implements Scene {
     @Override
     public void display() {
         if (moving) {
+            counter++;
             check();
             lights.forEach(l -> l.update(speed));
             currentEye.interpolateToSelf(targetEye, TRANSTITION_SPEED);
-            counter++;
         }
 
         parent.camera(currentEye.x, currentEye.y, currentEye.z, limits.x, limits.y+parent.height, limits.z-parent.height*0.5f, 0f, 1f, 0f);

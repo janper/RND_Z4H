@@ -98,16 +98,20 @@ public class ScnStavebniny implements Scene {
             if (PApplet.abs(physics.particles.get(physics.particles.size() - 1).x - rightPosition.x) > 0.1) {
                 physics.particles.get(physics.particles.size() - 1).interpolateToSelf(rightPosition, 0.025f);
             }
-
-
-            if (mode == 0) {
-                physics.update();
-            }
+            physics.update();
             if (mode == 1) {
-                physics.particles.forEach(p -> p.y -= 0.25f);
+                physics.particles.forEach(p -> {
+                    if(p.isLocked()) {
+                        p.y -= 0.1f;
+                    }
+                });
             }
             if (mode == 2) {
-                physics.particles.forEach(p -> p.y += 0.25f);
+                physics.particles.forEach(p -> {
+                    if(p.isLocked()) {
+                        p.y += 0.1f;
+                    }
+                });
             }
 
             if (mode==9){
@@ -116,13 +120,12 @@ public class ScnStavebniny implements Scene {
                 if (counter-endFrame==END_SEQUENCE){
                     physics.particles.get(0).unlock();
                     gravityVector.y=20f;
+                    physics.particles.get(physics.particles.size() - 1).x+=1000f;
                 }
 
-                if (counter-endFrame<END_SEQUENCE+30){
+                if (counter-endFrame<END_SEQUENCE+20){
                     physics.update();
                 }
-
-
 
             }
         }
@@ -143,7 +146,7 @@ public class ScnStavebniny implements Scene {
     @Override
     public void shuffle() {
         int which = (int) parent.random(1, physics.particles.size() - 1);
-        float value = parent.random(100, 200);
+        float value = parent.random(25, 75);
         int sign = (parent.random(1f) > 0.5f) ? 1 : -1;
         physics.particles.get(which).z+=(value * sign);
     }

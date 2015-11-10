@@ -11,6 +11,9 @@ import java.util.ArrayList;
 
 /**
  * Created by Jan on 10.10.2015.
+ * mode 0 = biele a povoleny shuffle
+ * mode 1 = farebne a bez shuffle
+ * mode 2 = farebne a shuffle
  */
 public class ScnSpalna implements Scene {
     private final String name = "Spalna";
@@ -83,7 +86,9 @@ public class ScnSpalna implements Scene {
 
     @Override
     public void shuffle() {
+        if (mode!=2) {
             fur.forEach(r -> r.shake(10f));
+        }
     }
 
     @Override
@@ -98,10 +103,25 @@ public class ScnSpalna implements Scene {
 
     @Override
     public void mode(int which) {
+        if (mode==9 && which!=9){
+            counter=0;
+        }
         mode = which;
-        reColor(which);
+        reColorTarget(which);
         if (mode==9){
             endPoint = counter;
+        }
+    }
+
+    private void reColorTarget(int which) {
+        if (which==0){
+            fur.forEach(r -> r.setTargetColour(parent.color(255)));
+        }
+
+        if (which==1 || which==2) {
+            for (int i=0; i<fur.size(); i++) {
+                fur.get(i).setTargetColour(colors.get(i));
+            }
         }
     }
 
@@ -110,7 +130,7 @@ public class ScnSpalna implements Scene {
             fur.forEach(r -> r.setColour(parent.color(255)));
         }
 
-        if (which==1) {
+        if (which==1 || which==2) {
             for (int i=0; i<fur.size(); i++) {
                 fur.get(i).setColour(colors.get(i));
             }
@@ -142,10 +162,10 @@ public class ScnSpalna implements Scene {
                 GravityBehavior gravity = new GravityBehavior(gravityVector);
                 Rod rod = new Rod(parent, position, direction, gravity);
 
-                int topLeft = parent.color(12, 52, 173);
-                int topRight = parent.color(96, 113, 163);
-                int bottomLeft = parent.color(232, 121, 2);
-                int bottomRight = parent.color(232, 18, 2);
+                int topLeft = parent.color(12*1.5f, 52*1.5f, 173*1.5f);
+                int topRight = parent.color(96*1.5f, 113*1.5f, 163*1.5f);
+                int bottomLeft = parent.color(232*1.5f, 121*1.5f, 2*1.5f);
+                int bottomRight = parent.color(232*1.5f, 18*1.5f, 2*1.5f);
 
 //                int topLeft = parent.color(8, 204, 135);
 //                int topRight = parent.color(125, 90, 7);

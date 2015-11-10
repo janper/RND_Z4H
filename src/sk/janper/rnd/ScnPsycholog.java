@@ -121,16 +121,18 @@ public class ScnPsycholog implements Scene {
 
     @Override
     public void shuffle() {
-        vectors.forEach(v -> {
-            v.x =parent.random(-1, 1);
-            v.y=parent.random(-1, 1);
-            v.z = parent.random(MIN_RADIUS, MAX_RADIUS);
-        });
+        if (mode!=1 && mode!=0) {
+            vectors.forEach(v -> {
+                v.x = parent.random(-1, 1);
+                v.y = parent.random(-1, 1);
+                v.z = parent.random(MIN_RADIUS, MAX_RADIUS);
+            });
+        }
     }
 
     @Override
     public void jitter() {
-        if (mode!=9) {
+        if (mode!=9 && mode!=1 && mode!=0) {
             randomizeRadii();
         }
     }
@@ -148,7 +150,7 @@ public class ScnPsycholog implements Scene {
         if (mode==0){
             currentFill = 0;
         }
-        if (mode==1){
+        if (mode==1 || mode==2){
             currentFill = 1;
         }
         if (mode==9){
@@ -158,12 +160,12 @@ public class ScnPsycholog implements Scene {
         if (mode!=9){
             stepSpeed = 0.01f;
         }
-        if (mode==2){
-            speedMultiplier = 0.25f;
-        }
-        if (mode==3){
-            speedMultiplier = 1f;
-        }
+//        if (mode==2){
+//            speedMultiplier = 0.25f;
+//        }
+//        if (mode==3){
+//            speedMultiplier = 1f;
+//        }
 
     }
 

@@ -98,6 +98,9 @@ public class ScnKlenotnictvo implements Scene {
     }
 
     public void mode(int which){
+        if (mode!=0 && which==0){
+            reset();
+        }
         mode = which;
     }
 
@@ -123,6 +126,27 @@ public class ScnKlenotnictvo implements Scene {
             Vec3D direction = new Vec3D(0, stepSize*(-1)*0.75f, 0);
             addString(position, direction, Math.round((parent.height/stepSize)*1.5f), stepSize);
         }
+
+        VerletParticle first = null;
+        VerletParticle second = null;
+        for (VerletParticle particle : physics.particles) {
+            if (particle.isLocked()){
+                first = particle;
+                break;
+            }
+        }
+
+        if (first!=null){
+            for (VerletParticle particle : physics.particles) {
+                if (particle.isLocked() && particle.distanceToSquared(first) > 0.1f) {
+                    second = particle;
+                    VerletSpring tempSpring = new VerletSpring(first, second, first.distanceTo(second), 0.1f);
+                    physics.addSpring(tempSpring);
+                    first = second;
+                }
+            }
+        }
+
 //        System.out.println("All strings added");
     }
 
@@ -148,7 +172,14 @@ public class ScnKlenotnictvo implements Scene {
         for (VerletParticle particle : physics.particles){
             Diamond d = (Diamond) particle;
             if (d.isLocked()) {
-                d.adjustPosition(ratio);
+                if (mode==9){
+                    float rand = parent.random(1.0f);
+                    if (rand<0.05f){
+                        d.unlock();
+                    }
+                } else {
+                    d.adjustPosition(ratio);
+                }
             }
         }
     }

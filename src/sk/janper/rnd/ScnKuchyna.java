@@ -89,8 +89,8 @@ public class ScnKuchyna implements Scene {
             tapeta.update();
         }
 
-        currentBgColor = parent.lerpColor(currentBgColor,bgColours[currentBgColorIndex], 0.2f);
-        currentColor = parent.lerpColor(currentColor, colours[currentColorIndex], 0.2f);
+        currentBgColor = parent.lerpColor(currentBgColor,bgColours[currentBgColorIndex], 0.05f);
+        currentColor = parent.lerpColor(currentColor, colours[currentColorIndex], 0.05f);
 
         parent.background(currentBgColor);
         tapeta.setLineColor(currentColor);
@@ -135,13 +135,19 @@ public class ScnKuchyna implements Scene {
             currentBgColorIndex = mode;
         }
 
-        if (which == 3){
+        if (which == 0 || which == 2){
             tapeta.setUpdateSteps(60*90);
         }
 
-        if (which == 4){
+        if (which == 1 || which == 3){
             tapeta.setUpdateSteps(60*6);
         }
+
+        if (which == 3){
+            currentColorIndex = 1;
+            currentBgColorIndex = 1;
+        }
+
 
     }
 

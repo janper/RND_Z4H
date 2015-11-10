@@ -24,7 +24,8 @@ public class Rod extends Vec3D {
 
     private ArrayList<VerletParticle> particles;
     private ArrayList<VerletSpring> springs;
-    private int colour =255;
+    private int colour = 255;
+    private int targetColour;
     private float weight = 2f;
 
     private float motion;
@@ -40,6 +41,7 @@ public class Rod extends Vec3D {
         this.length = direction.magnitude();
         this.parent = parent;
         this.motion = parent.random(parent.height*4f, parent.height*7f);
+        this.targetColour = this.colour;
     }
 
     public void setBgColour(int colour){
@@ -162,6 +164,10 @@ public class Rod extends Vec3D {
         this.colour = colour;
     }
 
+    public void setTargetColour(int colour) {
+        this.targetColour = colour;
+    }
+
     public float getWeight() {
         return weight;
     }
@@ -221,6 +227,7 @@ public class Rod extends Vec3D {
 
     public void display() {
         counter++;
+        colour = parent.lerpColor(colour, targetColour, 0.1f);
         int duration = 120;
         parent.pushStyle();
         parent.noFill();

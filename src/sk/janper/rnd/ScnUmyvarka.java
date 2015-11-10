@@ -100,7 +100,9 @@ public class ScnUmyvarka implements Scene {
             mirror.stop();
         }
 
-        mirror = new Mirror(new Vec2D((int) parent.random((parent.width / tileSize) - (w / tileSize)) * tileSize, (int) parent.random((parent.height / tileSize) - (h / tileSize)) * tileSize), parent, w, h);
+//        mirror = new Mirror(new Vec2D((int) parent.random((parent.width / tileSize) - (w / tileSize)) * tileSize, (int) parent.random((parent.height / tileSize) - (h / tileSize)) * tileSize), parent, w, h);
+        mirror = new Mirror(new Vec2D((float)Math.floor((parent.width/2-videoWidth/2)/tileSize)*tileSize-0f*tileSize, (float)Math.floor((parent.height/2-videoHeight/2)/tileSize)*tileSize-2f*tileSize), parent, w, h);
+
 
         mirror.start();
         mirror.setThresholdMin(thresholdMin);

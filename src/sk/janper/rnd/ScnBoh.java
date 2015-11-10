@@ -22,6 +22,7 @@ public class ScnBoh implements Scene {
     private boolean direct = true;
 
     private int counter;
+    private int mode = 0;
 
     public ScnBoh(PApplet parent) {
         System.out.print("Constructing "+name);
@@ -77,7 +78,9 @@ public class ScnBoh implements Scene {
 
     @Override
     public void shuffle() {
-        rays.forEach(r -> r.alignTo());
+        if (mode!=0) {
+            rays.forEach(r -> r.alignTo());
+        }
     }
 
     @Override
@@ -87,7 +90,7 @@ public class ScnBoh implements Scene {
 
     @Override
     public void mode(int which) {
-
+        mode = which;
     }
 
     @Override

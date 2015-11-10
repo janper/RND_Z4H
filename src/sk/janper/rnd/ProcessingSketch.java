@@ -64,8 +64,8 @@ public class ProcessingSketch extends PApplet{
             System.out.println("More displays detected");
             fullScreen(1);
         }
-
         size(WIDTH, HEIGHT, P3D);
+
         smooth();
 
         int density = displayDensity();
